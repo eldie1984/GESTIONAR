@@ -51,9 +51,9 @@
             this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox1.Location = new System.Drawing.Point(304, 30);
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(73, 17);
+            this.checkBox1.Size = new System.Drawing.Size(63, 17);
             this.checkBox1.TabIndex = 1;
-            this.checkBox1.Text = "Habilitado";
+            this.checkBox1.Text = "Borrado";
             this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // button1
