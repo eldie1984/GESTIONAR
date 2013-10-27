@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -66,11 +67,17 @@
     <Compile Include="Abm de Planes\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Abm de Profesional\Form1.cs">
+    <Compile Include="Abm de Profesional\AltaProfesional.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Abm de Profesional\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Abm de Profesional\AltaProfesional.Designer.cs">
+      <DependentUpon>AltaProfesional.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm de Profesional\ListadoProfesional.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm de Profesional\ListadoProfesional.Designer.cs">
+      <DependentUpon>ListadoProfesional.cs</DependentUpon>
     </Compile>
     <Compile Include="Abm de Rol\Elec_rol.cs">
       <SubType>Form</SubType>
@@ -102,6 +109,7 @@
     <Compile Include="Compra de Bono\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataAccessLayer.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -127,6 +135,8 @@
     <Compile Include="Login\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Model\Especialidad.cs" />
+    <Compile Include="Model\Profesional.cs" />
     <Compile Include="Pedir Turno\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -135,6 +145,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Abm de Profesional\AltaProfesional.resx">
+      <DependentUpon>AltaProfesional.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm de Profesional\ListadoProfesional.resx">
+      <DependentUpon>ListadoProfesional.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Abm de Rol\Elec_rol.resx">
       <DependentUpon>Elec_rol.cs</DependentUpon>
     </EmbeddedResource>
