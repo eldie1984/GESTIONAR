@@ -40,8 +40,6 @@ GO
 
 CREATE TABLE [GESTIONAR].[afiliado](
         afi_id [int] IDENTITY(1,1) NOT NULL,
-    afi_sub_id [int] NOT NULL,
-    afi_user_id REFERENCES GESTIONAR.usuario (usua_id) unique,
     afi_nombre [varchar](255) NULL,
     afi_apellido [varchar](255) NULL,
     afi_tipo_documento [varchar](3) NULL,
@@ -111,7 +109,6 @@ GO
 
 CREATE TABLE [GESTIONAR].[profesional](
         prof_id [int] IDENTITY(1,1) NOT NULL,
-    prof_user_id REFERENCES GESTIONAR.usuario (usua_id) unique,
     prof_nombre [varchar](255) NULL,
     prof_apellido [varchar](255) NULL,
     prof_tipo_documento [varchar] (3) NULL,
@@ -523,52 +520,14 @@ SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[Plan] ON
 GO
 
 
-CREATE TABLE [GESTIONAR].[turno](
-  [turn_id] [int] IDENTITY(1,1) NOT NULL ,
-  [turn_profe_id] [int] NOT NULL REFERENCES GESTIONAR.profesional (prof_id),
-  [turn_afil_id] [int] NOT NULL REFERENCES GESTIONAR.afiliado (afi_id),
-  [turn_hora_inicio] [datetime] null,
-  [turn_baja] [bit] NULL,
-  [turn_creado] [datetime] NULL,
-  [turn_modificado] [datetime] NULL
-  CONSTRAINT [PK_GESTIONAR.turnda] PRIMARY KEY CLUSTERED 
-  (
-    [turnd_id] ASC
-  )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-  ) ON [PRIMARY]
-GO
-
-
-SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[turno] ON
-
-insert into GESTIONAR.turno (
-[turn_id],
-[turn_profe_id],
-[turn_afil_id],
-[turn_hora_inicio],
-[turn_baja],
-[turn_creado],
-[turn_modificado])
-(select Turno_Numero,p.prof_id,af.afi_id, m.turno_fecha , case DATEPART( WEEKDAY , m.Turno_Fecha )
-when 7  then 1
-ELSE 0 end ,SYSDATETIME(),SYSDATETIME()
-from gd_esquema.Maestra m
-inner join GESTIONAR.afiliado af on af.afi_nro_documento = m.Paciente_Dni
-inner join GESTIONAR.profesional p on p.prof_nro_documento=m.Medico_Dni
-where consulta_sintomas is null
-and consulta_enfermedades is null
-and Turno_Numero is not null
-)
-SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[turno] OFF
-
 CREATE TABLE [GESTIONAR].[agenda](
   [agend_id] [int] IDENTITY(1,1) NOT NULL ,
   [agen_profe_id] [int] NOT NULL REFERENCES GESTIONAR.profesional (prof_id),
   [agen_afil_id] [int] NOT NULL REFERENCES GESTIONAR.afiliado (afi_id),
   [agen_hora_inicio] [datetime] null,
   [agen_baja] [bit] NULL,
-  [agen_creado] [datetime] NULL,
-  [agen_modificado] [datetime] NULL
+  [plan_creado] [datetime] NULL,
+  [plan_modificado] [datetime] NULL
   CONSTRAINT [PK_GESTIONAR.agenda] PRIMARY KEY CLUSTERED 
   (
     [agend_id] ASC
@@ -589,5 +548,3 @@ from gd_esquema.Maestra m
 inner join GESTIONAR.afiliado af on af.afi_nro_documento = m.Paciente_Dni
 inner join GESTIONAR.profesional p on p.prof_nro_documento=m.Medico_Dni
 )
-
-
