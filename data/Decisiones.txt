@@ -1,0 +1,3 @@
+Se genero una tabla para registrar el historial de cambio de planes en los afiliados:
+Hist_Plan_Afiliado:
+Columnas: 

@@ -39,9 +39,8 @@ select 'creo tabla afiliado'
 GO
 
 CREATE TABLE [GESTIONAR].[afiliado](
-        afi_id [int] IDENTITY(1,1) NOT NULL,
+    afi_id [int] IDENTITY(1,1) NOT NULL,
     afi_sub_id [int] NOT NULL,
-    afi_user_id REFERENCES GESTIONAR.usuario (usua_id) unique,
     afi_nombre [varchar](255) NULL,
     afi_apellido [varchar](255) NULL,
     afi_tipo_documento [varchar](3) NULL,
@@ -64,9 +63,20 @@ CREATE TABLE [GESTIONAR].[afiliado](
   ) ON [PRIMARY]
   GO
 
-
+CREATE TABLE [GESTIONAR].[Hist_Plan_Afiliado](
+    hist_id [int] IDENTITY(1,1) NOT NULL,
+    hist_fecha [datetime] NOT NULL,
+    hist_afi_id [int] NOT NULL REFERENCES GESTIONAR.afiliado (afi_id),
+    hist_motivo [varchar] (255) NOT NULL
+  CONSTRAINT [PK_GESTIONAR.Hist_Plan_Afiliado] PRIMARY KEY CLUSTERED 
+  (
+    [hist_id] ASC
+  )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+  ) ON [PRIMARY]
+  GO
 
 INSERT INTO [GESTIONAR].[afiliado](
+	afi_sub_id,
     afi_nombre ,
     afi_apellido ,
     afi_tipo_documento ,
@@ -82,7 +92,8 @@ INSERT INTO [GESTIONAR].[afiliado](
     afi_baja ,
     afi_creado,
     afi_modificado)
-(SELECT [Paciente_Nombre]
+(SELECT 1
+	  ,[Paciente_Nombre]
       ,[Paciente_Apellido]
       ,'DNI'
       ,[Paciente_Dni]
@@ -110,8 +121,7 @@ GO
 
 
 CREATE TABLE [GESTIONAR].[profesional](
-        prof_id [int] IDENTITY(1,1) NOT NULL,
-    prof_user_id REFERENCES GESTIONAR.usuario (usua_id) unique,
+    prof_id [int] IDENTITY(1,1) NOT NULL,
     prof_nombre [varchar](255) NULL,
     prof_apellido [varchar](255) NULL,
     prof_tipo_documento [varchar] (3) NULL,
