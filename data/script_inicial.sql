@@ -310,7 +310,7 @@ INSERT INTO [GESTIONAR].[funcionalidad]([func_name],[func_creado],[func_modifica
 ('destinosConPasajesCancelados',SYSDATETIME(),SYSDATETIME()),
 ('microsConMayorCantidadDeDiasFueraDeServicio',SYSDATETIME(),SYSDATETIME())
 
-GO
+
 Select 'Creo tabla Rol'
 
 GO
@@ -477,7 +477,7 @@ CREATE TABLE [GESTIONAR].[rol_usuario](
 
 GO
 Select 'Creo las relaciones entre el usuario y el rol'
-GO
+
 
   insert into [GESTIONAR].[rol_usuario]
   ([rolu_user_id],[rolu_rol_id],[rolu_creado],[rolu_modificado])
@@ -490,6 +490,8 @@ GO
   (6,2,SYSDATETIME(),SYSDATETIME())
   
   GO
+  
+  Select 'Creo la Tabla Plan'
 
 CREATE TABLE [GESTIONAR].[Plan](
   [plan_id] [int] IDENTITY(555560,1) NOT NULL ,
@@ -507,7 +509,7 @@ GO
 
 SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[Plan] ON
 
-GO
+select ' Populo la tabla Plan '
 
 insert into [GESTIONAR].[Plan](
 [plan_id],
@@ -526,12 +528,13 @@ insert into [GESTIONAR].[Plan](
 from gd_esquema.Maestra
 group by Plan_Med_Codigo,Plan_Med_Descripcion);
 
-GO
 
-SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[Plan] ON
 
-GO
+SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[Plan] OFF
 
+
+
+Select 'Creo la tabla Turno '
 
 CREATE TABLE [GESTIONAR].[turno](
   [turn_id] [int] IDENTITY(1,1) NOT NULL ,
@@ -543,14 +546,14 @@ CREATE TABLE [GESTIONAR].[turno](
   [turn_modificado] [datetime] NULL
   CONSTRAINT [PK_GESTIONAR.turnda] PRIMARY KEY CLUSTERED 
   (
-    [turnd_id] ASC
+    [turn_id] ASC
   )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
   ) ON [PRIMARY]
 GO
 
 
 SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[turno] ON
-
+select 'populo la tabla turno'
 insert into GESTIONAR.turno (
 [turn_id],
 [turn_profe_id],
@@ -571,6 +574,8 @@ and Turno_Numero is not null
 )
 SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[turno] OFF
 
+select 'Creo la tabla agenda'
+
 CREATE TABLE [GESTIONAR].[agenda](
   [agend_id] [int] IDENTITY(1,1) NOT NULL ,
   [agen_profe_id] [int] NOT NULL REFERENCES GESTIONAR.profesional (prof_id),
@@ -586,14 +591,15 @@ CREATE TABLE [GESTIONAR].[agenda](
   ) ON [PRIMARY]
 GO
 
+select 'Populo la tabla agenda'
 
 insert into GESTIONAR.agenda (
 [agen_profe_id],
 [agen_afil_id],
 [agen_hora_inicio],
 [agen_baja],
-[plan_creado],
-[plan_modificado])
+[agen_creado],
+[agen_modificado])
 (select p.prof_id,af.afi_id, m.turno_fecha,0,SYSDATETIME(),SYSDATETIME()
 from gd_esquema.Maestra m
 inner join GESTIONAR.afiliado af on af.afi_nro_documento = m.Paciente_Dni

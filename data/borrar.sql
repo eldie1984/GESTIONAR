@@ -1,145 +1,69 @@
-USE [GD1C2013]
-GO
-
-IF OBJECT_ID (N'transportados.SemYear', N'FN') IS NOT NULL
-    DROP FUNCTION transportados.SemYear;
-GO
-
-/****** Object:  View [transportados].[destino_view]    Script Date: 07/21/2013 09:44:52 ******/
-IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[transportados].[destino_view]'))
-DROP VIEW [transportados].[destino_view]
+USE [GD2C2013]
 GO
 
 
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[obtener_premios]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [transportados].[obtener_premios]
-GO
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[actualizar_puntos]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [transportados].[actualizar_puntos]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[agenda]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[agenda]
 GO
 
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[bajaRol]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [transportados].[bajaRol]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[Plan]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[Plan]
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[devuelvePasajes]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [transportados].[devuelvePasajes]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[profesional_especialidad]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[profesional_especialidad]
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[cargarMicro]') AND type in (N'P', N'PC'))
-DROP PROCEDURE  [transportados].[cargarMicro]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[Rol_funcionalidad]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[Rol_funcionalidad]
 GO
 
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[buscaViajes]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [transportados].[buscaViajes]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[rol_usuario]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[rol_usuario]
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[existe]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [transportados].[existe]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[turno]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[turno]
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[microAlterno]') AND  type in (N'P', N'PC'))
-DROP PROCEDURE [transportados].[microAlterno]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[usuario]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[usuario]
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[pasajesVendidos]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [transportados].[pasajesVendidos]
-GO
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[devolucionPersonal]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [transportados].[devolucionPersonal]
-GO
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[reemplaza_micro]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [transportados].[reemplaza_micro]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[Rol]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[Rol]
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[compra]') AND type in (N'P', N'PC'))
-DROP procedure [transportados].[compra]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[profesional]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[profesional]
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[Compra_pasaje]') AND type in (N'P', N'PC'))
-DROP PROCEDURE [transportados].[Compra_pasaje]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[funcionalidad]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[funcionalidad]
 GO
 
-/****** Object:  Table [transportados].[puntos_pas_frecuente]    Script Date: 05/21/2013 22:23:12 ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[puntos_pas_frecuente]') AND type in (N'U'))
-DROP TABLE [transportados].[puntos_pas_frecuente]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[Especialidad]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[Especialidad]
 GO
 
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[pasajes]') AND type in (N'U'))
-DROP TABLE [transportados].[pasajes]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[Tipo_Especialidad]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[Tipo_Especialidad]
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[Rol_funcionalidad]') AND type in (N'U'))
-DROP TABLE [transportados].[Rol_funcionalidad]
-GO
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[rol_usuario]') AND type in (N'U'))
-DROP TABLE [transportados].[rol_usuario]
-GO
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[usuario]') AND type in (N'U'))
-DROP TABLE [transportados].[usuario]
-GO
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[funcionalidad]') AND type in (N'U'))
-DROP TABLE [transportados].[funcionalidad]
-GO
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[Rol]') AND type in (N'U'))
-DROP TABLE [transportados].[Rol]
-GO
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[facturas]') AND type in (N'U'))
-DROP TABLE [transportados].[facturas]
-GO
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[butaca]') AND type in (N'U'))
-DROP TABLE [transportados].[butaca]
-GO
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[premios_obtenidos]') AND type in (N'U'))
-DROP TABLE [transportados].[premios_obtenidos]
-GO
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[voucher_de_compra]') AND type in (N'U'))
-DROP TABLE [transportados].[voucher_de_compra]
-GO
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[viajes]') AND type in (N'U'))
-DROP TABLE [transportados].[viajes]
-GO
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[recorrido]') AND type in (N'U'))
-DROP TABLE [transportados].[recorrido]
-GO
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[ciudad]') AND type in (N'U'))
-DROP TABLE [transportados].[ciudad]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[Hist_Plan_Afiliado]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[Hist_Plan_Afiliado]
 GO
 
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[premios]') AND type in (N'U'))
-DROP TABLE [transportados].[premios]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[afiliado]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[afiliado]
 GO
 
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[micros]') AND type in (N'U'))
-DROP TABLE [transportados].[micros]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[estado_civil]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[estado_civil]
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[clientes]') AND type in (N'U'))
-DROP TABLE [transportados].[clientes]
-GO
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[transportados].[tipo_servicio]') AND type in (N'U'))
-DROP TABLE [transportados].[tipo_servicio]
-GO
-
-IF  EXISTS (SELECT * FROM sys.schemas WHERE name = 'transportados')
-DROP SCHEMA [transportados]
+IF  EXISTS (SELECT * FROM sys.schemas WHERE name = 'GESTIONAR')
+DROP SCHEMA [GESTIONAR]
 GO
