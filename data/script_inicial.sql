@@ -32,7 +32,46 @@ insert into [GD2C2013].[GESTIONAR].[estado_civil]
     ('Divorciado/a',SYSDATETIME(),SYSDATETIME());
     GO
 
+  Select 'Creo la Tabla Plan'
 
+CREATE TABLE [GESTIONAR].[Plan](
+  [plan_id] [int] IDENTITY(555560,1) NOT NULL ,
+  [plan_nombre] [varchar](255) NULL,
+  [plan_consulta] [int] NOT NULL,
+  [plan_farmacia] [int] NOT NULL,
+  [plan_creado] [datetime] NULL,
+  [plan_modificado] [datetime] NULL
+  CONSTRAINT [PK_GESTIONAR.plan] PRIMARY KEY CLUSTERED 
+(
+  [plan_id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[Plan] ON
+
+select ' Populo la tabla Plan '
+
+insert into [GESTIONAR].[Plan](
+[plan_id],
+[plan_nombre],
+[plan_consulta],
+[plan_farmacia],
+[plan_creado],
+[plan_modificado])
+(select 
+  Plan_Med_Codigo
+  ,Plan_Med_Descripcion
+  ,min(Plan_Med_Precio_Bono_Consulta) 
+  , min(Plan_Med_Precio_Bono_Farmacia) 
+  ,SYSDATETIME()
+  ,SYSDATETIME()
+from gd_esquema.Maestra
+group by Plan_Med_Codigo,Plan_Med_Descripcion);
+
+
+
+SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[Plan] OFF
 
 select 'creo tabla afiliado'
 
@@ -55,19 +94,23 @@ CREATE TABLE [GESTIONAR].[afiliado](
     afi_plan [numeric](18, 0) NULL,
     afi_baja [bit] NULL,
     afi_creado [datetime] NULL,
-    afi_modificado [datetime] NULL
-  CONSTRAINT [PK_GESTIONAR.afiliado] PRIMARY KEY CLUSTERED 
-  (
-    [afi_id] ASC
-  )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-  ) ON [PRIMARY]
+    afi_modificado [datetime] NULL, 
+PRIMARY KEY CLUSTERED 
+(
+  [afi_id] ASC,
+  [afi_sub_id] ASC
+)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+) ON [PRIMARY]
   GO
 
 CREATE TABLE [GESTIONAR].[Hist_Plan_Afiliado](
     hist_id [int] IDENTITY(1,1) NOT NULL,
     hist_fecha [datetime] NOT NULL,
-    hist_afi_id [int] NOT NULL REFERENCES GESTIONAR.afiliado (afi_id),
-    hist_motivo [varchar] (255) NOT NULL
+    hist_afi_id [int] NOT NULL,
+    hist_afi_sub_id [int] NOT NULL,
+    hist_motivo [varchar] (255) NOT NULL,
+    hist_plan_id int NULL references GESTIONAR.[Plan] (plan_id),
+    foreign key (hist_afi_id,hist_afi_sub_id) references GESTIONAR.afiliado (afi_id,afi_sub_id),
   CONSTRAINT [PK_GESTIONAR.Hist_Plan_Afiliado] PRIMARY KEY CLUSTERED 
   (
     [hist_id] ASC
@@ -491,46 +534,7 @@ Select 'Creo las relaciones entre el usuario y el rol'
   
   GO
   
-  Select 'Creo la Tabla Plan'
 
-CREATE TABLE [GESTIONAR].[Plan](
-  [plan_id] [int] IDENTITY(555560,1) NOT NULL ,
-  [plan_nombre] [varchar](255) NULL,
-  [plan_consulta] [int] NOT NULL,
-  [plan_farmacia] [int] NOT NULL,
-  [plan_creado] [datetime] NULL,
-  [plan_modificado] [datetime] NULL
-  CONSTRAINT [PK_GESTIONAR.plan] PRIMARY KEY CLUSTERED 
-(
-  [plan_id] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-) ON [PRIMARY]
-GO
-
-SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[Plan] ON
-
-select ' Populo la tabla Plan '
-
-insert into [GESTIONAR].[Plan](
-[plan_id],
-[plan_nombre],
-[plan_consulta],
-[plan_farmacia],
-[plan_creado],
-[plan_modificado])
-(select 
-  Plan_Med_Codigo
-  ,Plan_Med_Descripcion
-  ,min(Plan_Med_Precio_Bono_Consulta) 
-  , min(Plan_Med_Precio_Bono_Farmacia) 
-  ,SYSDATETIME()
-  ,SYSDATETIME()
-from gd_esquema.Maestra
-group by Plan_Med_Codigo,Plan_Med_Descripcion);
-
-
-
-SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[Plan] OFF
 
 
 
@@ -539,11 +543,13 @@ Select 'Creo la tabla Turno '
 CREATE TABLE [GESTIONAR].[turno](
   [turn_id] [int] IDENTITY(1,1) NOT NULL ,
   [turn_profe_id] [int] NOT NULL REFERENCES GESTIONAR.profesional (prof_id),
-  [turn_afil_id] [int] NOT NULL REFERENCES GESTIONAR.afiliado (afi_id),
+  [turn_afil_id] [int] NOT NULL ,
+  [turn_afi_sub_id] [int] NOT NULL ,
   [turn_hora_inicio] [datetime] null,
   [turn_baja] [bit] NULL,
   [turn_creado] [datetime] NULL,
-  [turn_modificado] [datetime] NULL
+  [turn_modificado] [datetime] NULL,
+  foreign key (turn_afil_id,turn_afi_sub_id) references GESTIONAR.afiliado (afi_id,afi_sub_id),
   CONSTRAINT [PK_GESTIONAR.turnda] PRIMARY KEY CLUSTERED 
   (
     [turn_id] ASC
@@ -558,11 +564,12 @@ insert into GESTIONAR.turno (
 [turn_id],
 [turn_profe_id],
 [turn_afil_id],
+[turn_afi_sub_id],
 [turn_hora_inicio],
 [turn_baja],
 [turn_creado],
 [turn_modificado])
-(select Turno_Numero,p.prof_id,af.afi_id, m.turno_fecha , case DATEPART( WEEKDAY , m.Turno_Fecha )
+(select Turno_Numero,p.prof_id,af.afi_id,af.afi_sub_id, m.turno_fecha , case DATEPART( WEEKDAY , m.Turno_Fecha )
 when 7  then 1
 ELSE 0 end ,SYSDATETIME(),SYSDATETIME()
 from gd_esquema.Maestra m
@@ -579,11 +586,13 @@ select 'Creo la tabla agenda'
 CREATE TABLE [GESTIONAR].[agenda](
   [agend_id] [int] IDENTITY(1,1) NOT NULL ,
   [agen_profe_id] [int] NOT NULL REFERENCES GESTIONAR.profesional (prof_id),
-  [agen_afil_id] [int] NOT NULL REFERENCES GESTIONAR.afiliado (afi_id),
+  [agen_afil_id] [int] NOT NULL,
+  [agend_afil_sub_id] [int] NOT NULL ,
   [agen_hora_inicio] [datetime] null,
   [agen_baja] [bit] NULL,
   [agen_creado] [datetime] NULL,
-  [agen_modificado] [datetime] NULL
+  [agen_modificado] [datetime] NULL,
+  foreign key (agen_afil_id,agend_afil_sub_id) references GESTIONAR.afiliado (afi_id,afi_sub_id),
   CONSTRAINT [PK_GESTIONAR.agenda] PRIMARY KEY CLUSTERED 
   (
     [agend_id] ASC
@@ -596,11 +605,12 @@ select 'Populo la tabla agenda'
 insert into GESTIONAR.agenda (
 [agen_profe_id],
 [agen_afil_id],
+[agend_afil_sub_id],
 [agen_hora_inicio],
 [agen_baja],
 [agen_creado],
 [agen_modificado])
-(select p.prof_id,af.afi_id, m.turno_fecha,0,SYSDATETIME(),SYSDATETIME()
+(select p.prof_id,af.afi_id,af.afi_sub_id, m.turno_fecha,0,SYSDATETIME(),SYSDATETIME()
 from gd_esquema.Maestra m
 inner join GESTIONAR.afiliado af on af.afi_nro_documento = m.Paciente_Dni
 inner join GESTIONAR.profesional p on p.prof_nro_documento=m.Medico_Dni

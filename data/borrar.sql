@@ -7,9 +7,7 @@ DROP TABLE [GESTIONAR].[agenda]
 GO
 
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[Plan]') AND type in (N'U'))
-DROP TABLE [GESTIONAR].[Plan]
-GO
+
 
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[profesional_especialidad]') AND type in (N'U'))
 DROP TABLE [GESTIONAR].[profesional_especialidad]
@@ -62,6 +60,10 @@ GO
 
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[estado_civil]') AND type in (N'U'))
 DROP TABLE [GESTIONAR].[estado_civil]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[Plan]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[Plan]
 GO
 
 IF  EXISTS (SELECT * FROM sys.schemas WHERE name = 'GESTIONAR')
