@@ -1,6 +1,9 @@
 USE [GD2C2013]
 GO
 
+IF  EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[GESTIONAR].[afilado_tracker]'))
+DROP TRIGGER [GESTIONAR].[afilado_tracker]
+GO
 
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[agenda]') AND type in (N'U'))
 DROP TABLE [GESTIONAR].[agenda]

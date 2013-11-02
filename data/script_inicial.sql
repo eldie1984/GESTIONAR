@@ -108,7 +108,7 @@ CREATE TABLE [GESTIONAR].[Hist_Plan_Afiliado](
     hist_fecha [datetime] NOT NULL,
     hist_afi_id [int] NOT NULL,
     hist_afi_sub_id [int] NOT NULL,
-    hist_motivo [varchar] (255) NOT NULL,
+    --hist_motivo [varchar] (255) NOT NULL,
     hist_plan_id int NULL references GESTIONAR.[Plan] (plan_id),
     foreign key (hist_afi_id,hist_afi_sub_id) references GESTIONAR.afiliado (afi_id,afi_sub_id),
   CONSTRAINT [PK_GESTIONAR.Hist_Plan_Afiliado] PRIMARY KEY CLUSTERED 
@@ -617,3 +617,33 @@ inner join GESTIONAR.profesional p on p.prof_nro_documento=m.Medico_Dni
 )
 
 
+
+
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:    <Author,,Name>
+-- Create date: <Create Date,,>
+-- Description: <Description,,>
+-- =============================================
+CREATE TRIGGER GESTIONAR.afilado_tracker 
+   ON  GESTIONAR.afiliado 
+   AFTER UPDATE
+AS 
+BEGIN
+  -- SET NOCOUNT ON added to prevent extra result sets from
+  -- interfering with SELECT statements.
+  SET NOCOUNT ON;
+
+    -- Insert statements for trigger here
+
+    insert into Hist_Plan_Afiliado (hist_fecha,hist_afi_id,hist_afi_sub_id,hist_plan_id)
+   select SYSDATETIME(),d.afi_id,d.afi_sub_id,d.afi_plan  from deleted d
+   left join inserted i on d.afi_id=i.afi_id and d.afi_sub_id = i.afi_sub_id
+   where i.afi_plan <> d.afi_plan
+
+END
+GO
