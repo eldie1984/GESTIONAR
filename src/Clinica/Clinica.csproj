@@ -49,11 +49,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Abm de Afiliado\Form1.cs">
+    <Compile Include="Abm de Afiliado\AltaAfiliado.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Abm de Afiliado\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Abm de Afiliado\AltaAfiliado.Designer.cs">
+      <DependentUpon>AltaAfiliado.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm de Afiliado\ListadoAfiliado.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm de Afiliado\ListadoAfiliado.Designer.cs">
+      <DependentUpon>ListadoAfiliado.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Abm de Afiliado\ModificacionAfiliado.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Abm de Afiliado\ModificacionAfiliado.Designer.cs">
+      <DependentUpon>ModificacionAfiliado.cs</DependentUpon>
     </Compile>
     <Compile Include="Abm de Especialidades Medicas\Form1.cs">
       <SubType>Form</SubType>
@@ -135,7 +147,9 @@
     <Compile Include="Login\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Model\Afiliado.cs" />
     <Compile Include="Model\Especialidad.cs" />
+    <Compile Include="Model\Plan.cs" />
     <Compile Include="Model\Profesional.cs" />
     <Compile Include="Pedir Turno\Form1.cs">
       <SubType>Form</SubType>
@@ -145,6 +159,15 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Abm de Afiliado\AltaAfiliado.resx">
+      <DependentUpon>AltaAfiliado.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm de Afiliado\ListadoAfiliado.resx">
+      <DependentUpon>ListadoAfiliado.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Abm de Afiliado\ModificacionAfiliado.resx">
+      <DependentUpon>ModificacionAfiliado.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Abm de Profesional\AltaProfesional.resx">
       <DependentUpon>AltaProfesional.cs</DependentUpon>
     </EmbeddedResource>
