@@ -1,3 +1,5 @@
 Se genero una tabla para registrar el historial de cambio de planes en los afiliados:
 Hist_Plan_Afiliado:
-Columnas: 
+Columnas: ....
+
+una vez dada de baja el afiliado, el campo modificado indica la fecha de la baja

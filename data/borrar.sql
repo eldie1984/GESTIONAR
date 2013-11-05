@@ -72,3 +72,15 @@ GO
 IF  EXISTS (SELECT * FROM sys.schemas WHERE name = 'GESTIONAR')
 DROP SCHEMA [GESTIONAR]
 GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[AfiliadoUpdate]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [GESTIONAR].[AfiliadoUpdate]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[AfiliadoGrupoInsert]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [GESTIONAR].[AfiliadoGrupoInsert]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[AfiliadoBaja]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [GESTIONAR].[AfiliadoBaja]
+GO

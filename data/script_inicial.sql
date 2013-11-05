@@ -647,3 +647,93 @@ BEGIN
 
 END
 GO
+
+
+--PROCEDURES
+GO
+CREATE PROCEDURE GESTIONAR.AfiliadoUpdate 
+    @mainid int,
+    @subid int,
+    @nombre varchar(255),
+    @apellido varchar(255),
+    @doc numeric(18,0),
+    @dire varchar(255),
+    @tipo varchar(3),
+    @telefono numeric(18,0),
+    @mail varchar(255),
+    @fecNac datetime,
+    @sexo char(1),
+    @creado datetime,
+    @estado int,
+    @hijos int,
+    @plan numeric(18,0)
+    
+AS 
+
+    SET NOCOUNT ON;
+   
+    UPDATE GESTIONAR.afiliado
+    SET afi_nombre = @nombre,
+     afi_apellido = @apellido,
+     afi_nro_documento=@doc,
+     afi_direccion=@dire,
+     afi_tipo_documento=@tipo,
+     afi_telefono=@telefono,
+     afi_mail=@mail,
+     afi_fecha_nacimiento=@fecNac,
+     afi_sexo=@sexo,
+     afi_modificado=GETDATE(),
+     afi_estado_id = @estado,
+     afi_cant_hijos = @hijos,
+     afi_plan = @plan
+     WHERE afi_id = @mainid and afi_sub_id=@subid
+		
+		
+GO
+
+CREATE PROCEDURE GESTIONAR.AfiliadoBaja 
+    @mainid int,
+    @subid int
+    
+AS 
+
+    SET NOCOUNT ON;
+   
+    UPDATE GESTIONAR.afiliado
+    SET afi_baja = 1,
+    afi_modificado=GETDATE()
+    WHERE afi_id = @mainid and afi_sub_id=@subid
+		
+		
+GO
+
+
+CREATE PROCEDURE GESTIONAR.AfiliadoGrupoInsert 
+    @mainid int,
+    @subid int,
+    @nombre varchar(255),
+    @apellido varchar(255),
+    @doc numeric(18,0),
+    @dire varchar(255),
+    @tipo varchar(3),
+    @telefono numeric(18,0),
+    @mail varchar(255),
+    @fecNac datetime,
+    @sexo char(1),
+    @creado datetime,
+    @modificado datetime,
+    @estado int,
+    @hijos int,
+    @plan numeric(18,0),
+    @baja bit
+    
+AS 
+
+    SET NOCOUNT ON;
+    SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[afiliado] ON
+    
+    INSERT INTO GESTIONAR.afiliado(afi_id,afi_sub_id,afi_nombre, afi_apellido, afi_nro_documento,afi_direccion,afi_tipo_documento,afi_telefono,afi_mail,afi_fecha_nacimiento,afi_sexo,afi_creado,afi_modificado,afi_estado_id,afi_cant_hijos,afi_plan,afi_baja)
+		VALUES(@mainid,@subid,@nombre,@apellido, @doc,@dire,@tipo,@telefono,@mail,@fecNac,@sexo,@creado,@modificado,@estado,@hijos,@plan,@baja)
+		
+		SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[Plan] OFF
+GO
