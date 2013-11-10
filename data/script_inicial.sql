@@ -32,9 +32,9 @@ insert into [GD2C2013].[GESTIONAR].[estado_civil]
     ('Divorciado/a',SYSDATETIME(),SYSDATETIME());
     GO
 
-  Select 'Creo la Tabla Plan'
+  Select 'Creo la Tabla plan_medico'
 
-CREATE TABLE [GESTIONAR].[Plan](
+CREATE TABLE [GESTIONAR].[plan_medico](
   [plan_id] [int] IDENTITY(555560,1) NOT NULL ,
   [plan_nombre] [varchar](255) NULL,
   [plan_consulta] [int] NOT NULL,
@@ -48,11 +48,11 @@ CREATE TABLE [GESTIONAR].[Plan](
 ) ON [PRIMARY]
 GO
 
-SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[Plan] ON
+SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[plan_medico] ON
 
-select ' Populo la tabla Plan '
+select ' Populo la tabla plan_medico '
 
-insert into [GESTIONAR].[Plan](
+insert into [GESTIONAR].[plan_medico](
 [plan_id],
 [plan_nombre],
 [plan_consulta],
@@ -60,18 +60,18 @@ insert into [GESTIONAR].[Plan](
 [plan_creado],
 [plan_modificado])
 (select 
-  Plan_Med_Codigo
-  ,Plan_Med_Descripcion
-  ,min(Plan_Med_Precio_Bono_Consulta) 
-  , min(Plan_Med_Precio_Bono_Farmacia) 
+  plan_Med_Codigo
+  ,plan_Med_Descripcion
+  ,min(plan_Med_Precio_Bono_Consulta) 
+  , min(plan_Med_Precio_Bono_Farmacia) 
   ,SYSDATETIME()
   ,SYSDATETIME()
 from gd_esquema.Maestra
-group by Plan_Med_Codigo,Plan_Med_Descripcion);
+group by plan_Med_Codigo,plan_Med_Descripcion);
 
 
 
-SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[Plan] OFF
+SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[plan_medico] OFF
 
 select 'creo tabla afiliado'
 
@@ -103,15 +103,15 @@ PRIMARY KEY CLUSTERED
 ) ON [PRIMARY]
   GO
 
-CREATE TABLE [GESTIONAR].[Hist_Plan_Afiliado](
+CREATE TABLE [GESTIONAR].[Hist_plan_Afiliado](
     hist_id [int] IDENTITY(1,1) NOT NULL,
     hist_fecha [datetime] NOT NULL,
     hist_afi_id [int] NOT NULL,
     hist_afi_sub_id [int] NOT NULL,
     --hist_motivo [varchar] (255) NOT NULL,
-    hist_plan_id int NULL references GESTIONAR.[Plan] (plan_id),
+    hist_plan_id int NULL references GESTIONAR.[plan_medico] (plan_id),
     foreign key (hist_afi_id,hist_afi_sub_id) references GESTIONAR.afiliado (afi_id,afi_sub_id),
-  CONSTRAINT [PK_GESTIONAR.Hist_Plan_Afiliado] PRIMARY KEY CLUSTERED 
+  CONSTRAINT [PK_GESTIONAR.Hist_plan_Afiliado] PRIMARY KEY CLUSTERED 
   (
     [hist_id] ASC
   )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
@@ -147,7 +147,7 @@ INSERT INTO [GESTIONAR].[afiliado](
       ,'M'
       ,1
       ,0
-      ,[Plan_Med_Codigo]
+      ,[plan_Med_Codigo]
       ,0
       ,SYSDATETIME()
       ,SYSDATETIME()
@@ -159,7 +159,7 @@ INSERT INTO [GESTIONAR].[afiliado](
       ,[Paciente_Telefono]
       ,[Paciente_Mail]
       ,[Paciente_Fecha_Nac]
-      ,[Plan_Med_Codigo]);
+      ,[plan_Med_Codigo]);
 GO
 
 
@@ -615,9 +615,139 @@ from gd_esquema.Maestra m
 inner join GESTIONAR.afiliado af on af.afi_nro_documento = m.Paciente_Dni
 inner join GESTIONAR.profesional p on p.prof_nro_documento=m.Medico_Dni
 )
+GO
+
+select 'Populo la tabla compra'
+
+CREATE TABLE [GESTIONAR].[compra](
+  [compra_id] [int] IDENTITY(1,1) NOT NULL ,
+  [compra_afi_id] [int] NOT NULL ,
+  [compra_afi_sub_id] [int] NOT NULL,
+  [compra_suma] [int] NOT NULL,
+  [compra_cant_farmacia] [int] NOT NULL ,
+  [compra_cant_consulta] [int] NOT NULL,
+  [compra_plan_id] [int] NOT NULL REFERENCES GESTIONAR.plan_medico (plan_id),
+  [compra_creado] [datetime] NULL,
+  [compra_modificado] [datetime] NULL,
+  foreign key (compra_afi_id,compra_afi_sub_id) references GESTIONAR.afiliado (afi_id,afi_sub_id),
+  CONSTRAINT [PK_GESTIONAR.compra] PRIMARY KEY CLUSTERED 
+  (
+    [compra_id] ASC
+  )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+  ) ON [PRIMARY]
+
+GO
+
+select 'Populo la tabla consulta'
+
+CREATE TABLE [GESTIONAR].[consulta](
+  [consul_id] [int] IDENTITY(1,1) NOT NULL ,
+  [consul_sintomas] varchar(255) NULL ,
+  [consul_enfermedades] varchar(255) NULL,
+  [consul_tuno_id] [int] NOT NULL REFERENCES GESTIONAR.turno (turn_id),
+  [consul_afi_id] [int] NOT NULL ,
+  [consul_afi_sub_id] [int] NOT NULL,
+  [consul_creado] [datetime] NULL,
+  [consul_modificado] [datetime] NULL,
+  foreign key (consul_afi_id,consul_afi_sub_id) references GESTIONAR.afiliado (afi_id,afi_sub_id),
+  CONSTRAINT [PK_GESTIONAR.consulta] PRIMARY KEY CLUSTERED 
+  (
+    [consul_id] ASC
+  )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+  ) ON [PRIMARY]
+
+GO
+
+select 'Populo la tabla cancelacion'
+
+CREATE TABLE [GESTIONAR].[cancelacion](
+  [cancel_id] [int] IDENTITY(1,1) NOT NULL ,
+  [cancel_tipo] varchar(255) NULL ,
+  [cancel_descripcion] varchar(255) NULL,
+  [cancel_consulta_id] [int] NOT NULL REFERENCES GESTIONAR.consulta (consul_id),
+  [cancel_creado] [datetime] NULL,
+  [cancel_modificado] [datetime] NULL,
+  CONSTRAINT [PK_GESTIONAR.cancelacion] PRIMARY KEY CLUSTERED 
+  (
+    [cancel_id] ASC
+  )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+  ) ON [PRIMARY]
+
+GO
+
+select 'Populo la tabla bono_consulta'
+
+CREATE TABLE [GESTIONAR].[bono_consulta](
+  [boco_id] [int] IDENTITY(1,1) NOT NULL ,
+  [boco_compra_id] [int] NOT NULL REFERENCES GESTIONAR.compra (compra_id),
+  [boco_numero_consulta] [int] NOT NULL,
+  [boco_afi_id] [int] NOT NULL ,
+  [boco_afi_sub_id] [int] NOT NULL,
+  [boco_consulta_id] [int] NULL REFERENCES GESTIONAR.consulta (consul_id),
+  [boco_plan_id] [int] NOT NULL REFERENCES GESTIONAR.plan_medico (plan_id),
+  [boco_creado] [datetime] NULL,
+  [boco_modificado] [datetime] NULL,
+  foreign key (boco_afi_id,boco_afi_sub_id) references GESTIONAR.afiliado (afi_id,afi_sub_id),
+  CONSTRAINT [PK_GESTIONAR.bono_consulta] PRIMARY KEY CLUSTERED 
+  (
+    [boco_id] ASC
+  )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+  ) ON [PRIMARY]
+
+GO
+
+select 'Populo la tabla bono_farmacia'
+
+CREATE TABLE [GESTIONAR].[bono_farmacia](
+  [bofa_id] [int] IDENTITY(1,1) NOT NULL ,
+  [bofa_compra_id] [int] NOT NULL REFERENCES GESTIONAR.compra (compra_id),
+  [bofa_afi_id] [int] NOT NULL ,
+  [bofa_afi_sub_id] [int] NOT NULL,
+  [bofa_consulta_id] [int] NULL REFERENCES GESTIONAR.consulta (consul_id),
+  [bofa_plan_id] [int] NOT NULL REFERENCES GESTIONAR.plan_medico (plan_id),
+  [bofa_creado] [datetime] NULL,
+  [bofa_modificado] [datetime] NULL,
+  foreign key (bofa_afi_id,bofa_afi_sub_id) references GESTIONAR.afiliado (afi_id,afi_sub_id),
+  CONSTRAINT [PK_GESTIONAR.bono_farmacia] PRIMARY KEY CLUSTERED 
+  (
+    [bofa_id] ASC
+  )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+  ) ON [PRIMARY]
+
+GO
+
+select 'Populo la tabla medicamento'
+
+CREATE TABLE [GESTIONAR].[medicamento](
+  [medic_id] [int] IDENTITY(1,1) NOT NULL ,
+  [medic_descripcion] [int] ,
+  [medic_creado] [datetime] NULL,
+  [medic_modificado] [datetime] NULL,
+  CONSTRAINT [PK_GESTIONAR.medicamento] PRIMARY KEY CLUSTERED 
+  (
+    [medic_id] ASC
+  )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+  ) ON [PRIMARY]
+
+GO
+
+select 'Populo la tabla medicamento_bono'
 
 
+CREATE TABLE [GESTIONAR].[medicamento_bono](
+  [mebo_id] [int] IDENTITY(1,1) NOT NULL ,
+  [mebo_bofa_id] [int] NOT NULL REFERENCES GESTIONAR.bono_farmacia (bofa_id),
+  [mebo_medic_id] [int] NOT NULL REFERENCES GESTIONAR.medicamento (medic_id),
+  [mebo_cant] [int] NOT NULL ,
+  [mebo_creado] [datetime] NULL,
+  [mebo_modificado] [datetime] NULL,
+  CONSTRAINT [PK_GESTIONAR.medicamento_bono] PRIMARY KEY CLUSTERED 
+  (
+    [mebo_id] ASC
+  )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+  ) ON [PRIMARY]
 
+GO
 
 
 SET ANSI_NULLS ON
@@ -640,7 +770,7 @@ BEGIN
 
     -- Insert statements for trigger here
 
-    insert into Hist_Plan_Afiliado (hist_fecha,hist_afi_id,hist_afi_sub_id,hist_plan_id)
+    insert into Hist_plan_Afiliado (hist_fecha,hist_afi_id,hist_afi_sub_id,hist_plan_id)
    select SYSDATETIME(),d.afi_id,d.afi_sub_id,d.afi_plan  from deleted d
    left join inserted i on d.afi_id=i.afi_id and d.afi_sub_id = i.afi_sub_id
    where i.afi_plan <> d.afi_plan
@@ -735,5 +865,5 @@ AS
     INSERT INTO GESTIONAR.afiliado(afi_id,afi_sub_id,afi_nombre, afi_apellido, afi_nro_documento,afi_direccion,afi_tipo_documento,afi_telefono,afi_mail,afi_fecha_nacimiento,afi_sexo,afi_creado,afi_modificado,afi_estado_id,afi_cant_hijos,afi_plan,afi_baja)
 		VALUES(@mainid,@subid,@nombre,@apellido, @doc,@dire,@tipo,@telefono,@mail,@fecNac,@sexo,@creado,@modificado,@estado,@hijos,@plan,@baja)
 		
-		SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[Plan] OFF
+		SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[plan_medico] OFF
 GO
