@@ -26,50 +26,6 @@ IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].
 DROP TABLE [GESTIONAR].[cancelacion]
 GO
 
-
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[GESTIONAR].[FK__bono_cons__boco___6A70BD6B]') AND parent_object_id = OBJECT_ID(N'[GESTIONAR].[bono_consulta]'))
-ALTER TABLE [GESTIONAR].[bono_consulta] DROP CONSTRAINT [FK__bono_cons__boco___6A70BD6B]
-GO
-
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[GESTIONAR].[FK__bono_cons__boco___6B64E1A4]') AND parent_object_id = OBJECT_ID(N'[GESTIONAR].[bono_consulta]'))
-ALTER TABLE [GESTIONAR].[bono_consulta] DROP CONSTRAINT [FK__bono_cons__boco___6B64E1A4]
-GO
-
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[GESTIONAR].[FK__bono_cons__boco___6C5905DD]') AND parent_object_id = OBJECT_ID(N'[GESTIONAR].[bono_consulta]'))
-ALTER TABLE [GESTIONAR].[bono_consulta] DROP CONSTRAINT [FK__bono_cons__boco___6C5905DD]
-GO
-
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[GESTIONAR].[FK__bono_consulta__6D4D2A16]') AND parent_object_id = OBJECT_ID(N'[GESTIONAR].[bono_consulta]'))
-ALTER TABLE [GESTIONAR].[bono_consulta] DROP CONSTRAINT [FK__bono_consulta__6D4D2A16]
-GO
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[bono_consulta]') AND type in (N'U'))
-DROP TABLE [GESTIONAR].[bono_consulta]
-GO
-
-
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[GESTIONAR].[FK__medicamen__mebo___77CAB889]') AND parent_object_id = OBJECT_ID(N'[GESTIONAR].[medicamento_bono]'))
-ALTER TABLE [GESTIONAR].[medicamento_bono] DROP CONSTRAINT [FK__medicamen__mebo___77CAB889]
-GO
-
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[GESTIONAR].[FK__medicamen__mebo___78BEDCC2]') AND parent_object_id = OBJECT_ID(N'[GESTIONAR].[medicamento_bono]'))
-ALTER TABLE [GESTIONAR].[medicamento_bono] DROP CONSTRAINT [FK__medicamen__mebo___78BEDCC2]
-GO
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[medicamento_bono]') AND type in (N'U'))
-DROP TABLE [GESTIONAR].[medicamento_bono]
-GO
-
-
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[bono_farmacia]') AND type in (N'U'))
-DROP TABLE [GESTIONAR].[bono_farmacia]
-GO
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[medicamento]') AND type in (N'U'))
-DROP TABLE [GESTIONAR].[medicamento]
-GO
-
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[consulta]') AND type in (N'U'))
 DROP TABLE [GESTIONAR].[consulta]
 GO
@@ -77,6 +33,26 @@ GO
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[turno]') AND type in (N'U'))
 DROP TABLE [GESTIONAR].[turno]
 GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[medicamento_bono]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[medicamento_bono]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[bono_farmacia]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[bono_farmacia]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[bono_consulta]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[bono_consulta]
+GO
+
+
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[medicamento]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[medicamento]
+GO
+
+
 
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[usuario]') AND type in (N'U'))
 DROP TABLE [GESTIONAR].[usuario]
@@ -102,8 +78,8 @@ IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].
 DROP TABLE [GESTIONAR].[Tipo_Especialidad]
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[Hist_plan_Afiliado]') AND type in (N'U'))
-DROP TABLE [GESTIONAR].[Hist_plan_Afiliado]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[Hist_Plan_Afiliado]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[Hist_Plan_Afiliado]
 GO
 
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[compra]') AND type in (N'U'))
