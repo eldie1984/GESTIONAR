@@ -3,3 +3,7 @@ Hist_Plan_Afiliado:
 Columnas: ....
 
 una vez dada de baja el afiliado, el campo modificado indica la fecha de la baja
+
+todos los afiliados migrados se cargaron con el subid 01
+
+todos los afiliados y profesionales migrados se cargan como activos

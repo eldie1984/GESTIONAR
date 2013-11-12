@@ -176,7 +176,8 @@ CREATE TABLE [GESTIONAR].[profesional](
     prof_sexo [char] (1),
     prof_matricula [varchar](8) NULL unique,
     prof_creado [datetime] NULL,
-    prof_modificado[datetime] NULL
+    prof_modificado[datetime] NULL,
+	prof_baja [bit] NULL
   CONSTRAINT [PK_GESTIONAR.profesional] PRIMARY KEY CLUSTERED 
   (
     [prof_id] ASC
@@ -199,7 +200,8 @@ insert into [GESTIONAR].[profesional](
     prof_sexo,
     prof_matricula,
     prof_creado,
-    prof_modificado)
+    prof_modificado,
+	prof_baja)
 (SELECT m.Medico_Nombre,
      m.Medico_Apellido,
      'DNI',
@@ -212,6 +214,7 @@ insert into [GESTIONAR].[profesional](
        ,LEFT( NEWID(), 8 )
        ,SYSDATETIME()
        ,SYSDATETIME()
+	   ,0
 FROM gd_esquema.Maestra m
 WHERE m.Medico_Apellido IS NOT NULL
 GROUP BY m.Medico_Apellido,
@@ -974,6 +977,21 @@ AS
     SET afi_baja = 1,
     afi_modificado=GETDATE()
     WHERE afi_id = @mainid and afi_sub_id=@subid
+		
+		
+GO
+
+CREATE PROCEDURE GESTIONAR.ProfesionalBaja 
+    @profid int
+    
+AS 
+
+    SET NOCOUNT ON;
+   
+    UPDATE GESTIONAR.profesional
+    SET prof_baja = 1,
+    prof_modificado=GETDATE()
+    WHERE prof_id = @profid
 		
 		
 GO

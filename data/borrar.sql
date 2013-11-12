@@ -110,6 +110,10 @@ IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].
 DROP PROCEDURE [GESTIONAR].[AfiliadoBaja]
 GO
 
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[ProfesionalBaja]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [GESTIONAR].[ProfesionalBaja]
+GO
+
 IF  EXISTS (SELECT * FROM sys.schemas WHERE name = 'GESTIONAR')
 DROP SCHEMA [GESTIONAR]
 GO
