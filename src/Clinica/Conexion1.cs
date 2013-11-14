@@ -18,7 +18,9 @@ namespace Clinica
 
         public Conexion1()
         {
-            this.cadenaConexion = (@"Data Source=WXPX86BE-133\GD2C2013;Initial Catalog =GD2C2013; integrated security =true;User Id=gd;Password=gd2013;");
+            //tomo connection string del app.config
+            this.cadenaConexion = ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString;
+            //this.cadenaConexion = (@"Data Source=WXPX86BE-133\GD2C2013;Initial Catalog =GD2C2013; integrated security =true;User Id=gd;Password=gd2013;");
             //this.cadenaConexion = ConfigurationSettings.AppSettings["conexionBD"];
 
             this.cnn = new SqlConnection(this.cadenaConexion);
