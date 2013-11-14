@@ -519,6 +519,7 @@ CREATE TABLE [GESTIONAR].[rol_usuario](
       [rolu_id] [int] IDENTITY(0,1) NOT NULL,
       [rolu_user_id] [int] NOT NULL REFERENCES GESTIONAR.usuario (usua_id),
       [rolu_rol_id] [int] NOT NULL REFERENCES GESTIONAR.rol (rol_id),
+      [rol_relacion] [int] NULL,
       [rolu_creado] [datetime] NULL,
       [rolu_modificado] [datetime] NULL
 ) ON [PRIMARY]
@@ -528,14 +529,14 @@ Select 'Creo las relaciones entre el usuario y el rol'
 
 
   insert into [GESTIONAR].[rol_usuario]
-  ([rolu_user_id],[rolu_rol_id],[rolu_creado],[rolu_modificado])
+  ([rolu_user_id],[rolu_rol_id],[rolu_creado],[rolu_modificado],rol_relacion)
   values
-  (0,0,SYSDATETIME(),SYSDATETIME()),
-  (1,0,SYSDATETIME(),SYSDATETIME()),
-  (2,1,SYSDATETIME(),SYSDATETIME()),
-  (3,1,SYSDATETIME(),SYSDATETIME()),
-  (4,2,SYSDATETIME(),SYSDATETIME()),
-  (5,2,SYSDATETIME(),SYSDATETIME())
+  (0,0,SYSDATETIME(),SYSDATETIME(),0),
+  (1,0,SYSDATETIME(),SYSDATETIME(),1),
+  (2,1,SYSDATETIME(),SYSDATETIME(),2),
+  (3,1,SYSDATETIME(),SYSDATETIME(),3),
+  (4,2,SYSDATETIME(),SYSDATETIME(),4),
+  (5,2,SYSDATETIME(),SYSDATETIME(),5)
   
   
   GO
@@ -892,6 +893,13 @@ INSERT INTO [GD2C2013].[GESTIONAR].[medicamento_bono]
 where Bono_Farmacia_Numero=bofa_id
 and Bono_Farmacia_Medicamento=medic_descripcion
 group by Bono_Farmacia_Numero,medic_id)
+
+
+
+
+
+
+
 
 GO
 SET ANSI_NULLS ON
