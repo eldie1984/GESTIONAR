@@ -13,7 +13,7 @@ namespace Clinica_Frba
     {
         #region GETS
 
-        public List<Profesional> GetProfesionales()
+        public List<Profesional> GetProfesionales(string fNombre, string fApellido, string fDoc)
         {
             List<Profesional> listado = new List<Profesional>();
 
@@ -21,8 +21,22 @@ namespace Clinica_Frba
             {
                 connection.Open();
 
+                System.Text.StringBuilder query = new System.Text.StringBuilder();
+
+                query.Append("SELECT prof_id,prof_nombre, prof_apellido, prof_nro_documento,prof_tipo_documento,prof_dureccion,prof_telefono,prof_mail,prof_fecha_nacimiento,prof_sexo,prof_matricula FROM GESTIONAR.profesional  WHERE prof_baja=0");
+                if (fNombre != String.Empty && fNombre != null)
+                    query.Append(" and prof_nombre LIKE '%" + fNombre + "%'");
+                if (fApellido != String.Empty && fApellido != null)
+                    query.Append(" and prof_apellido LIKE '%" + fApellido + "%'");
+                if (fDoc != String.Empty && fDoc != null)
+                    query.Append(" and prof_nro_documento =" + fDoc);
+
                 SqlCommand command = connection.CreateCommand();
-                command.CommandText = "SELECT prof_id,prof_nombre, prof_apellido, prof_nro_documento,prof_tipo_documento,prof_dureccion,prof_telefono,prof_mail,prof_fecha_nacimiento,prof_sexo,prof_matricula FROM GESTIONAR.profesional  WHERE prof_baja=0";
+                command.CommandText = query.ToString();
+
+
+                //SqlCommand command = connection.CreateCommand();
+                //command.CommandText = "SELECT prof_id,prof_nombre, prof_apellido, prof_nro_documento,prof_tipo_documento,prof_dureccion,prof_telefono,prof_mail,prof_fecha_nacimiento,prof_sexo,prof_matricula FROM GESTIONAR.profesional  WHERE prof_baja=0";
                 SqlDataReader ProfReader = command.ExecuteReader();
 
                 while (ProfReader.Read())
@@ -47,7 +61,7 @@ namespace Clinica_Frba
             }
         }
 
-        public List<Afiliado> GetAfiliados()
+        public List<Afiliado> GetAfiliados(string fNombre,string fApellido, string fDoc)
         {
             List<Afiliado> listado = new List<Afiliado>();
 
@@ -55,8 +69,22 @@ namespace Clinica_Frba
             {
                 connection.Open();
 
+                System.Text.StringBuilder query = new System.Text.StringBuilder();
+                
+                query.Append("SELECT TOP 200 afi_id,afi_sub_id,afi_nombre, afi_apellido, afi_nro_documento,afi_direccion,afi_tipo_documento,afi_telefono,afi_mail,afi_fecha_nacimiento,afi_sexo,afi_estado_id,afi_cant_hijos,afi_plan FROM GESTIONAR.afiliado WHERE afi_baja=0");
+                if (fNombre != String.Empty && fNombre != null)
+                    query.Append(" and afi_nombre LIKE '%" + fNombre + "%'");
+                if (fApellido != String.Empty && fApellido != null)
+                    query.Append(" and afi_apellido LIKE '%" + fApellido + "%'");
+                if (fDoc != String.Empty && fDoc != null)
+                    query.Append(" and afi_nro_documento =" + fDoc);
+
                 SqlCommand command = connection.CreateCommand();
-                command.CommandText = "SELECT TOP 200 afi_id,afi_sub_id,afi_nombre, afi_apellido, afi_nro_documento,afi_direccion,afi_tipo_documento,afi_telefono,afi_mail,afi_fecha_nacimiento,afi_sexo,afi_estado_id,afi_cant_hijos,afi_plan FROM GESTIONAR.afiliado WHERE afi_baja=0";
+                command.CommandText = query.ToString();
+
+                //SqlCommand command = connection.CreateCommand();
+                //command.CommandText = "SELECT TOP 200 afi_id,afi_sub_id,afi_nombre, afi_apellido, afi_nro_documento,afi_direccion,afi_tipo_documento,afi_telefono,afi_mail,afi_fecha_nacimiento,afi_sexo,afi_estado_id,afi_cant_hijos,afi_plan FROM GESTIONAR.afiliado WHERE afi_baja=0";               
+                                
                 SqlDataReader AfilReader = command.ExecuteReader();
 
                 while (AfilReader.Read())
@@ -74,7 +102,7 @@ namespace Clinica_Frba
                     string sexo = AfilReader.GetString(10);
                     int estado = AfilReader.GetInt32(11);
                     int hijos = AfilReader.GetInt32(12);
-                    int plan = (int)AfilReader.GetDecimal(13);
+                    int plan = (int)AfilReader.GetInt32(13);
                     listado.Add(new Afiliado() { ID = id, Sub_ID = subid, Nombre = nombre, Estado = estado, Hijos = hijos, Plan = plan, Apellido = apellido, Direccion = dire, Documento = nrodoc, Tipo = tipodoc, Mail = mail, FechaNac = fechaNac, Sexo = sexo, Telefono = telefono });
                 }
                 AfilReader.Close();

@@ -25,12 +25,25 @@ namespace Clinica_Frba.Abm_de_Afiliado
 
         private void buttonLimpiar_Click(object sender, EventArgs e)
         {
-         
+            this.textBoxApellido.Clear();
+            this.textBoxNombre.Clear();
+            this.textBoxDocumento.Clear();
         }
 
         private void buttonBuscar_Click(object sender, EventArgs e)
         {
-            var listadoAfil = this.dataAccess.GetAfiliados();
+            var filtronombre = this.textBoxNombre.Text;
+            var filtroape = this.textBoxApellido.Text;
+            string filtrodoc = String.Empty;
+
+            int n;
+            
+            if(int.TryParse(this.textBoxDocumento.Text,out n))
+            {filtrodoc=n.ToString();}
+
+
+
+            var listadoAfil = this.dataAccess.GetAfiliados(filtronombre,filtroape,filtrodoc);
             this.dataGridView1.DataSource = listadoAfil;
         }
 
@@ -41,7 +54,8 @@ namespace Clinica_Frba.Abm_de_Afiliado
                 selected = this.dataGridView1.SelectedRows[0].DataBoundItem as Afiliado;
                 var ModWindow = new ModificacionAfiliado(selected);
 
-                ModWindow.Show();
+                ModWindow.ShowDialog();
+                buttonBuscar_Click(this, new EventArgs());
             }
             else
             { MessageBox.Show("Debe seleccion un elemento de la lista"); }

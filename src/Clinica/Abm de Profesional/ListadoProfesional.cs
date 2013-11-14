@@ -25,7 +25,17 @@ namespace Clinica_Frba.Abm_de_Profesional
 
         private void buttonBuscar_Click(object sender, EventArgs e)
         {
-            var listadoProf = this.dataAccess.GetProfesionales();
+            var filtronombre = this.textBoxNombre.Text;
+            var filtroape = this.textBoxApellido.Text;
+            string filtrodoc = String.Empty;
+
+            int n;
+
+            if (int.TryParse(this.textBoxDocumento.Text, out n))
+            { filtrodoc = n.ToString(); }
+
+
+            var listadoProf = this.dataAccess.GetProfesionales(filtronombre, filtroape, filtrodoc);
             this.dataGridView1.DataSource = listadoProf;
             
         }
@@ -40,7 +50,8 @@ namespace Clinica_Frba.Abm_de_Profesional
                 selected = this.dataGridView1.SelectedRows[0].DataBoundItem as Profesional;
                 var ModWindow = new AltaProfesional(selected);
                 
-                ModWindow.Show();
+                ModWindow.ShowDialog();
+                buttonBuscar_Click(this, new EventArgs());
             }
             else
             { MessageBox.Show("Debe seleccion un elemento de la lista"); }
@@ -49,9 +60,19 @@ namespace Clinica_Frba.Abm_de_Profesional
         private void buttonDelete_Click(object sender, EventArgs e)
         {
             if (this.dataGridView1.SelectedRows.Count > 0)
-                selected = this.dataGridView1.SelectedRows[0].DataBoundItem as Profesional;
+            { selected = this.dataGridView1.SelectedRows[0].DataBoundItem as Profesional;
+            this.dataAccess.BajaProfesional(selected);
+            buttonBuscar_Click(this, new EventArgs());
+            }
             else
             { MessageBox.Show("Debe seleccion un elemento de la lista"); }
+        }
+
+        private void buttonLimpiar_Click(object sender, EventArgs e)
+        {
+            this.textBoxApellido.Clear();
+            this.textBoxNombre.Clear();
+            this.textBoxDocumento.Clear();
         }
     }
 }
