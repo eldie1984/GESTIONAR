@@ -22,7 +22,7 @@ namespace Clinica_Frba
                 connection.Open();
 
                 SqlCommand command = connection.CreateCommand();
-                command.CommandText = "SELECT prof_id,prof_nombre, prof_apellido, prof_nro_documento,prof_tipo_documento,prof_dureccion,prof_telefono,prof_mail,prof_fecha_nacimiento,prof_sexo,prof_matricula FROM GESTIONAR.profesional";
+                command.CommandText = "SELECT prof_id,prof_nombre, prof_apellido, prof_nro_documento,prof_tipo_documento,prof_dureccion,prof_telefono,prof_mail,prof_fecha_nacimiento,prof_sexo,prof_matricula FROM GESTIONAR.profesional  WHERE prof_baja=0";
                 SqlDataReader ProfReader = command.ExecuteReader();
 
                 while (ProfReader.Read())
@@ -83,6 +83,50 @@ namespace Clinica_Frba
             }
         }
 
+        public Afiliado GetAfiliadoByID(int mainID, int subID)
+        {
+            Afiliado afiliado= null;
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+
+                SqlCommand command = new SqlCommand("SELECT afi_id,afi_sub_id,afi_nombre, afi_apellido, afi_nro_documento,afi_direccion,afi_tipo_documento,afi_telefono,afi_mail,afi_fecha_nacimiento,afi_sexo,afi_estado_id,afi_cant_hijos,afi_plan FROM GESTIONAR.afiliado WHERE afi_id=@mainID and afi_sub_id=@subID ", connection);
+
+                SqlParameter mainParameter = new SqlParameter("mainID", mainID);
+                mainParameter.SqlDbType = SqlDbType.Int;
+                SqlParameter subParameter = new SqlParameter("subID", subID);
+                subParameter.SqlDbType = SqlDbType.Int;
+
+                command.Parameters.Add(mainParameter);
+                command.Parameters.Add(subParameter);
+
+                SqlDataReader AfilReader = command.ExecuteReader();
+
+                while (AfilReader.Read())
+                {
+                    int id = AfilReader.GetInt32(0);
+                    int subid = AfilReader.GetInt32(1);
+                    string nombre = AfilReader.GetString(2);
+                    string apellido = AfilReader.GetString(3);
+                    decimal nrodoc = AfilReader.GetDecimal(4);
+                    string dire = AfilReader.GetString(5);
+                    string tipodoc = AfilReader.GetString(6);
+                    decimal telefono = AfilReader.GetDecimal(7);
+                    string mail = AfilReader.GetString(8);
+                    DateTime fechaNac = AfilReader.GetDateTime(9);
+                    string sexo = AfilReader.GetString(10);
+                    int estado = AfilReader.GetInt32(11);
+                    int hijos = AfilReader.GetInt32(12);
+                    int plan = (int)AfilReader.GetInt32(13);
+                    afiliado = new Afiliado() { ID = id, Sub_ID = subid, Nombre = nombre, Estado = estado, Hijos = hijos, Plan = plan, Apellido = apellido, Direccion = dire, Documento = nrodoc, Tipo = tipodoc, Mail = mail, FechaNac = fechaNac, Sexo = sexo, Telefono = telefono };
+                }
+                AfilReader.Close();
+
+                return afiliado;
+            }
+        }
+
         public List<Especialidad> GetEspecialidades()
         {
             List<Especialidad> listado = new List<Especialidad>();
@@ -109,6 +153,40 @@ namespace Clinica_Frba
 
         }
 
+        public Plan GetPlanByID(int planID)
+        {
+            Plan plan=null;
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+
+                SqlCommand command = new SqlCommand("SELECT plan_id, plan_nombre, plan_consulta, plan_farmacia FROM GESTIONAR.[plan_medico] where plan_id=@planid ", connection);
+
+                SqlParameter mainParameter = new SqlParameter("planid", planID);
+                mainParameter.SqlDbType = SqlDbType.Int;
+             
+                command.Parameters.Add(mainParameter);
+                                              
+                SqlDataReader planReader = command.ExecuteReader();
+
+                while (planReader.Read())
+                {
+
+                    int cod = planReader.GetInt32(0);
+                    string desc = planReader.GetString(1);
+                    int consulta = planReader.GetInt32(2);
+                    int farmacia = planReader.GetInt32(3);
+
+                    plan= new Plan() { Codigo = cod, Descripcion = desc,PrecioConsulta=consulta,PrecioFarmacia=farmacia };
+                }
+                planReader.Close();
+
+                return plan;
+            }
+
+        }
+
         public List<Plan> GetPlanes()
         {
             List<Plan> listado = new List<Plan>();
@@ -117,7 +195,7 @@ namespace Clinica_Frba
             {
                 connection.Open();
 
-                SqlCommand command = new SqlCommand("SELECT plan_id, plan_nombre FROM GESTIONAR.[Plan]", connection);
+                SqlCommand command = new SqlCommand("SELECT plan_id, plan_nombre FROM GESTIONAR.[plan_medico]", connection);
                 SqlDataReader especReader = command.ExecuteReader();
 
                 while (especReader.Read())
@@ -288,6 +366,7 @@ namespace Clinica_Frba
             }
         }
 
+
         //agrega afiliado de un grupo familiar
         public void AddAfiliadoGrupo(Afiliado afi)
         {
@@ -352,6 +431,106 @@ namespace Clinica_Frba
 
 
                 command.ExecuteNonQuery();
+
+            }
+        }
+
+        //inserta nueva compra
+        public int AddCompra(Compra comp)
+        {
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = "INSERT INTO GESTIONAR.Compra(compra_afi_id,compra_afi_sub_id,compra_suma,compra_cant_farmacia,compra_cant_consulta,compra_plan_id,compra_creado,compra_modificado)" +
+
+                "VALUES(@afi_id,@afi_subid,@suma,@cantfarmacia,@cantconsulta,@planid,@creado,@modificado)" +
+                "SELECT SCOPE_IDENTITY()";
+
+                command.Parameters.Add("@afi_id", SqlDbType.Int);
+                command.Parameters.Add("@afi_subid", SqlDbType.Int);
+                command.Parameters.Add("@suma", SqlDbType.Int);
+                command.Parameters.Add("@cantfarmacia", SqlDbType.Int);
+                command.Parameters.Add("@cantconsulta", SqlDbType.Int);
+                command.Parameters.Add("@planid", SqlDbType.Int);
+                command.Parameters.Add("@creado", SqlDbType.DateTime);
+                command.Parameters.Add("@modificado", SqlDbType.DateTime);
+
+                command.Parameters["@afi_id"].Value = comp.afi_ID;
+                command.Parameters["@afi_subid"].Value = comp.afi_Sub_ID;
+                command.Parameters["@suma"].Value = comp.Suma;
+                command.Parameters["@cantfarmacia"].Value = comp.CantFarmacia;
+                command.Parameters["@cantconsulta"].Value = comp.CanConsulta;
+                command.Parameters["@planid"].Value = comp.PlanID;
+                command.Parameters["@creado"].Value = DateTime.Now;
+                command.Parameters["@modificado"].Value = DateTime.Now;
+                connection.Open();
+
+                //int rows = command.ExecuteNonQuery();
+
+                //retorna la PK del nuevo registro
+                int nuevaCompra = Convert.ToInt32(command.ExecuteScalar());
+                return nuevaCompra;
+            }
+        }
+
+        public int AddBonoFarmacia(BonoFarmacia bonoFar)
+        {
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = "INSERT INTO GESTIONAR.bono_farmacia(bofa_compra_id,bofa_afi_id,bofa_afi_sub_id,bofa_plan_id,bofa_creado,bofa_modificado)" +
+
+                "VALUES(@compraid,@afi_id,@afi_subid,@planid,@creado,@modificado)" +
+                "SELECT SCOPE_IDENTITY()";
+
+                command.Parameters.Add("@compraid", SqlDbType.Int);
+                command.Parameters.Add("@afi_id", SqlDbType.Int);
+                command.Parameters.Add("@afi_subid", SqlDbType.Int);
+                command.Parameters.Add("@planid", SqlDbType.Int);
+                command.Parameters.Add("@creado", SqlDbType.DateTime);
+                command.Parameters.Add("@modificado", SqlDbType.DateTime);
+
+                command.Parameters["@compraid"].Value = bonoFar.compraID;
+                command.Parameters["@afi_id"].Value = bonoFar.afi_ID;
+                command.Parameters["@afi_subid"].Value = bonoFar.afi_Sub_ID;
+                command.Parameters["@planid"].Value = bonoFar.planID;
+                command.Parameters["@creado"].Value = DateTime.Now;
+                command.Parameters["@modificado"].Value = DateTime.Now;
+                connection.Open();
+
+                int nuevoBono = Convert.ToInt32(command.ExecuteScalar());
+                return nuevoBono;
+
+            }
+        }
+
+        public int AddBonoConsulta(BonoConsulta bonoCon)
+        {
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = "INSERT INTO GESTIONAR.bono_consulta(boco_compra_id,boco_afi_id,boco_afi_sub_id,boco_plan_id,boco_creado,boco_modificado)" +
+
+                "VALUES(@compraid,@afi_id,@afi_subid,@planid,@creado,@modificado)"+
+                "SELECT SCOPE_IDENTITY()";
+
+                command.Parameters.Add("@compraid", SqlDbType.Int);
+                command.Parameters.Add("@afi_id", SqlDbType.Int);
+                command.Parameters.Add("@afi_subid", SqlDbType.Int);
+                command.Parameters.Add("@planid", SqlDbType.Int);
+                command.Parameters.Add("@creado", SqlDbType.DateTime);
+                command.Parameters.Add("@modificado", SqlDbType.DateTime);
+
+                command.Parameters["@compraid"].Value = bonoCon.compraID;
+                command.Parameters["@afi_id"].Value = bonoCon.afi_ID;
+                command.Parameters["@afi_subid"].Value = bonoCon.afi_Sub_ID;
+                command.Parameters["@planid"].Value = bonoCon.planID;
+                command.Parameters["@creado"].Value = DateTime.Now;
+                command.Parameters["@modificado"].Value = DateTime.Now;
+                connection.Open();
+
+                int nuevoBono = Convert.ToInt32(command.ExecuteScalar());
+                return nuevoBono;
 
             }
         }
@@ -509,6 +688,22 @@ namespace Clinica_Frba
 
                 SqlParameter subIdParameter = new SqlParameter("subid", afi.Sub_ID);
                 command.Parameters.Add(subIdParameter);
+
+                int rows = command.ExecuteNonQuery();
+            }
+        }
+
+        public void BajaProfesional(Profesional prof)
+        {
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+
+                SqlCommand command = new SqlCommand("GESTIONAR.ProfesionalBaja", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter profidParameter = new SqlParameter("profid", prof.ID);
+                command.Parameters.Add(profidParameter);
 
                 int rows = command.ExecuteNonQuery();
             }

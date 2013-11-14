@@ -115,11 +115,23 @@
     <Compile Include="Cancelar Atencion\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Compra de Bono\Form1.cs">
+    <Compile Include="Compra de Bono\BonoConsultaTicket.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Compra de Bono\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Compra de Bono\BonoConsultaTicket.Designer.cs">
+      <DependentUpon>BonoConsultaTicket.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Compra de Bono\BonoFarmaciaTicket.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Compra de Bono\BonoFarmaciaTicket.Designer.cs">
+      <DependentUpon>BonoFarmaciaTicket.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Compra de Bono\CompraBonos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Compra de Bono\CompraBonos.Designer.cs">
+      <DependentUpon>CompraBonos.cs</DependentUpon>
     </Compile>
     <Compile Include="DataAccessLayer.cs" />
     <Compile Include="Form1.cs">
@@ -148,6 +160,9 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Model\Afiliado.cs" />
+    <Compile Include="Model\BonoConsulta.cs" />
+    <Compile Include="Model\BonoFarmacia.cs" />
+    <Compile Include="Model\Compra.cs" />
     <Compile Include="Model\Especialidad.cs" />
     <Compile Include="Model\Plan.cs" />
     <Compile Include="Model\Profesional.cs" />
@@ -182,6 +197,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Abm de Rol\ModRol.resx">
       <DependentUpon>ModRol.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Compra de Bono\BonoConsultaTicket.resx">
+      <DependentUpon>BonoConsultaTicket.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Compra de Bono\BonoFarmaciaTicket.resx">
+      <DependentUpon>BonoFarmaciaTicket.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Compra de Bono\CompraBonos.resx">
+      <DependentUpon>CompraBonos.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

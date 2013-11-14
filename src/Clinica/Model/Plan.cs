@@ -12,6 +12,10 @@ namespace Clinica_Frba.Model
 
             public string Descripcion { get; set; }
 
+            public int PrecioConsulta { get; set; }
+
+            public int PrecioFarmacia { get; set; }
+
        
     }
 }
