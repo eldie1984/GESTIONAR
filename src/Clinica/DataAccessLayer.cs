@@ -6,6 +6,7 @@ using Clinica_Frba.Model;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Data;
+using Clinica;
 
 namespace Clinica_Frba
 {
@@ -312,8 +313,8 @@ namespace Clinica_Frba
                 command.Parameters["@fecNac"].Value = prof.FechaNac;
                 command.Parameters["@sexo"].Value = prof.Sexo;
                 command.Parameters["@matric"].Value = prof.Matricula;
-                command.Parameters["@creado"].Value = DateTime.Now;
-                command.Parameters["@modificado"].Value = DateTime.Now;
+                command.Parameters["@creado"].Value = Helper.GetFechaNow();
+                command.Parameters["@modificado"].Value = Helper.GetFechaNow();
 
                 connection.Open();
 
@@ -378,8 +379,8 @@ namespace Clinica_Frba
                 command.Parameters["@mail"].Value = afi.Mail;
                 command.Parameters["@fecNac"].Value = afi.FechaNac;
                 command.Parameters["@sexo"].Value = afi.Sexo;
-                command.Parameters["@creado"].Value = DateTime.Now;
-                command.Parameters["@modificado"].Value = DateTime.Now;
+                command.Parameters["@creado"].Value = Helper.GetFechaNow();
+                command.Parameters["@modificado"].Value = Helper.GetFechaNow();
                 command.Parameters["@estado"].Value = afi.Estado;
                 command.Parameters["@hijos"].Value = afi.Hijos;
                 command.Parameters["@plan"].Value = afi.Plan;
@@ -438,10 +439,10 @@ namespace Clinica_Frba
                 SqlParameter SexoParameter = new SqlParameter("sexo", afi.Sexo);
                 command.Parameters.Add(SexoParameter);
 
-                SqlParameter creadoParameter = new SqlParameter("creado", DateTime.Now);
+                SqlParameter creadoParameter = new SqlParameter("creado", Helper.GetFechaNow());
                 command.Parameters.Add(creadoParameter);
 
-                SqlParameter modificadoParameter = new SqlParameter("modificado", DateTime.Now);
+                SqlParameter modificadoParameter = new SqlParameter("modificado", Helper.GetFechaNow());
                 command.Parameters.Add(modificadoParameter);
 
                 SqlParameter estadoParameter = new SqlParameter("estado", afi.Estado);
@@ -489,8 +490,8 @@ namespace Clinica_Frba
                 command.Parameters["@cantfarmacia"].Value = comp.CantFarmacia;
                 command.Parameters["@cantconsulta"].Value = comp.CanConsulta;
                 command.Parameters["@planid"].Value = comp.PlanID;
-                command.Parameters["@creado"].Value = DateTime.Now;
-                command.Parameters["@modificado"].Value = DateTime.Now;
+                command.Parameters["@creado"].Value = Helper.GetFechaNow();
+                command.Parameters["@modificado"].Value = Helper.GetFechaNow();
                 connection.Open();
 
                 //int rows = command.ExecuteNonQuery();
@@ -522,8 +523,8 @@ namespace Clinica_Frba
                 command.Parameters["@afi_id"].Value = bonoFar.afi_ID;
                 command.Parameters["@afi_subid"].Value = bonoFar.afi_Sub_ID;
                 command.Parameters["@planid"].Value = bonoFar.planID;
-                command.Parameters["@creado"].Value = DateTime.Now;
-                command.Parameters["@modificado"].Value = DateTime.Now;
+                command.Parameters["@creado"].Value = Helper.GetFechaNow();
+                command.Parameters["@modificado"].Value = Helper.GetFechaNow();
                 connection.Open();
 
                 int nuevoBono = Convert.ToInt32(command.ExecuteScalar());
@@ -553,8 +554,8 @@ namespace Clinica_Frba
                 command.Parameters["@afi_id"].Value = bonoCon.afi_ID;
                 command.Parameters["@afi_subid"].Value = bonoCon.afi_Sub_ID;
                 command.Parameters["@planid"].Value = bonoCon.planID;
-                command.Parameters["@creado"].Value = DateTime.Now;
-                command.Parameters["@modificado"].Value = DateTime.Now;
+                command.Parameters["@creado"].Value = Helper.GetFechaNow();
+                command.Parameters["@modificado"].Value = Helper.GetFechaNow();
                 connection.Open();
 
                 int nuevoBono = Convert.ToInt32(command.ExecuteScalar());
@@ -604,7 +605,7 @@ namespace Clinica_Frba
                 command.Parameters["@sexo"].Value = prof.Sexo;
                 command.Parameters["@matric"].Value = prof.Matricula;
                 //command.Parameters["@creado"].Value = DateTime.Now;
-                command.Parameters["@modificado"].Value = DateTime.Now;
+                command.Parameters["@modificado"].Value = Helper.GetFechaNow();
 
                 connection.Open();
 
@@ -678,7 +679,7 @@ namespace Clinica_Frba
                 SqlParameter SexoParameter = new SqlParameter("sexo", afi.Sexo);
                 command.Parameters.Add(SexoParameter);
 
-                SqlParameter creadoParameter = new SqlParameter("creado", DateTime.Now);
+                SqlParameter creadoParameter = new SqlParameter("creado", Helper.GetFechaNow());
                 command.Parameters.Add(creadoParameter);
 
                 SqlParameter estadoParameter = new SqlParameter("estado", afi.Estado);

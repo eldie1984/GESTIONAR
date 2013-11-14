@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Clinica_Frba.Model;
+using Clinica;
 
 namespace Clinica_Frba.Compra_de_Bono
 {
@@ -16,7 +17,7 @@ namespace Clinica_Frba.Compra_de_Bono
         {
             InitializeComponent();
             this.labelAfiID.Text = bono.afi_ID.ToString();
-            this.labelFechaCompra.Text = DateTime.Now.ToString("dd/MM/yyyy");
+            this.labelFechaCompra.Text = Helper.GetFechaNow().ToString("dd/MM/yyyy");
             this.labelNumero.Text = bono.ID.ToString();
             this.labelPlan.Text = PlanNombre;
         }
