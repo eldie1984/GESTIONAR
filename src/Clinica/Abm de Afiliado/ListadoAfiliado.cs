@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Clinica_Frba.Model;
+using Clinica.Model;
 
 namespace Clinica.Abm_de_Afiliado
 {

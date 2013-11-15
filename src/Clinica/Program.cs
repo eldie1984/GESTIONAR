@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using System.Configuration;
-using Clinica_Frba.Compra_de_Bono;
+using Clinica.Compra_de_Bono;
 using Clinica;
 
 namespace Clinica_Frba
