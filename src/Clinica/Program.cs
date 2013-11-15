@@ -7,7 +7,7 @@ using System.Configuration;
 using Clinica.Compra_de_Bono;
 using Clinica;
 
-namespace Clinica_Frba
+namespace Clinica
 {
     static class Program
     {
@@ -25,7 +25,9 @@ namespace Clinica_Frba
            // Application.Run(new AltaAfiliado());
            // Application.Run(new ListadoAfiliado());
             //Application.Run(new CompraBonos(0,0));
-            Application.Run(new Login());
+            Application.Run(new Generar_Receta.Bono_farmacia(56566, 23, 6263));
+            
+            //Application.Run(new Login());
 
             //ejemplo traer fecha del sistema
            // DateTime a = Helper.GetFechaNow();

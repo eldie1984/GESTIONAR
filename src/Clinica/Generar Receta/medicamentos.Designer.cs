@@ -173,6 +173,7 @@
             this.Controls.Add(this.button1);
             this.Name = "medicamentos";
             this.Text = "medicamentos";
+            this.Load += new System.EventHandler(this.medicamentos_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

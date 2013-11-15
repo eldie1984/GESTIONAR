@@ -286,6 +286,15 @@
     <EmbeddedResource Include="Registrar Agenda\select_profesional.resx">
       <DependentUpon>select_profesional.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Registro de LLegada\busq_prof.resx">
+      <DependentUpon>busq_prof.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Registro de LLegada\CheckTurno.resx">
+      <DependentUpon>CheckTurno.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Registro de LLegada\Ingreso_bono.resx">
+      <DependentUpon>Ingreso_bono.cs</DependentUpon>
+    </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
@@ -325,6 +334,24 @@
     </Compile>
     <Compile Include="Registrar Agenda\select_profesional.Designer.cs">
       <DependentUpon>select_profesional.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Registro de LLegada\busq_prof.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Registro de LLegada\busq_prof.Designer.cs">
+      <DependentUpon>busq_prof.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Registro de LLegada\CheckTurno.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Registro de LLegada\CheckTurno.Designer.cs">
+      <DependentUpon>CheckTurno.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Registro de LLegada\Ingreso_bono.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Registro de LLegada\Ingreso_bono.Designer.cs">
+      <DependentUpon>Ingreso_bono.cs</DependentUpon>
     </Compile>
     <Compile Include="Registro de LLegada\llegada.cs">
       <SubType>Form</SubType>

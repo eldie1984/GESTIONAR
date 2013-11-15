@@ -25,10 +25,25 @@ namespace Clinica.Generar_Receta
 
         private void button1_Click(object sender, EventArgs e)
         {
-            medicamentos medic = new medicamentos(this.turno, this.profe_id, this.afil_id);
-            medic.Show();
-            medic.parent = this;
-            this.Hide();
+            bool error = false;
+            Int32 bono_id=0;
+            Funciones func = new Funciones();
+            try
+            {
+                bono_id=Convert.ToInt32(textBox1.Text);
+            }
+            catch
+            {
+                error = false;
+                MessageBox.Show("El bono puede ser solo numerico", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            if (error == false && func.checkBono(bono_id))
+            {
+                medicamentos medic = new medicamentos(this.turno, bono_id);
+                medic.Show();
+                medic.parent = this;
+                this.Hide();
+            }
 
         }
 

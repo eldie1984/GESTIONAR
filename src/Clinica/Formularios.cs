@@ -81,5 +81,47 @@ namespace Clinica
             da.Fill(ds, "rol");
             return ds;
         }
+
+        public DataSet llenaComboBoxMedic()
+        {
+            this.sql = string.Format(@"
+select -1 as 'medic_id', '' as 'medic_descripcion'
+union
+select medic_id,medic_descripcion from GESTIONAR.medicamento");
+
+            //indicamos la consulta en SQL
+            this.da = new SqlDataAdapter(this.sql, this.cnn);
+            //return da;
+            this.da.Fill(this.ds, "medic_descripcion");
+            return this.ds;
+        }
+
+
+        public DataSet listarProfesionales(string profesional)
+        {
+            this.sql = string.Format(@"select prof_id,prof_nombre,prof_apellido,prof_mail from GESTIONAR.profesional
+                                        where prof_nombre like'%{0}%'
+                                        or prof_apellido like '%{0}%'
+                                        or prof_mail like '%{0}%';", profesional);
+            DataSet ds = new DataSet();
+            //indicamos la consulta en SQL
+            SqlDataAdapter da = new SqlDataAdapter(this.sql, this.cnn);
+            //return da;
+            da.Fill(ds, "prof_id");
+            return ds;
+        }
+
+        internal DataSet llenaComboBoxTurno(Int32 profesional)
+        {
+            this.sql = string.Format(@"select CONVERT(VARCHAR(10), turn_hora_inicio, 108) as 'Turno',turn_id from GESTIONAR.turno
+                                    where CONVERT(VARCHAR(10), turn_hora_inicio, 101) = SUBSTRING('{0}',0 , 11 ) 
+                                    and turn_profe_id = {1}", Helper.GetFechaNow(),profesional);
+
+            //indicamos la consulta en SQL
+            this.da = new SqlDataAdapter(this.sql, this.cnn);
+            //return da;
+            this.da.Fill(this.ds, "Turno");
+            return this.ds;
+        }
     }
 }

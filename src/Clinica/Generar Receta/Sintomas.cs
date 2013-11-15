@@ -24,24 +24,33 @@ namespace Clinica.Generar_Receta
 
         private void button1_Click(object sender, EventArgs e)
         {
-            DialogResult result = MessageBox.Show("Desea crear una receta?", "Receta", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information);
-
-            switch (result)
+            if (textBox1.Text != string.Empty && textBox2.Text != string.Empty)
             {
-                case DialogResult.Yes:
-                    Bono_farmacia farmacia = new Bono_farmacia(turno,profe_id,0);
-                    farmacia.Show();
-                    
-                    
-                    this.Hide();
-                    break;
-                case DialogResult.No:
-                    this.Close();
-                    parent.Close();
-                    break;
-                case DialogResult.Cancel:
-                    break;
-                                }
+                DialogResult result = MessageBox.Show("Desea crear una receta?", "Receta", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information);
+                Funciones func = new Funciones();
+                switch (result)
+                {
+                    case DialogResult.Yes:
+                        func.completeConsul(this.turno, textBox1.Text, textBox2.Text);
+                        Bono_farmacia farmacia = new Bono_farmacia(turno, profe_id, 0);
+                        farmacia.Show();
+
+
+                        this.Hide();
+                        break;
+                    case DialogResult.No:
+                        func.completeConsul(this.turno, textBox1.Text, textBox2.Text);
+                        this.Close();
+                        parent.Close();
+                        break;
+                    case DialogResult.Cancel:
+                        break;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Los campos de Sintoma y enfermedad no pueden estar vacios", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
