@@ -1,4 +1,4 @@
-﻿namespace Clinica_Frba.Compra_de_Bono
+﻿namespace Clinica.Compra_de_Bono
 {
     partial class BonoFarmaciaTicket
     {

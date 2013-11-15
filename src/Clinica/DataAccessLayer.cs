@@ -6,9 +6,9 @@ using Clinica_Frba.Model;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Data;
-using Clinica;
+using Clinica.Model;
 
-namespace Clinica_Frba
+namespace Clinica
 {
     public class DataAccessLayer
     {

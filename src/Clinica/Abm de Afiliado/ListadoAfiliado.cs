@@ -8,7 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Clinica_Frba.Model;
 
-namespace Clinica_Frba.Abm_de_Afiliado
+namespace Clinica.Abm_de_Afiliado
 {
     public partial class ListadoAfiliado : Form
     {

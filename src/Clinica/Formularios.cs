@@ -69,5 +69,17 @@ namespace Clinica
             return this.ds;
             
         }
+        public DataSet llenaComboboxPerfil(Int32 user_id)
+        {
+            this.sql = string.Format(@"select rol_id,rol_nombre from GESTIONAR.rol, GESTIONAR.rol_usuario
+            where rolu_rol_id=rol_id
+            and rolu_user_id={0}",user_id);
+            DataSet ds = new DataSet();
+            //indicamos la consulta en SQL
+            SqlDataAdapter da = new SqlDataAdapter(this.sql, this.cnn);
+            //return da;
+            da.Fill(ds, "rol");
+            return ds;
+        }
     }
 }

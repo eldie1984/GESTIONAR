@@ -323,38 +323,51 @@ Select 'Creo las funcionalidades'
 GO
 INSERT INTO [GESTIONAR].[funcionalidad]([func_name],[func_creado],[func_modificado])
   VALUES
-('crear_recorrido',SYSDATETIME(),SYSDATETIME()) ,
-('listar_recorrido',SYSDATETIME(),SYSDATETIME()) ,
-('modificar_recorrido',SYSDATETIME(),SYSDATETIME()), 
-('crear_ciudad',SYSDATETIME(),SYSDATETIME()) ,
-('listar_ciudad',SYSDATETIME(),SYSDATETIME()) ,
-('modificar_ciudad',SYSDATETIME(),SYSDATETIME()), 
-('crear_micro',SYSDATETIME(),SYSDATETIME()) ,
-('listar_micro',SYSDATETIME(),SYSDATETIME()) ,
-('modificar_micro',SYSDATETIME(),SYSDATETIME()), 
-('registrar_llegada',SYSDATETIME(),SYSDATETIME()), 
-('crear_viaje',SYSDATETIME(),SYSDATETIME()) ,
-('modificar_viaje',SYSDATETIME(),SYSDATETIME()), 
-('listar_viaje',SYSDATETIME(),SYSDATETIME()) ,
-('pasaje_generar',SYSDATETIME(),SYSDATETIME()), 
-('pasaje_anular',SYSDATETIME(),SYSDATETIME()) ,
-('consulta_puntos',SYSDATETIME(),SYSDATETIME()), 
-('listar_roles',SYSDATETIME(),SYSDATETIME()) ,
-('listar_funcionalidades',SYSDATETIME(),SYSDATETIME()) ,
-('modificar_usuario',SYSDATETIME(),SYSDATETIME()) ,
-('Ciudad',SYSDATETIME(),SYSDATETIME()) ,
-('Recorrido',SYSDATETIME(),SYSDATETIME()), 
-('Micros',SYSDATETIME(),SYSDATETIME()) ,
-('Viaje',SYSDATETIME(),SYSDATETIME()), 
-('Pasaje',SYSDATETIME(),SYSDATETIME()) ,
-('Puntos',SYSDATETIME(),SYSDATETIME()), 
-('Usuarios',SYSDATETIME(),SYSDATETIME()) ,
-('Estadisticas',SYSDATETIME(),SYSDATETIME()),
-('pasajesXDestino',SYSDATETIME(),SYSDATETIME()),
-('destinosConMicrosMasVacios',SYSDATETIME(),SYSDATETIME()),
-('clientesConMasPuntosAcumuladosALaFecha',SYSDATETIME(),SYSDATETIME()),
-('destinosConPasajesCancelados',SYSDATETIME(),SYSDATETIME()),
-('microsConMayorCantidadDeDiasFueraDeServicio',SYSDATETIME(),SYSDATETIME())
+ ('consultaToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('registrarResultadoToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('aBMToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('altaRolToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('bajaRolToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('modificarRolToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('usuarioToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('altaUsuarioToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('bajaUsuarioToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('modificarToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('afiliadoToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('altaAfiliadoToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('bajaAfiliadoToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('modificarAfiliadoToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('profesionalToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('altaProfesionalToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('bajaProfesionalToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('modificarProfesionalToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('especialidadesToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('altaEspecialidadesToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('bajaEspecialidadesToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('modificarEspecialidadesToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('planToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('altaPlanToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('bajaPlanToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('mToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('registrarLlegadaToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('listarRolesToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('listarUsuariosToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('listarAfiliadosToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('listarProfesionalToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('listarEspecialidadesToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('listarPlanToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('agendaToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('registrarToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('pedidoTurnoToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('cancelarAtencionToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('bonosToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('comprarBonosToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('toolStripMenuItem1',SYSDATETIME(),SYSDATETIME()) ,
+ ('estadisticasToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('bonosFarmaciaVencidosToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('especialidadesConCancelacionesToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('bonosFarmaciaRecetadosToolStripMenuItem',SYSDATETIME(),SYSDATETIME()) ,
+ ('afiliadosQueUsaronPeroNoCompraronToolStripMenuItem',SYSDATETIME(),SYSDATETIME())
 
 
 Select 'Creo tabla Rol'
@@ -435,6 +448,20 @@ insert into [GESTIONAR].[Rol_funcionalidad]
 (1,29,SYSDATETIME(),SYSDATETIME()),
 (1,30,SYSDATETIME(),SYSDATETIME()),
 (1,31,SYSDATETIME(),SYSDATETIME()),
+(1,32,SYSDATETIME(),SYSDATETIME()),
+(1,33,SYSDATETIME(),SYSDATETIME()),
+(1,34,SYSDATETIME(),SYSDATETIME()),
+(1,35,SYSDATETIME(),SYSDATETIME()),
+(1,36,SYSDATETIME(),SYSDATETIME()),
+(1,37,SYSDATETIME(),SYSDATETIME()),
+(1,38,SYSDATETIME(),SYSDATETIME()),
+(1,39,SYSDATETIME(),SYSDATETIME()),
+(1,40,SYSDATETIME(),SYSDATETIME()),
+(1,41,SYSDATETIME(),SYSDATETIME()),
+(1,42,SYSDATETIME(),SYSDATETIME()),
+(1,43,SYSDATETIME(),SYSDATETIME()),
+(1,44,SYSDATETIME(),SYSDATETIME()),
+(1,31,SYSDATETIME(),SYSDATETIME()),
 (2,2,SYSDATETIME(),SYSDATETIME()),
 (2,5,SYSDATETIME(),SYSDATETIME()),
 (2,8,SYSDATETIME(),SYSDATETIME()),
@@ -483,32 +510,32 @@ INSERT INTO [GESTIONAR].[usuario]
            ,[usua_habilitado])
      VALUES
            ('Administrador'
-           ,'e6b87050bfcb8143fcb8db0170a4dc9ed00d904ddd3e2a4ad1b1e8dc0fdc9be7'
+           ,'e8fd3b177583c5e1ff6d09068f75bf02a76576dca567e0e96fa3229fb4448533'
            ,SYSDATETIME()
            ,SYSDATETIME()
            ,1)
            ,('Admin'
-           ,'e6b87050bfcb8143fcb8db0170a4dc9ed00d904ddd3e2a4ad1b1e8dc0fdc9be7'
+           ,'e8fd3b177583c5e1ff6d09068f75bf02a76576dca567e0e96fa3229fb4448533'
            ,SYSDATETIME()
            ,SYSDATETIME()
            ,1)
            ,('Agustin'
-           ,'e6b87050bfcb8143fcb8db0170a4dc9ed00d904ddd3e2a4ad1b1e8dc0fdc9be7'
+           ,'e8fd3b177583c5e1ff6d09068f75bf02a76576dca567e0e96fa3229fb4448533'
            ,SYSDATETIME()
            ,SYSDATETIME()
            ,1)
            ,('Daniel'
-           ,'e6b87050bfcb8143fcb8db0170a4dc9ed00d904ddd3e2a4ad1b1e8dc0fdc9be7'
+           ,'e8fd3b177583c5e1ff6d09068f75bf02a76576dca567e0e96fa3229fb4448533'
            ,SYSDATETIME()
            ,SYSDATETIME()
            ,1)
            ,('Martin'
-           ,'e6b87050bfcb8143fcb8db0170a4dc9ed00d904ddd3e2a4ad1b1e8dc0fdc9be7'
+           ,'e8fd3b177583c5e1ff6d09068f75bf02a76576dca567e0e96fa3229fb4448533'
            ,SYSDATETIME()
            ,SYSDATETIME()
            ,1)
            ,('Diego'
-           ,'e6b87050bfcb8143fcb8db0170a4dc9ed00d904ddd3e2a4ad1b1e8dc0fdc9be7'
+           ,'e8fd3b177583c5e1ff6d09068f75bf02a76576dca567e0e96fa3229fb4448533'
            ,SYSDATETIME()
            ,SYSDATETIME()
            ,1)

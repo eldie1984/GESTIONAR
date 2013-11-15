@@ -6,10 +6,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Clinica_Frba.Model;
-using Clinica;
+using Clinica.Model;
 
-namespace Clinica_Frba.Compra_de_Bono
+namespace Clinica.Compra_de_Bono
 {
     public partial class BonoConsultaTicket : Form
     {

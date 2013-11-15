@@ -109,11 +109,11 @@
     <Compile Include="Abm de Rol\ModRol.Designer.cs">
       <DependentUpon>ModRol.cs</DependentUpon>
     </Compile>
-    <Compile Include="Cancelar Atencion\Form1.cs">
+    <Compile Include="Cancelar Atencion\Cancelar.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Cancelar Atencion\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Cancelar Atencion\Cancelar.Designer.cs">
+      <DependentUpon>Cancelar.cs</DependentUpon>
     </Compile>
     <Compile Include="Compra de Bono\BonoConsultaTicket.cs">
       <SubType>Form</SubType>
@@ -134,18 +134,43 @@
       <DependentUpon>CompraBonos.cs</DependentUpon>
     </Compile>
     <Compile Include="DataAccessLayer.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="Funciones.cs" />
+    <Compile Include="Login.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Login.Designer.cs">
+      <DependentUpon>Login.cs</DependentUpon>
     </Compile>
     <Compile Include="Formularios.cs" />
+    <Compile Include="Generar Receta\Bono_farmacia.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Generar Receta\Bono_farmacia.Designer.cs">
+      <DependentUpon>Bono_farmacia.cs</DependentUpon>
+    </Compile>
     <Compile Include="Generar Receta\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Generar Receta\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Generar Receta\medicamentos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Generar Receta\medicamentos.Designer.cs">
+      <DependentUpon>medicamentos.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Generar Receta\SelectHora.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Generar Receta\SelectHora.Designer.cs">
+      <DependentUpon>SelectHora.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Generar Receta\Sintomas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Generar Receta\Sintomas.Designer.cs">
+      <DependentUpon>Sintomas.cs</DependentUpon>
     </Compile>
     <Compile Include="Helper.cs" />
     <Compile Include="Listados Estadisticos\Form1.cs">
@@ -160,6 +185,12 @@
     <Compile Include="Login\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main.Designer.cs">
+      <DependentUpon>Main.cs</DependentUpon>
+    </Compile>
     <Compile Include="Model\Afiliado.cs" />
     <Compile Include="Model\BonoConsulta.cs" />
     <Compile Include="Model\BonoFarmacia.cs" />
@@ -167,11 +198,17 @@
     <Compile Include="Model\Especialidad.cs" />
     <Compile Include="Model\Plan.cs" />
     <Compile Include="Model\Profesional.cs" />
-    <Compile Include="Pedir Turno\Form1.cs">
+    <Compile Include="Pedir Turno\Turno.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Pedir Turno\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Pedir Turno\Turno.Designer.cs">
+      <DependentUpon>Turno.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Perfil.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Perfil.Designer.cs">
+      <DependentUpon>Perfil.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -208,16 +245,46 @@
     <EmbeddedResource Include="Compra de Bono\CompraBonos.resx">
       <DependentUpon>CompraBonos.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="Login.resx">
+      <DependentUpon>Login.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Generar Receta\Bono_farmacia.resx">
+      <DependentUpon>Bono_farmacia.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Generar Receta\medicamentos.resx">
+      <DependentUpon>medicamentos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Generar Receta\SelectHora.resx">
+      <DependentUpon>SelectHora.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Generar Receta\Sintomas.resx">
+      <DependentUpon>Sintomas.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Login\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main.resx">
+      <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Perfil.resx">
+      <DependentUpon>Perfil.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Registrar Agenda\Seleccion_dias.resx">
+      <DependentUpon>Seleccion_dias.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Registrar Agenda\Seleccion_fecha.resx">
+      <DependentUpon>Seleccion_fecha.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Registrar Agenda\Seleccion_horario.resx">
+      <DependentUpon>Seleccion_horario.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Registrar Agenda\select_profesional.resx">
+      <DependentUpon>select_profesional.cs</DependentUpon>
     </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -235,17 +302,35 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Registrar Agenda\Form1.cs">
+    <Compile Include="Registrar Agenda\Seleccion_dias.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Registrar Agenda\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Registrar Agenda\Seleccion_dias.Designer.cs">
+      <DependentUpon>Seleccion_dias.cs</DependentUpon>
     </Compile>
-    <Compile Include="Registro de LLegada\Form1.cs">
+    <Compile Include="Registrar Agenda\Seleccion_fecha.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Registro de LLegada\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Registrar Agenda\Seleccion_fecha.Designer.cs">
+      <DependentUpon>Seleccion_fecha.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Registrar Agenda\Seleccion_horario.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Registrar Agenda\Seleccion_horario.Designer.cs">
+      <DependentUpon>Seleccion_horario.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Registrar Agenda\select_profesional.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Registrar Agenda\select_profesional.Designer.cs">
+      <DependentUpon>select_profesional.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Registro de LLegada\llegada.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Registro de LLegada\llegada.Designer.cs">
+      <DependentUpon>llegada.cs</DependentUpon>
     </Compile>
     <Compile Include="Registro de Usuario\Form1.cs">
       <SubType>Form</SubType>

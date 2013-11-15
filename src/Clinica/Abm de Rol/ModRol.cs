@@ -51,6 +51,11 @@ namespace Clinica.Abm_de_Rol
                 }
             }
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
         
     }
 }

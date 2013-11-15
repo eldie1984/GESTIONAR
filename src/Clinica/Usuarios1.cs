@@ -94,7 +94,7 @@ namespace Clinica
         {
             bool Resultado = false;
             Int32 result = 0;
-            this.sql = string.Format(@"update transportados.usuario
+            this.sql = string.Format(@"update Gestionar.usuario
                                        set usua_logins=0
                                            where usua_username= '{0}'", this.usuario);
             this.comandosSql = new SqlCommand(this.sql, this.cnn);
@@ -111,6 +111,27 @@ namespace Clinica
             this.cnn.Close();
             return Resultado;
         }
+        public Int32 getId()
+        {
+            
+            Int32 result = 0;
+            this.sql = string.Format(@"select usua_id from GESTIONAR.usuario where usua_username='{0}'", this.usuario);
+            this.comandosSql = new SqlCommand(this.sql, this.cnn);
+            this.cnn.Open();
+            SqlDataReader Reg = null;
+            Reg = this.comandosSql.ExecuteReader();
+            if (Reg.Read())
+            {
+                result = Convert.ToInt32(Reg[0]);
+               
+            }
+            else
+            {
 
+                result=-1;
+            }
+            this.cnn.Close();
+            return result;
+        }
     }
 }

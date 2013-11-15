@@ -6,9 +6,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Clinica_Frba.Model;
+using Clinica.Model;
 
-namespace Clinica_Frba.Abm_de_Profesional
+namespace Clinica.Abm_de_Profesional
 {
     public partial class AltaProfesional : Form
     {

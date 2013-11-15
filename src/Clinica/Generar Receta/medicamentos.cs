@@ -29,5 +29,10 @@ namespace Clinica.Generar_Receta
             this.Close();
             parent.Show();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
