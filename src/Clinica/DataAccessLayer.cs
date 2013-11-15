@@ -691,6 +691,9 @@ namespace Clinica
                 SqlParameter planParameter = new SqlParameter("plan", afi.Plan);
                 command.Parameters.Add(planParameter);
 
+                SqlParameter modificadoParameter = new SqlParameter("modificado", Helper.GetFechaNow());
+                command.Parameters.Add(modificadoParameter);
+
 
                 int rows = command.ExecuteNonQuery();
 
@@ -718,6 +721,9 @@ namespace Clinica
                 SqlParameter subIdParameter = new SqlParameter("subid", afi.Sub_ID);
                 command.Parameters.Add(subIdParameter);
 
+                SqlParameter modParameter = new SqlParameter("modificado", Helper.GetFechaNow());
+                command.Parameters.Add(modParameter);
+
                 int rows = command.ExecuteNonQuery();
             }
         }
@@ -733,6 +739,9 @@ namespace Clinica
 
                 SqlParameter profidParameter = new SqlParameter("profid", prof.ID);
                 command.Parameters.Add(profidParameter);
+
+                SqlParameter modParameter = new SqlParameter("modificado", Helper.GetFechaNow());
+                command.Parameters.Add(modParameter);
 
                 int rows = command.ExecuteNonQuery();
             }

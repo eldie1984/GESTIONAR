@@ -975,7 +975,8 @@ CREATE PROCEDURE GESTIONAR.AfiliadoUpdate
     @creado datetime,
     @estado int,
     @hijos int,
-    @plan numeric(18,0)
+    @plan numeric(18,0),
+	@modificado datetime
     
 AS 
 
@@ -991,7 +992,7 @@ AS
      afi_mail=@mail,
      afi_fecha_nacimiento=@fecNac,
      afi_sexo=@sexo,
-     afi_modificado=GETDATE(),
+     afi_modificado=@modificado,
      afi_estado_id = @estado,
      afi_cant_hijos = @hijos,
      afi_plan = @plan
@@ -1002,7 +1003,8 @@ GO
 
 CREATE PROCEDURE GESTIONAR.AfiliadoBaja 
     @mainid int,
-    @subid int
+    @subid int,
+	@modificado datetime
     
 AS 
 
@@ -1010,14 +1012,15 @@ AS
    
     UPDATE GESTIONAR.afiliado
     SET afi_baja = 1,
-    afi_modificado=GETDATE()
+    afi_modificado=@modificado
     WHERE afi_id = @mainid and afi_sub_id=@subid
 		
 		
 GO
 
 CREATE PROCEDURE GESTIONAR.ProfesionalBaja 
-    @profid int
+    @profid int,
+	@modificado datetime
     
 AS 
 
@@ -1025,7 +1028,7 @@ AS
    
     UPDATE GESTIONAR.profesional
     SET prof_baja = 1,
-    prof_modificado=GETDATE()
+    prof_modificado=@modificado
     WHERE prof_id = @profid
 		
 		

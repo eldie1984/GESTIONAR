@@ -7,3 +7,7 @@ una vez dada de baja el afiliado, el campo modificado indica la fecha de la baja
 todos los afiliados migrados se cargaron con el subid 01
 
 todos los afiliados y profesionales migrados se cargan como activos
+
+una vez hecha la baja logica de afiliado y profesional se tomara la fecha de modificacion como la fecha de baja
+
+en los listados de abm se mostraran los primeros 200 resultados de la busqueda
