@@ -29,15 +29,15 @@ namespace Clinica_Frba.Compra_de_Bono
             this.currentCompra = new Compra();
             this.dataAccess = new DataAccessLayer();
             //rol usuario afiliado
-            if (rolid == 1)
-            {
-                ADMINMode = false;
-                this.groupBoxAfiliado.Hide();
+            //if (rolid == 1)
+            //{
+            //    ADMINMode = false;
+            //    this.groupBoxAfiliado.Hide();
                 
-                //get Afiliado asociado al usuario y rol
-                this.AfiliadoID = 33;
-                this.AfiliadoSubID = 01;
-            }
+            //    //get Afiliado asociado al usuario y rol
+            //    this.AfiliadoID = 33;//tomar datos del usuario asociado
+            //    this.AfiliadoSubID = 01;//tomar datos del usuario asociado
+            //}
 
 
         }

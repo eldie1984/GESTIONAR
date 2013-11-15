@@ -23,13 +23,13 @@ namespace Clinica_Frba
             Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new Form1());
             //Application.Run(new AltaProfesional(null));
-            //Application.Run(new ListadoProfesional());
+           // Application.Run(new ListadoProfesional());
            // Application.Run(new AltaAfiliado());
            // Application.Run(new ListadoAfiliado());
             Application.Run(new CompraBonos(0,0));
 
             //ejemplo traer fecha del sistema
-            DateTime a = Helper.GetFechaNow();
+           // DateTime a = Helper.GetFechaNow();
             
         }
     }
