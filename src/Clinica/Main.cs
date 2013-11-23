@@ -126,7 +126,7 @@ namespace Clinica
 
         private void registrarLlegadaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Registro_de_LLegada.llegada Llegada = new Clinica.Registro_de_LLegada.llegada();
+            Registro_de_LLegada.busq_prof Llegada = new Clinica.Registro_de_LLegada.busq_prof();
             Llegada.Show();
             Llegada.MdiParent = this;
         }

@@ -148,12 +148,6 @@
     <Compile Include="Generar Receta\Bono_farmacia.Designer.cs">
       <DependentUpon>Bono_farmacia.cs</DependentUpon>
     </Compile>
-    <Compile Include="Generar Receta\Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Generar Receta\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
     <Compile Include="Generar Receta\medicamentos.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -352,12 +346,6 @@
     </Compile>
     <Compile Include="Registro de LLegada\Ingreso_bono.Designer.cs">
       <DependentUpon>Ingreso_bono.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Registro de LLegada\llegada.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Registro de LLegada\llegada.Designer.cs">
-      <DependentUpon>llegada.cs</DependentUpon>
     </Compile>
     <Compile Include="Registro de Usuario\Form1.cs">
       <SubType>Form</SubType>

@@ -12,14 +12,13 @@ namespace Clinica.Generar_Receta
     public partial class Bono_farmacia : Form
     {
         private Int32 turno;
-        private Int32 profe_id;
         private Int32 afil_id;
+        public Form padre;
 
-        public Bono_farmacia(Int32 turno,Int32 profesional,Int32 afiliado)
+        public Bono_farmacia(Int32 turno,Int32 afiliado)
         {
             InitializeComponent();
             this.turno = turno;
-            this.profe_id = profesional;
             this.afil_id = afiliado;
         }
 
@@ -39,10 +38,11 @@ namespace Clinica.Generar_Receta
             }
             if (error == false && func.checkBono(bono_id))
             {
-                medicamentos medic = new medicamentos(this.turno, bono_id);
+                medicamentos medic = new medicamentos(this.turno, bono_id,this.afil_id);
                 medic.Show();
-                medic.parent = this;
                 this.Hide();
+                medic.parent = this;
+                
             }
 
         }
@@ -60,6 +60,11 @@ namespace Clinica.Generar_Receta
                     break;
 
             }
+        }
+
+        private void Bono_farmacia_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

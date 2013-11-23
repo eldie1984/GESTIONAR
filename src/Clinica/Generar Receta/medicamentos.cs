@@ -14,12 +14,16 @@ namespace Clinica.Generar_Receta
         public Form parent;
         private Int32 turno;
         private Int32 bono_id;
+        private Int32 afil_id;
+        public List<Int32> medic_list = new List<Int32>();
+        public List<Int32> medic_cant = new List<Int32>();
 
-        public medicamentos(Int32 turno, Int32 bono)
+        public medicamentos(Int32 turno, Int32 bono,Int32 afiliado)
         {
             InitializeComponent();
             this.turno = turno;
             this.bono_id = bono;
+            this.afil_id=afiliado;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -30,7 +34,80 @@ namespace Clinica.Generar_Receta
 
         private void button1_Click(object sender, EventArgs e)
         {
+             if (check_lista(Convert.ToInt32(comboBox1.SelectedValue)))
+             {
+             this.medic_list.Add(Convert.ToInt32(comboBox1.SelectedValue));
+             this.medic_cant.Add(Convert.ToInt32(comboBox2.SelectedValue));
+                 comboBox1.Enabled=false;
+                 comboBox2.Enabled=false;
+             }
+            else
+             {
+                 return;
+             }
+            if (check_lista(Convert.ToInt32(comboBox4.SelectedValue)))
+             {
+             this.medic_list.Add(Convert.ToInt32(comboBox4.SelectedValue));
+             this.medic_cant.Add(Convert.ToInt32(comboBox3.SelectedValue));
+                 comboBox4.Enabled=false;
+                 comboBox3.Enabled=false;
+             }
+            else
+             {
+                 return;
+             }
+            if (check_lista(Convert.ToInt32(comboBox6.SelectedValue)))
+             {
+             this.medic_list.Add(Convert.ToInt32(comboBox6.SelectedValue));
+             this.medic_cant.Add(Convert.ToInt32(comboBox5.SelectedValue));
+                 comboBox6.Enabled=false;
+                 comboBox5.Enabled=false;
+             }
+            else
+             {
+                 return;
+             }
+            if (check_lista(Convert.ToInt32(comboBox8.SelectedValue)))
+             {
+             this.medic_list.Add(Convert.ToInt32(comboBox8.SelectedValue));
+             this.medic_cant.Add(Convert.ToInt32(comboBox7.SelectedValue));
+                 comboBox8.Enabled=false;
+                 comboBox7.Enabled=false;
+             }
+            else
+             {
+                 return;
+             }
+            if (check_lista(Convert.ToInt32(comboBox10.SelectedValue)))
+             {
+             this.medic_list.Add(Convert.ToInt32(comboBox10.SelectedValue));
+             this.medic_cant.Add(Convert.ToInt32(comboBox9.SelectedValue));
+                 comboBox10.Enabled=false;
+                 comboBox9.Enabled=false;
+             }
+            else
+             {
+                 return;
+             }
 
+
+             DialogResult result = MessageBox.Show("Necesita agregar otra orden?", "Receta", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+             Funciones func = new Funciones();
+            switch (result)
+            {
+                case DialogResult.Yes:
+
+                    Bono_farmacia farmacia = new Bono_farmacia(turno, afil_id);
+                    farmacia.Show();
+
+
+                    this.Hide();
+                    break;
+                case DialogResult.No:
+                    this.Close();
+                    parent.Close();
+                    break;
+            }
         }
 
         private void medicamentos_Load(object sender, EventArgs e)
@@ -84,5 +161,23 @@ namespace Clinica.Generar_Receta
             comboBox10.ValueMember = "medic_id";
             
         }
+
+        private bool check_lista (int valor)
+        {
+            foreach (Int32 lista in this.medic_list)
+            {
+                if (lista == valor)
+                {
+                    MessageBox.Show("Existen medicamentos que ya han sido elegidos, por favor corrijalos", "Error");
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            return true;
+        }       
+
     }
 }

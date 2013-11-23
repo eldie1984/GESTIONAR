@@ -86,6 +86,7 @@
             this.Controls.Add(this.button1);
             this.Name = "Bono_farmacia";
             this.Text = "Bono_farmacia";
+            this.Load += new System.EventHandler(this.Bono_farmacia_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -38,8 +38,8 @@ namespace Clinica
         }
         public SqlDataReader getFuncID(Int32 rol_id)
         {
-            this.sql = string.Format(@"select rf.rolf_func_id,fu.func_name from GESTIONAR.Rol_funcionalidad rf ,GESTIONAR.funcionalidad fu  
-where ru.rolf_rol_id = {1}
+            this.sql = string.Format(@"select fu.func_name from GESTIONAR.Rol_funcionalidad rf ,GESTIONAR.funcionalidad fu  
+where rf.rolf_rol_id = {0}
 and fu.func_id=rf.rolf_func_id
 order by rf.rolf_func_id desc", rol_id);
             this.comandosSql = new SqlCommand(this.sql, this.cnn);

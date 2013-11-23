@@ -13,12 +13,12 @@ namespace Clinica.Generar_Receta
     {
         public Form parent;
         private Int32 turno;
-        private Int32 profe_id;
+        private Int32 afil_id;
 
-        public Sintomas(Int32 profesional,Int32 turno)
+        public Sintomas(Int32 afiliado,Int32 turno)
         {
             InitializeComponent();
-            this.profe_id = profesional;
+            this.afil_id = afiliado;
             this.turno = turno;
         }
 
@@ -32,7 +32,7 @@ namespace Clinica.Generar_Receta
                 {
                     case DialogResult.Yes:
                         func.completeConsul(this.turno, textBox1.Text, textBox2.Text);
-                        Bono_farmacia farmacia = new Bono_farmacia(turno, profe_id, 0);
+                        Bono_farmacia farmacia = new Bono_farmacia(turno,afil_id);
                         farmacia.Show();
 
 
