@@ -11,15 +11,17 @@ namespace Clinica.Generar_Receta
 {
     public partial class Bono_farmacia : Form
     {
-        private Int32 turno;
+        private Int32 consulta;
         private Int32 afil_id;
-        public Form padre;
+        public Form padre ;
+        public List<Int32> medic_hist = new List<Int32>();
 
-        public Bono_farmacia(Int32 turno,Int32 afiliado)
+        public Bono_farmacia(Int32 consulta, Int32 afiliado)
         {
             InitializeComponent();
-            this.turno = turno;
+            this.consulta = consulta;
             this.afil_id = afiliado;
+            this.padre = this;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -33,15 +35,16 @@ namespace Clinica.Generar_Receta
             }
             catch
             {
-                error = false;
+                error = true;
                 MessageBox.Show("El bono puede ser solo numerico", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             if (error == false && func.checkBono(bono_id))
             {
-                medicamentos medic = new medicamentos(this.turno, bono_id,this.afil_id);
+                medicamentos medic = new medicamentos(this.consulta, bono_id, this.afil_id);
+                medic.medic_hist = this.medic_hist;
                 medic.Show();
                 this.Hide();
-                medic.parent = this;
+                medic.parent = this.padre;
                 
             }
 

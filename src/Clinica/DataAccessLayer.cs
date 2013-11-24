@@ -563,8 +563,83 @@ namespace Clinica
 
             }
         }
+        #endregion
+        // agrega la relacion entre el bono farmacia y los medicamentos
+
+        #region Consulta
+        public string persistir_medic(List<int> medic_list, List<int> medic_cant, int afil_id, int bono_id, int consulta)
+        {
+            string resultado = string.Empty;
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                SqlTransaction transaction;
+                transaction = connection.BeginTransaction("Transaccion_medicamento");
+
+                command.Connection = connection;
+                command.Transaction = transaction;
+                try
+                {
+                    command.CommandText = @"update GESTIONAR.bono_farmacia" +
+                                           " set bofa_bono_consulta_id=@consulta," +
+                                           "bofa_modificado=@modificado " +
+                                           "where bofa_id=@bono";
+
+
+                    command.Parameters.Add("@consulta", SqlDbType.Int);
+                    command.Parameters.Add("@bono", SqlDbType.Int);
+                    command.Parameters.Add("@modificado", SqlDbType.DateTime);
+
+                    command.Parameters["@consulta"].Value = consulta;
+                    command.Parameters["@bono"].Value = bono_id;
+                    command.Parameters["@modificado"].Value = Helper.GetFechaNow();
+                    command.ExecuteNonQuery();
+                    command.CommandText = @"INSERT INTO [GD2C2013].[GESTIONAR].[medicamento_bono] " +
+                                           "([mebo_bofa_id],[mebo_medic_id],[mebo_cant],[mebo_creado],[mebo_modificado]) " +
+                                           "values " +
+                                           "(@bono,@medicamento,@cantidad,@modificado,@modificado)";
+                    command.Parameters.Add("@medicamento", SqlDbType.Int);
+                    command.Parameters.Add("@cantidad", SqlDbType.Int);
+
+                    for (int i = 0; i < medic_list.Count; i++)
+                    {
+                        command.Parameters["@medicamento"].Value = medic_list[i];
+                        command.Parameters["@cantidad"].Value = medic_cant[i];
+                        command.Parameters["@modificado"].Value = Helper.GetFechaNow();
+                        command.ExecuteNonQuery();
+                    }
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Commit Exception Type: {0}", ex.GetType());
+                    Console.WriteLine("  Message: {0}", ex.Message);
+                    resultado = resultado + "Commit Exception Type: " + ex.GetType() + "\n" + "  Message: " + ex.Message; 
+                  
+                    // Attempt to roll back the transaction. 
+                    try
+                    {
+                        transaction.Rollback();
+                    }
+                    catch (Exception ex2)
+                    {
+                        // This catch block will handle any errors that may have occurred 
+                        // on the server that would cause the rollback to fail, such as 
+                        // a closed connection.
+                        Console.WriteLine("Rollback Exception Type: {0}", ex2.GetType());
+                        Console.WriteLine("  Message: {0}", ex2.Message);
+                        resultado = resultado +"\n" + "Rollback Exception Type: " + ex.GetType() + "\n" + "  Message: " + ex.Message; 
+                    }
+                    
+                }
+            }
+            return resultado;
+        }
 
         #endregion
+
+
 
         #region UPDATES
         public void UpdateProf(Profesional prof, List<int> especialidades)

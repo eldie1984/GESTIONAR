@@ -192,5 +192,41 @@ and dateadd(day,60,bofa_creado) >= CONVERT(datetime, '{1}', 120)", bono, Helper.
             this.cnn.Close();
 
         }
+
+//        internal void persistir_medic(List<int> medic_list, List<int> medic_cant, int afil_id, int bono_id,int consulta)
+//        {
+            
+//            this.cnn.Open();
+            
+//            this.sql = string.Format(@"update GESTIONAR.bono_farmacia
+//set bofa_bono_consulta_id={0},
+//bofa_modificado={1}
+//where bofa_id={2}", consulta, Helper.GetFechaNow().ToString("yyyy-MM-dd HH:mm:ss"), bono_id);
+//            result = this.comandosSql.ExecuteNonQuery();
+//            if (result > 0)
+//            {
+//                this.cnn.Close();
+//                return false;
+//            }
+//            else
+//            {
+//                this.cnn.Close(); ;
+//                return false;
+//            }
+//            for (int i = 0; i < medic_list.Count; i++)
+//            {
+//                this.sql = string.Format(@"INSERT INTO [GD2C2013].[GESTIONAR].[medicamento_bono]
+//           ([mebo_bofa_id]
+//           ,[mebo_medic_id]
+//           ,[mebo_cant]
+//           ,[mebo_creado]
+//           ,[mebo_modificado])
+//            values
+//            ({0},{1},{2},{3},CONVERT(datetime, '{4}', 120),CONVERT(datetime, '{4}', 120))", bono_id, medic_list[i], medic_cant[i], Helper.GetFechaNow().ToString("yyyy-MM-dd HH:mm:ss"));
+//                this.comandosSql.ExecuteNonQuery();
+                
+//            }
+//            this.cnn.Close();
+//        }
     }
 }

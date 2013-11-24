@@ -12,16 +12,19 @@ namespace Clinica.Generar_Receta
     public partial class medicamentos : Form
     {
         public Form parent;
-        private Int32 turno;
+        private Int32 consulta;
         private Int32 bono_id;
         private Int32 afil_id;
         public List<Int32> medic_list = new List<Int32>();
+        public List<Int32> medic_hist = new List<Int32>();
         public List<Int32> medic_cant = new List<Int32>();
+        private DataAccessLayer dataAccess;
+        int[] arr = new int[5];
 
-        public medicamentos(Int32 turno, Int32 bono,Int32 afiliado)
+        public medicamentos(Int32 consulta, Int32 bono, Int32 afiliado)
         {
             InitializeComponent();
-            this.turno = turno;
+            this.consulta = consulta;
             this.bono_id = bono;
             this.afil_id=afiliado;
         }
@@ -34,81 +37,146 @@ namespace Clinica.Generar_Receta
 
         private void button1_Click(object sender, EventArgs e)
         {
-             if (check_lista(Convert.ToInt32(comboBox1.SelectedValue)))
-             {
-             this.medic_list.Add(Convert.ToInt32(comboBox1.SelectedValue));
-             this.medic_cant.Add(Convert.ToInt32(comboBox2.SelectedValue));
-                 comboBox1.Enabled=false;
-                 comboBox2.Enabled=false;
-             }
-            else
-             {
-                 return;
-             }
-            if (check_lista(Convert.ToInt32(comboBox4.SelectedValue)))
-             {
-             this.medic_list.Add(Convert.ToInt32(comboBox4.SelectedValue));
-             this.medic_cant.Add(Convert.ToInt32(comboBox3.SelectedValue));
-                 comboBox4.Enabled=false;
-                 comboBox3.Enabled=false;
-             }
-            else
-             {
-                 return;
-             }
-            if (check_lista(Convert.ToInt32(comboBox6.SelectedValue)))
-             {
-             this.medic_list.Add(Convert.ToInt32(comboBox6.SelectedValue));
-             this.medic_cant.Add(Convert.ToInt32(comboBox5.SelectedValue));
-                 comboBox6.Enabled=false;
-                 comboBox5.Enabled=false;
-             }
-            else
-             {
-                 return;
-             }
-            if (check_lista(Convert.ToInt32(comboBox8.SelectedValue)))
-             {
-             this.medic_list.Add(Convert.ToInt32(comboBox8.SelectedValue));
-             this.medic_cant.Add(Convert.ToInt32(comboBox7.SelectedValue));
-                 comboBox8.Enabled=false;
-                 comboBox7.Enabled=false;
-             }
-            else
-             {
-                 return;
-             }
-            if (check_lista(Convert.ToInt32(comboBox10.SelectedValue)))
-             {
-             this.medic_list.Add(Convert.ToInt32(comboBox10.SelectedValue));
-             this.medic_cant.Add(Convert.ToInt32(comboBox9.SelectedValue));
-                 comboBox10.Enabled=false;
-                 comboBox9.Enabled=false;
-             }
-            else
-             {
-                 return;
-             }
-
-
-             DialogResult result = MessageBox.Show("Necesita agregar otra orden?", "Receta", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-             Funciones func = new Funciones();
-            switch (result)
+            this.dataAccess = new DataAccessLayer();
+            if (Convert.ToInt32(comboBox1.SelectedValue) != -1 && comboBox2.SelectedItem != null)
             {
-                case DialogResult.Yes:
+                if (arr[0] == 0 && check_lista(Convert.ToInt32(comboBox1.SelectedValue)))
+                {
+                    this.medic_list.Add(Convert.ToInt32(comboBox1.SelectedValue));
+                    this.medic_hist.Add(Convert.ToInt32(comboBox1.SelectedValue));
+                    this.medic_cant.Add(Convert.ToInt32(comboBox2.SelectedItem));
+                    comboBox1.Enabled = false;
+                    comboBox2.Enabled = false;
+                    arr[0] = 1;
+                }
+                else if (arr[0] == 0)
+                {
+                    return;
+                }
+            }
+            else if ((Convert.ToInt32(comboBox1.SelectedValue) != -1 && comboBox2.SelectedItem == null) || (Convert.ToInt32(comboBox1.SelectedValue) == -1 && comboBox2.SelectedItem != null))
+            {
+                MessageBox.Show("El campo medicamento o el de cantidad esta vacio", "Error");
+                return;
+            }
 
-                    Bono_farmacia farmacia = new Bono_farmacia(turno, afil_id);
-                    farmacia.Show();
+            if (Convert.ToInt32(comboBox4.SelectedValue) != -1 && comboBox3.SelectedItem != null)
+            {
+                if (arr[1] == 0 && check_lista(Convert.ToInt32(comboBox4.SelectedValue)))
+                {
+                    this.medic_list.Add(Convert.ToInt32(comboBox4.SelectedValue));
+                    this.medic_hist.Add(Convert.ToInt32(comboBox4.SelectedValue));
+                    this.medic_cant.Add(Convert.ToInt32(comboBox3.SelectedItem));
+                    comboBox4.Enabled = false;
+                    comboBox3.Enabled = false;
+                    arr[1] = 1;
+                }
+                else if (arr[1] == 0)
+                {
+                    return;
+                }
+            }
+            else if ((comboBox3.SelectedItem != null && Convert.ToInt32(comboBox4.SelectedValue) == -1) || (comboBox3.SelectedItem == null && Convert.ToInt32(comboBox4.SelectedValue) != -1))
+            {
+                MessageBox.Show("El campo medicamento o el de cantidad esta vacio", "Error");
+                return;
+            }
+
+            if (Convert.ToInt32(comboBox6.SelectedValue) != -1 && comboBox5.SelectedItem != null)
+            {
+                if (arr[2] == 0 && check_lista(Convert.ToInt32(comboBox6.SelectedValue)))
+                {
+                    this.medic_list.Add(Convert.ToInt32(comboBox6.SelectedValue));
+                    this.medic_hist.Add(Convert.ToInt32(comboBox6.SelectedValue));
+                    this.medic_cant.Add(Convert.ToInt32(comboBox5.SelectedItem));
+                    comboBox6.Enabled = false;
+                    comboBox5.Enabled = false;
+                    arr[2] = 1;
+                }
+                else if (arr[2] == 0)
+                {
+                    return;
+                }
+            }
+            else if ((comboBox5.SelectedItem != null && Convert.ToInt32(comboBox6.SelectedValue) == -1) || (comboBox5.SelectedItem == null && Convert.ToInt32(comboBox6.SelectedValue) != -1))
+            {
+                MessageBox.Show("El campo medicamento o el de cantidad esta vacio", "Error");
+                return;
+            }
+            if (comboBox7.SelectedItem != null && Convert.ToInt32(comboBox8.SelectedValue) != -1)
+            {
+                if (arr[3] == 0 && check_lista(Convert.ToInt32(comboBox8.SelectedValue)))
+                {
+                    this.medic_list.Add(Convert.ToInt32(comboBox8.SelectedValue));
+                    this.medic_hist.Add(Convert.ToInt32(comboBox8.SelectedValue));
+                    this.medic_cant.Add(Convert.ToInt32(comboBox7.SelectedItem));
+                    comboBox8.Enabled = false;
+                    comboBox7.Enabled = false;
+                    arr[3] = 1;
+                }
+                else if (arr[3] == 0)
+                {
+                    return;
+                }
+            }
+            else if ((comboBox7.SelectedItem != null && Convert.ToInt32(comboBox8.SelectedValue) == -1) || (comboBox7.SelectedItem == null && Convert.ToInt32(comboBox8.SelectedValue) != -1))
+            {
+                MessageBox.Show("El campo medicamento o el de cantidad esta vacio", "Error");
+                return;
+            }
+            if (comboBox9.SelectedItem != null && Convert.ToInt32(comboBox10.SelectedValue) != -1)
+            {
+                if (arr[4] == 0 && check_lista(Convert.ToInt32(comboBox10.SelectedValue)))
+                {
+                    this.medic_list.Add(Convert.ToInt32(comboBox10.SelectedValue));
+                    this.medic_hist.Add(Convert.ToInt32(comboBox10.SelectedValue));
+                    this.medic_cant.Add(Convert.ToInt32(comboBox9.SelectedItem));
+                    comboBox10.Enabled = false;
+                    comboBox9.Enabled = false;
+                    arr[4] = 1;
+                }
+                else if (arr[4] == 0)
+                {
+                    return;
+                }
+            }
+            else if ((comboBox9.SelectedItem != null && Convert.ToInt32(comboBox10.SelectedValue) == -1) || (comboBox9.SelectedItem == null && Convert.ToInt32(comboBox10.SelectedValue) != -1))
+            {
+                MessageBox.Show("El campo medicamento o el de cantidad esta vacio", "Error");
+                return;
+            }
+
+            if (medic_list.Count % 5 == 0)
+            {
+                DialogResult result = MessageBox.Show("Necesita agregar otra orden?", "Receta", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                Funciones func = new Funciones();
+                switch (result)
+                {
+                    case DialogResult.Yes:
+                        this.dataAccess.persistir_medic(medic_list, medic_cant, afil_id, bono_id, consulta);
+                        Bono_farmacia farmacia = new Bono_farmacia(consulta, afil_id);
+                        farmacia.padre = this.parent;
+                        farmacia.medic_hist = this.medic_hist;
+                        farmacia.Show();
 
 
-                    this.Hide();
-                    break;
-                case DialogResult.No:
-                    this.Close();
-                    parent.Close();
-                    break;
+                        this.Hide();
+                        break;
+                    case DialogResult.No:
+                        this.dataAccess.persistir_medic(medic_list, medic_cant, afil_id, bono_id, consulta);
+                        this.Close();
+                        parent.Close();
+                        break;
+                }
+            }
+            else
+            {
+                this.dataAccess.persistir_medic(medic_list, medic_cant, afil_id, bono_id, consulta);
+                this.Close();
+                parent.Close();
             }
         }
+
 
         private void medicamentos_Load(object sender, EventArgs e)
         {
@@ -159,12 +227,14 @@ namespace Clinica.Generar_Receta
             //se especifica el campo de la tabla
             comboBox10.DisplayMember = "medic_descripcion";
             comboBox10.ValueMember = "medic_id";
+            for (int i=0; i< 5; i++)
+            {arr[i]=0;}
             
         }
 
         private bool check_lista (int valor)
         {
-            foreach (Int32 lista in this.medic_list)
+            foreach (Int32 lista in this.medic_hist)
             {
                 if (lista == valor)
                 {
