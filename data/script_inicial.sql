@@ -547,6 +547,7 @@ CREATE TABLE [GESTIONAR].[rol_usuario](
       [rolu_user_id] [int] NOT NULL REFERENCES GESTIONAR.usuario (usua_id),
       [rolu_rol_id] [int] NOT NULL REFERENCES GESTIONAR.rol (rol_id),
       [rol_relacion] [int] NULL,
+      [rol_relacion_sub] [int] NULL,
       [rolu_creado] [datetime] NULL,
       [rolu_modificado] [datetime] NULL
 ) ON [PRIMARY]
@@ -558,7 +559,7 @@ Select 'Creo las relaciones entre el usuario y el rol'
   insert into [GESTIONAR].[rol_usuario]
   ([rolu_user_id],[rolu_rol_id],[rolu_creado],[rolu_modificado],rol_relacion)
   values
-  (0,0,SYSDATETIME(),SYSDATETIME(),0),
+  (0,0,SYSDATETIME(),SYSDATETIME(),23),
   (1,0,SYSDATETIME(),SYSDATETIME(),1),
   (2,1,SYSDATETIME(),SYSDATETIME(),2),
   (3,1,SYSDATETIME(),SYSDATETIME(),3),
@@ -731,7 +732,6 @@ select 'Creo la tabla bono_consulta'
 CREATE TABLE [GESTIONAR].[bono_consulta](
   [boco_id] [int] IDENTITY(181694,1) NOT NULL ,
   [boco_compra_id] [int] NOT NULL REFERENCES GESTIONAR.compra (compra_id),
-  [boco_numero_consulta] [int] NULL,
   [boco_afi_id] [int] NOT NULL ,
   [boco_afi_sub_id] [int] NOT NULL,
   [boco_plan_id] [int] NOT NULL REFERENCES GESTIONAR.plan_medico (plan_id),
@@ -773,7 +773,7 @@ CREATE TABLE [GESTIONAR].[consulta](
   [consul_id] [int] IDENTITY(0,1) NOT NULL ,
   [consul_sintomas] varchar(255) NULL ,
   [consul_enfermedades] varchar(255) NULL,
-  [consul_tuno_id] [int] NOT NULL REFERENCES GESTIONAR.turno (turn_id),
+  [consul_turno_id] [int] NOT NULL REFERENCES GESTIONAR.turno (turn_id),
   [consul_bono_id] [int] NULL REFERENCES GESTIONAR.bono_consulta (boco_id),
   [consul_afi_id] [int] NOT NULL ,
   [consul_afi_sub_id] [int] NOT NULL,
@@ -793,7 +793,7 @@ select 'Populo la tabla consulta'
 INSERT INTO [GD2C2013].[GESTIONAR].[consulta]
            ([consul_sintomas]
            ,[consul_enfermedades]
-           ,[consul_tuno_id]
+           ,[consul_turno_id]
            ,[consul_bono_id]
            ,[consul_afi_id]
            ,[consul_afi_sub_id]
@@ -804,6 +804,8 @@ from gd_esquema.Maestra,GESTIONAR.bono_consulta
 where boco_id=Bono_Consulta_Numero
 and Consulta_Enfermedades is not null
 and Consulta_Sintomas is not null)
+
+
 
 select 'Creo la tabla cancelacion'
 

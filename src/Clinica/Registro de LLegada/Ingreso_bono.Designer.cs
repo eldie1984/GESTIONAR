@@ -56,11 +56,11 @@
             // maskedTextBox1
             // 
             this.maskedTextBox1.Location = new System.Drawing.Point(59, 71);
-            this.maskedTextBox1.Mask = "99999999";
             this.maskedTextBox1.Name = "maskedTextBox1";
             this.maskedTextBox1.PromptChar = ' ';
             this.maskedTextBox1.Size = new System.Drawing.Size(184, 20);
             this.maskedTextBox1.TabIndex = 3;
+            this.maskedTextBox1.ValidatingType = typeof(int);
             // 
             // Ingreso_bono
             // 

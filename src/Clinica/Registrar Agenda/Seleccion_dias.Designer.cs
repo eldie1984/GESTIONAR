@@ -155,7 +155,7 @@
             this.Controls.Add(this.checkBox2);
             this.Controls.Add(this.checkBox1);
             this.Name = "Seleccion_dias";
-            this.Text = "Form1";
+            this.Text = "Seleccion de Dias";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

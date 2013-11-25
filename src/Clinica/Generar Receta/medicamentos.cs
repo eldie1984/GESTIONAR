@@ -149,7 +149,7 @@ namespace Clinica.Generar_Receta
             if (medic_list.Count % 5 == 0)
             {
                 DialogResult result = MessageBox.Show("Necesita agregar otra orden?", "Receta", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-                Funciones func = new Funciones();
+           
                 switch (result)
                 {
                     case DialogResult.Yes:

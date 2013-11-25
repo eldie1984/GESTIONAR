@@ -275,6 +275,127 @@ namespace Clinica
 
         }
 
+        public Int32 getTurnoId(Int32 profesional, DateTime fecha)
+        {
+            Int32 Resultado = 0;
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = @"select turn_id  " +
+                "from GESTIONAR.turno , GESTIONAR.consulta " +
+                "where turn_profe_id=@profesional " +
+                "and turn_baja=0 " +
+                "and turn_hora_inicio >= DATEADD(minute,-15,@ahora)  " +
+                "and turn_hora_inicio<DATEADD(minute,15,@ahora)  " +
+                "and consul_turno_id=turn_id " +
+                "and consul_sintomas is null " +
+                "and consul_enfermedades is null;";
+
+
+                command.Parameters.Add("@profesional", SqlDbType.Int);
+                command.Parameters.Add("@ahora", SqlDbType.DateTime);
+
+                command.Parameters["@profesional"].Value = profesional;
+                command.Parameters["@ahora"].Value = fecha;
+                SqlDataReader Reg = command.ExecuteReader();
+                if (Reg.HasRows)
+                {
+                    Reg.Read();
+                    Resultado = Convert.ToInt32(Reg[0].ToString());
+                }
+            }
+            return Resultado;
+        }
+
+        public List<string> getFuncID(Int32 rol_id)
+        {
+            List <string> funcion = new List <string>();
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = @"select fu.func_name from GESTIONAR.Rol_funcionalidad rf ,GESTIONAR.funcionalidad fu  " +
+                                      "where rf.rolf_rol_id = @rol_id  " +
+                                      "and fu.func_id=rf.rolf_func_id  " +
+                                      "order by rf.rolf_func_id desc";
+                command.Parameters.Add("@rol_id", SqlDbType.Int);
+                command.Parameters["@rol_id"].Value = rol_id;
+                SqlDataReader especReader = command.ExecuteReader();
+                while (especReader.Read())
+                {
+
+                    string cod = especReader.GetString(0);
+
+                    funcion.Add(cod);
+                }
+                especReader.Close();
+            }
+            return funcion;
+
+        }
+
+        public Usuario getUser(Int32 user_id, Int32 rol_id)
+        {
+
+            Usuario result = new Usuario();
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = @"select rol_relacion,rol_relacion_sub from GESTIONAR.rol_usuario ru where ru.rolu_rol_id=@rol_id and ru.rolu_user_id=@user_id";
+
+
+                command.Parameters.Add("@rol_id", SqlDbType.Int);
+                command.Parameters.Add("@user_id", SqlDbType.Int);
+
+                command.Parameters["@rol_id"].Value = rol_id;
+                command.Parameters["@user_id"].Value = user_id;
+                SqlDataReader Reg = command.ExecuteReader();
+
+                if (Reg.Read())
+                {
+                    int cod = Reg.GetInt32(0);
+                    int cod_sub;
+                    if (!Reg.IsDBNull(1))
+                    {
+                       cod_sub = Reg.GetInt32(1);
+                    }
+                    else
+                    {
+                        cod_sub = -1;
+                    }
+
+
+                    result = new Usuario() { id = user_id, rol=rol_id, user_rel=cod, user_rel_sub=cod_sub };
+                }
+            }
+            return result;
+        }
+
+        public Int32 getBono(Int32 turno)
+        {
+            Int32 Resultado = 0;
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = @"select consul_bono_id from GESTIONAR.consulta where consul_turno_id=@turno;";
+
+
+                command.Parameters.Add("@turno", SqlDbType.Int);
+                
+                command.Parameters["@turno"].Value = turno;
+               
+                SqlDataReader Reg = command.ExecuteReader();
+                if (Reg.HasRows)
+                {
+                    Reg.Read();
+                    Resultado = Convert.ToInt32(Reg[0].ToString());
+                }
+            }
+            return Resultado;
+        }
         #endregion
 
         #region ADDS
@@ -563,9 +684,69 @@ namespace Clinica
 
             }
         }
-        #endregion
-        // agrega la relacion entre el bono farmacia y los medicamentos
 
+        public QueryResult AddConsulta(int bono, int turno, int afiliado, int miembro)
+        {
+            QueryResult nuevaConsulta= new QueryResult();
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                SqlTransaction transaction;
+                transaction = connection.BeginTransaction("Crear consulta");
+
+                command.Connection = connection;
+                command.Transaction = transaction;
+                try
+                {
+                    command.CommandText = @"INSERT INTO [GD2C2013].[GESTIONAR].[consulta] " +
+                                        "([consul_turno_id],[consul_bono_id],[consul_afi_id],[consul_afi_sub_id],[consul_creado],[consul_modificado]) " +
+                                        "values" +
+                                        "(@turno,@bono,@afiliado,@miembro,@creado,@modificado);" +
+                                         "SELECT SCOPE_IDENTITY()";
+
+                    command.Parameters.Add("@turno", SqlDbType.Int);
+                    command.Parameters.Add("@bono", SqlDbType.Int);
+                    command.Parameters.Add("@afiliado", SqlDbType.Int);
+                    command.Parameters.Add("@miembro", SqlDbType.Int);
+                    command.Parameters.Add("@creado", SqlDbType.DateTime);
+                    command.Parameters.Add("@modificado", SqlDbType.DateTime);
+
+                    command.Parameters["@turno"].Value = turno;
+                    command.Parameters["@bono"].Value = bono;
+                    command.Parameters["@afiliado"].Value = afiliado;
+                    command.Parameters["@miembro"].Value = miembro;
+                    command.Parameters["@creado"].Value = Helper.GetFechaNow();
+                    command.Parameters["@modificado"].Value = Helper.GetFechaNow();
+
+                    nuevaConsulta.ID = Convert.ToInt32(command.ExecuteScalar());
+                    
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Commit Exception Type: {0}", ex.GetType());
+                    Console.WriteLine("  Message: {0}", ex.Message);
+                    nuevaConsulta.mensaje = nuevaConsulta.mensaje + "Commit Exception Type: " + ex.GetType() + "\n" + "  Message: " + ex.Message;
+                    nuevaConsulta.ID = -1;
+                    try
+                    {
+                        transaction.Rollback();
+                    }
+                    catch (Exception ex2)
+                    {
+                        Console.WriteLine("Rollback Exception Type: {0}", ex2.GetType());
+                        Console.WriteLine("  Message: {0}", ex2.Message);
+                        nuevaConsulta.mensaje = nuevaConsulta.mensaje + "\n" + "Rollback Exception Type: " + ex.GetType() + "\n" + "  Message: " + ex.Message; 
+                    }
+
+                }
+            }
+            return nuevaConsulta;
+        }
+
+        #endregion
+        
         #region Consulta
         public string persistir_medic(List<int> medic_list, List<int> medic_cant, int afil_id, int bono_id, int consulta)
         {
@@ -581,7 +762,7 @@ namespace Clinica
                 command.Transaction = transaction;
                 try
                 {
-                    command.CommandText = @"update GESTIONAR.bono_farmacia" +
+                    command.CommandText = "update GESTIONAR.bono_farmacia" +
                                            " set bofa_bono_consulta_id=@consulta," +
                                            "bofa_modificado=@modificado " +
                                            "where bofa_id=@bono";
@@ -595,7 +776,7 @@ namespace Clinica
                     command.Parameters["@bono"].Value = bono_id;
                     command.Parameters["@modificado"].Value = Helper.GetFechaNow();
                     command.ExecuteNonQuery();
-                    command.CommandText = @"INSERT INTO [GD2C2013].[GESTIONAR].[medicamento_bono] " +
+                    command.CommandText = "INSERT INTO [GD2C2013].[GESTIONAR].[medicamento_bono] " +
                                            "([mebo_bofa_id],[mebo_medic_id],[mebo_cant],[mebo_creado],[mebo_modificado]) " +
                                            "values " +
                                            "(@bono,@medicamento,@cantidad,@modificado,@modificado)";
@@ -638,8 +819,6 @@ namespace Clinica
         }
 
         #endregion
-
-
 
         #region UPDATES
         public void UpdateProf(Profesional prof, List<int> especialidades)
@@ -777,8 +956,64 @@ namespace Clinica
             }
         }
 
-        #endregion
+        public string updateConsul(Int32 id_turno, string sintoma, string enfermedad)
+        {
+            string resultado = string.Empty;
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                SqlTransaction transaction;
+                transaction = connection.BeginTransaction("Crear consulta");
 
+                command.Connection = connection;
+                command.Transaction = transaction;
+                try
+                {
+                    command.CommandText = @"UPDATE [GESTIONAR].[consulta] " +
+                                        "SET " +
+                                        "consul_sintomas = @Sintoma, " +
+                                        "consul_enfermedades=@Enfermedad, " +
+                                        "consul_modificado=@modificado " +
+                                        "where consul_turno_id =@turno_id";
+
+
+                    command.Parameters.Add("@turno_id", SqlDbType.Int);
+                    command.Parameters.Add("@Sintoma", SqlDbType.Text);
+                    command.Parameters.Add("@Enfermedad", SqlDbType.Text);
+                    command.Parameters.Add("@modificado", SqlDbType.DateTime);
+
+                    command.Parameters["@turno_id"].Value = id_turno;
+                    command.Parameters["@Sintoma"].Value = sintoma;
+                    command.Parameters["@Enfermedad"].Value = enfermedad;
+                    command.Parameters["@modificado"].Value = Helper.GetFechaNow();
+                    command.ExecuteNonQuery();
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Commit Exception Type: {0}", ex.GetType());
+                    Console.WriteLine("  Message: {0}", ex.Message);
+                    resultado = resultado + "Commit Exception Type: " + ex.GetType() + "\n" + "  Message: " + ex.Message;
+                    try
+                    {
+                        transaction.Rollback();
+                    }
+                    catch (Exception ex2)
+                    {
+                        Console.WriteLine("Rollback Exception Type: {0}", ex2.GetType());
+                        Console.WriteLine("  Message: {0}", ex2.Message);
+                        resultado = resultado + "\n" + "Rollback Exception Type: " + ex.GetType() + "\n" + "  Message: " + ex.Message;
+                    }
+
+                }
+
+            }
+            return resultado;
+
+        }
+
+        #endregion
 
         #region DELETES
         public void BajaAfiliado(Afiliado afi)
@@ -820,6 +1055,102 @@ namespace Clinica
 
                 int rows = command.ExecuteNonQuery();
             }
+        }
+
+        #endregion
+
+        #region CHECK
+
+        public bool checkBono(Int32 bono)
+        {
+            bool Resultado = false;
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = @"select * from GESTIONAR.bono_farmacia " +
+                                        "where bofa_id=@bono " +
+                                        "and bofa_bono_consulta_id is null " +
+                                        "and dateadd(day,60,bofa_creado) >= @ahora " +
+                                        "and bofa_id not in (select mebo_bofa_id from GESTIONAR.medicamento_bono)";
+
+                command.Parameters.Add("@bono", SqlDbType.Int);
+                command.Parameters.Add("@ahora", SqlDbType.DateTime);
+
+                command.Parameters["@bono"].Value = bono;
+                command.Parameters["@ahora"].Value = Helper.GetFechaNow();
+                SqlDataReader Reg = command.ExecuteReader();
+                if (Reg.HasRows)
+                {
+                    Resultado = true;
+                }
+            }
+            return Resultado;
+
+        }
+
+        public bool checkTurno(Int32 turno, Int32 afil_id, Int32 afi_sub_id)
+        {
+            bool Resultado = false;
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = @"select * from GESTIONAR.turno " +
+                                        "where turn_id=@turno " +
+                                        "and turn_afil_id=@afil_id " +
+                                        "and turn_afi_sub_id=@afi_sub_id";
+
+                command.Parameters.Add("@turno", SqlDbType.Int);
+                command.Parameters.Add("@afil_id", SqlDbType.Int);
+                command.Parameters.Add("@afi_sub_id", SqlDbType.Int);
+
+                command.Parameters["@turno"].Value = turno;
+                command.Parameters["@afil_id"].Value = afil_id;
+                command.Parameters["@afi_sub_id"].Value = afi_sub_id;
+
+                SqlDataReader Reg = command.ExecuteReader();
+                if (Reg.HasRows)
+                {
+                    Resultado = true;
+                }
+
+            }
+
+            
+            return Resultado;
+        }
+
+        public bool checkBonoConsulta(Int32 bono, int afiliado)
+        {
+            bool Resultado = false;
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = @"select * from GESTIONAR.bono_consulta " +
+                                        "where boco_id=@bono " +
+                                        "and boco_afi_id = @afil_id " +
+                                        "and boco_id  in (select consul_bono_id " +
+                                        "from GESTIONAR.consulta " +
+                                        "where consul_afi_id=@afil_id)";
+
+                command.Parameters.Add("@bono", SqlDbType.Int);
+                command.Parameters.Add("@afil_id", SqlDbType.Int);
+                //command.Parameters.Add("@afi_sub_id", SqlDbType.Int);
+
+                command.Parameters["@bono"].Value = bono;
+                command.Parameters["@afil_id"].Value = afiliado;
+                //command.Parameters["@afi_sub_id"].Value = afi_sub_id;
+
+                SqlDataReader Reg = command.ExecuteReader();
+                if (!Reg.HasRows)
+                {
+                    Resultado = true;
+                }
+
+            }
+            return Resultado;
         }
 
         #endregion

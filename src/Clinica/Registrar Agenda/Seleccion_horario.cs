@@ -11,9 +11,12 @@ namespace Clinica.Registrar_Agenda
 {
     public partial class Seleccion_horario : Form
     {
-        public Seleccion_horario()
+        List<Int32> dias;
+
+        public Seleccion_horario(List<Int32> semana)
         {
             InitializeComponent();
+            this.dias = semana;
         }
 
         private void button1_Click(object sender, EventArgs e)

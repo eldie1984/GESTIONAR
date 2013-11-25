@@ -13,33 +13,37 @@ namespace Clinica.Generar_Receta
     {
         public Form parent;
         private Int32 turno;
+        private Int32 bono_consulta;
         private Int32 afil_id;
+        private DataAccessLayer dataAccess;
 
-        public Sintomas(Int32 afiliado,Int32 turno)
+        public Sintomas(Int32 afiliado, Int32 turno, Int32 bono_consulta)
         {
             InitializeComponent();
             this.afil_id = afiliado;
             this.turno = turno;
+            this.bono_consulta = bono_consulta;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            this.dataAccess = new DataAccessLayer();
             if (textBox1.Text != string.Empty && textBox2.Text != string.Empty)
             {
                 DialogResult result = MessageBox.Show("Desea crear una receta?", "Receta", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information);
-                Funciones func = new Funciones();
+                
                 switch (result)
                 {
                     case DialogResult.Yes:
-                        func.completeConsul(this.turno, textBox1.Text, textBox2.Text);
-                        Bono_farmacia farmacia = new Bono_farmacia(turno,afil_id);
+                        this.dataAccess.updateConsul(this.turno, textBox1.Text, textBox2.Text);
+                        Bono_farmacia farmacia = new Bono_farmacia(bono_consulta,afil_id);
                         farmacia.Show();
 
 
                         this.Hide();
                         break;
                     case DialogResult.No:
-                        func.completeConsul(this.turno, textBox1.Text, textBox2.Text);
+                        this.dataAccess.updateConsul(this.turno, textBox1.Text, textBox2.Text);
                         this.Close();
                         parent.Close();
                         break;

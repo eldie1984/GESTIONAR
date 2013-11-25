@@ -7,32 +7,30 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using Clinica.Model;
 
 namespace Clinica
 {
     public partial class Main : Form
     {
-        private Int32 User_id;
-        private Int32 Rol_id;
-        private Int32 Usuario_relacional;
+        private Usuario usuario;
         public Form parentForm;
+        private DataAccessLayer dataAccess;
 
         public Main(Int32 rol , Int32 usuario)
         {
+            this.dataAccess = new DataAccessLayer();
             InitializeComponent();
-            Funciones func =new Funciones();
-            this.User_id = usuario;
-            this.Rol_id = rol;
-            this.Usuario_relacional = func.getUserRel(usuario, rol);
+            this.usuario = this.dataAccess.getUser(usuario,rol);
         }
 
         private void Main_Load(object sender, EventArgs e)
         {
-            Funciones Func = new Funciones();
-            SqlDataReader list_func = Func.getFuncID(Rol_id);
-            while (list_func.Read())
+            this.dataAccess = new DataAccessLayer();
+            List<string> listaFunciones = this.dataAccess.getFuncID(this.usuario.rol);
+            for(int i=0; i < listaFunciones.Count() ; i++)
             {
-                string menu = list_func.GetString(1);
+                string menu = listaFunciones[i];
                 var m = menuStrip1.Items.Find(menu, true);
                 var consulta = consultaToolStripMenuItem.DropDownItems.Find(menu, true);
                 var rol = aBMToolStripMenuItem.DropDownItems.Find(menu, true);
@@ -119,7 +117,7 @@ namespace Clinica
 
         private void registrarResultadoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Generar_Receta.SelectHora resultado = new Clinica.Generar_Receta.SelectHora(this.Usuario_relacional);
+            Generar_Receta.SelectHora resultado = new Clinica.Generar_Receta.SelectHora(this.usuario.user_rel);
             resultado.Show();
             resultado.MdiParent = this;
         }
@@ -271,28 +269,28 @@ namespace Clinica
 
         private void registrarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Registrar_Agenda.Seleccion_dias agenda = new Clinica.Registrar_Agenda.Seleccion_dias(this.Usuario_relacional);
+            Registrar_Agenda.Seleccion_dias agenda = new Clinica.Registrar_Agenda.Seleccion_dias(this.usuario.user_rel);
             agenda.Show();
             agenda.MdiParent = this;
         }
 
         private void pedidoTurnoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Pedir_Turno.Turno turno = new Clinica.Pedir_Turno.Turno(this.Usuario_relacional, this.Rol_id);
+            Pedir_Turno.Turno turno = new Clinica.Pedir_Turno.Turno(this.usuario);
             turno.Show();
             turno.MdiParent = this;
         }
 
         private void cancelarAtencionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Cancelar_Atencion.Cancelar cancelar = new Clinica.Cancelar_Atencion.Cancelar(this.Usuario_relacional, this.Rol_id);
+            Cancelar_Atencion.Cancelar cancelar = new Clinica.Cancelar_Atencion.Cancelar(this.usuario);
             cancelar.Show();
             cancelar.MdiParent = this;
         }
 
         private void comprarBonosToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Compra_de_Bono.CompraBonos bono = new Clinica.Compra_de_Bono.CompraBonos(this.Usuario_relacional,this.Rol_id);
+            Compra_de_Bono.CompraBonos bono = new Clinica.Compra_de_Bono.CompraBonos(this.usuario);
             bono.Show();
             bono.MdiParent = this;
         }

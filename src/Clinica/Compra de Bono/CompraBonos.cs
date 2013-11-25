@@ -12,6 +12,7 @@ namespace Clinica.Compra_de_Bono
 {
     public partial class CompraBonos : Form
     {
+        private Usuario usuario;
         private int AfiliadoID;
         private int AfiliadoSubID;
         private Afiliado selectedAfiliado;
@@ -21,7 +22,7 @@ namespace Clinica.Compra_de_Bono
         private bool error=false;
         private Compra currentCompra;
 
-        public CompraBonos(int userid,int rolid)
+        public CompraBonos(Usuario usuario)
         {
 
 

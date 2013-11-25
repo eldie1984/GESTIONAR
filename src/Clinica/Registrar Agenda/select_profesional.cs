@@ -20,5 +20,12 @@ namespace Clinica.Registrar_Agenda
         {
             
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Formularios profesional = new Formularios();
+            DataSet profeLista = profesional.listarProfesionales(textBox1.Text);
+            dataGridView1.DataSource = profeLista.Tables[0].DefaultView;
+        }
     }
 }

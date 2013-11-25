@@ -190,6 +190,8 @@
     <Compile Include="Model\BonoFarmacia.cs" />
     <Compile Include="Model\Compra.cs" />
     <Compile Include="Model\Especialidad.cs" />
+    <Compile Include="Model\QueryResult.cs" />
+    <Compile Include="Model\Usuario.cs" />
     <Compile Include="Model\Plan.cs" />
     <Compile Include="Model\Profesional.cs" />
     <Compile Include="Pedir Turno\Turno.cs">

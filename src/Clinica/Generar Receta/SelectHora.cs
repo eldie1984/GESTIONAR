@@ -12,6 +12,7 @@ namespace Clinica.Generar_Receta
     public partial class SelectHora : Form
     {
         private Int32 profe_id;
+        private DataAccessLayer dataAccess;
 
         public SelectHora(Int32 profesional)
         {
@@ -21,18 +22,19 @@ namespace Clinica.Generar_Receta
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Funciones func = new Funciones();
-            Int32 turno = func.getTurnoId(this.profe_id, dateTimePicker1.Value);
+            this.dataAccess = new DataAccessLayer();
+            Int32 turno = this.dataAccess.getTurnoId(this.profe_id, dateTimePicker1.Value);
+            Int32 bono = this.dataAccess.getBono(turno);
             if (turno > 0)
             {
-                Sintomas sintomas = new Sintomas(this.profe_id, turno);
+                Sintomas sintomas = new Sintomas(this.profe_id, turno,bono);
                 sintomas.parent = this;
                 sintomas.Show();
                 this.Hide();
             }
             else
             {
-                MessageBox.Show("No existe ningun turno en el horario ingresado para el profesional actual", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("No existe ningun turno en el horario ingresado para el profesional actual o no fue cargada la llegada", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

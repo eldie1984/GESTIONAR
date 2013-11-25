@@ -14,6 +14,7 @@ namespace Clinica.Registro_de_LLegada
         private Int32 profe_id;
         public Form parent;
         public Form MiParent;
+        private DataAccessLayer dataAccess;
 
         public CheckTurno(Int32 profesional)
         {
@@ -34,8 +35,18 @@ namespace Clinica.Registro_de_LLegada
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Funciones func = new Funciones();
-            if (func.checkTurno(Convert.ToInt32(comboBox1.SelectedValue), Convert.ToInt32(maskedTextBox1.Text), Convert.ToInt32(maskedTextBox2.Text)))
+            this.dataAccess = new DataAccessLayer();
+            try
+            {
+                Convert.ToInt32(maskedTextBox1.Text);
+                Convert.ToInt32(maskedTextBox2.Text);
+            }
+            catch
+            {
+                MessageBox.Show("El usuario puede ser solo numerico", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (this.dataAccess.checkTurno(Convert.ToInt32(comboBox1.SelectedValue), Convert.ToInt32(maskedTextBox1.Text), Convert.ToInt32(maskedTextBox2.Text)))
             {
                 Ingreso_bono bono_consulta = new Ingreso_bono(Convert.ToInt32(comboBox1.SelectedValue), Convert.ToInt32(maskedTextBox1.Text), Convert.ToInt32(maskedTextBox2.Text));
                 bono_consulta.Show();

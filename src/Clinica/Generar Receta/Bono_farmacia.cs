@@ -14,6 +14,7 @@ namespace Clinica.Generar_Receta
         private Int32 consulta;
         private Int32 afil_id;
         public Form padre ;
+        private DataAccessLayer dataAccess;
         public List<Int32> medic_hist = new List<Int32>();
 
         public Bono_farmacia(Int32 consulta, Int32 afiliado)
@@ -27,8 +28,8 @@ namespace Clinica.Generar_Receta
         private void button1_Click(object sender, EventArgs e)
         {
             bool error = false;
+            this.dataAccess = new DataAccessLayer();
             Int32 bono_id=0;
-            Funciones func = new Funciones();
             try
             {
                 bono_id=Convert.ToInt32(textBox1.Text);
@@ -38,7 +39,7 @@ namespace Clinica.Generar_Receta
                 error = true;
                 MessageBox.Show("El bono puede ser solo numerico", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            if (error == false && func.checkBono(bono_id))
+            if (error == false && this.dataAccess.checkBono(bono_id))
             {
                 medicamentos medic = new medicamentos(this.consulta, bono_id, this.afil_id);
                 medic.medic_hist = this.medic_hist;

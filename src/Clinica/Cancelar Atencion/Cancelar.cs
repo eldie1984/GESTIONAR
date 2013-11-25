@@ -6,19 +6,18 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Clinica.Model;
 
 namespace Clinica.Cancelar_Atencion
 {
     public partial class Cancelar : Form
     {
-        private Int32 user_id;
-        private Int32 rol_id;
+        private Usuario usuario;
 
-        public Cancelar(Int32 user, Int32 rol)
+        public Cancelar(Usuario usuario)
         {
             InitializeComponent();
-            this.user_id = user;
-            this.rol_id = rol;
+            this.usuario = usuario;
         }
     }
 }
