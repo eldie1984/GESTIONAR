@@ -186,6 +186,7 @@
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
     <Compile Include="Model\Afiliado.cs" />
+    <Compile Include="Model\Agenda.cs" />
     <Compile Include="Model\BonoConsulta.cs" />
     <Compile Include="Model\BonoFarmacia.cs" />
     <Compile Include="Model\Compra.cs" />
@@ -276,9 +277,6 @@
     <EmbeddedResource Include="Registrar Agenda\Seleccion_fecha.resx">
       <DependentUpon>Seleccion_fecha.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Registrar Agenda\Seleccion_horario.resx">
-      <DependentUpon>Seleccion_horario.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Registrar Agenda\select_profesional.resx">
       <DependentUpon>select_profesional.cs</DependentUpon>
     </EmbeddedResource>
@@ -318,12 +316,6 @@
     </Compile>
     <Compile Include="Registrar Agenda\Seleccion_fecha.Designer.cs">
       <DependentUpon>Seleccion_fecha.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Registrar Agenda\Seleccion_horario.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Registrar Agenda\Seleccion_horario.Designer.cs">
-      <DependentUpon>Seleccion_horario.cs</DependentUpon>
     </Compile>
     <Compile Include="Registrar Agenda\select_profesional.cs">
       <SubType>Form</SubType>

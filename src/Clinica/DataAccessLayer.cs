@@ -745,6 +745,67 @@ namespace Clinica
             return nuevaConsulta;
         }
 
+        public QueryResult AddAgenda(List<Agenda> dias, DateTime desde, DateTime hasta, Int32 profesional)
+        {
+            QueryResult nuevaConsulta = new QueryResult();
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                SqlTransaction transaction;
+                transaction = connection.BeginTransaction("Crear consulta");
+
+                command.Connection = connection;
+                command.Transaction = transaction;
+                try
+                {
+                    command.CommandText = @"INSERT INTO [GD2C2013].[GESTIONAR].[consulta] " +
+                                        "([consul_turno_id],[consul_bono_id],[consul_afi_id],[consul_afi_sub_id],[consul_creado],[consul_modificado]) " +
+                                        "values" +
+                                        "(@turno,@bono,@afiliado,@miembro,@creado,@modificado);" +
+                                         "SELECT SCOPE_IDENTITY()";
+
+                    command.Parameters.Add("@turno", SqlDbType.Int);
+                    command.Parameters.Add("@bono", SqlDbType.Int);
+                    command.Parameters.Add("@afiliado", SqlDbType.Int);
+                    command.Parameters.Add("@miembro", SqlDbType.Int);
+                    command.Parameters.Add("@creado", SqlDbType.DateTime);
+                    command.Parameters.Add("@modificado", SqlDbType.DateTime);
+
+                    command.Parameters["@turno"].Value = turno;
+                    command.Parameters["@bono"].Value = bono;
+                    command.Parameters["@afiliado"].Value = afiliado;
+                    command.Parameters["@miembro"].Value = miembro;
+                    command.Parameters["@creado"].Value = Helper.GetFechaNow();
+                    command.Parameters["@modificado"].Value = Helper.GetFechaNow();
+
+                    nuevaConsulta.ID = Convert.ToInt32(command.ExecuteScalar());
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Commit Exception Type: {0}", ex.GetType());
+                    Console.WriteLine("  Message: {0}", ex.Message);
+                    nuevaConsulta.mensaje = nuevaConsulta.mensaje + "Commit Exception Type: " + ex.GetType() + "\n" + "  Message: " + ex.Message;
+                    nuevaConsulta.ID = -1;
+                    try
+                    {
+                        transaction.Rollback();
+                    }
+                    catch (Exception ex2)
+                    {
+                        Console.WriteLine("Rollback Exception Type: {0}", ex2.GetType());
+                        Console.WriteLine("  Message: {0}", ex2.Message);
+                        nuevaConsulta.mensaje = nuevaConsulta.mensaje + "\n" + "Rollback Exception Type: " + ex.GetType() + "\n" + "  Message: " + ex.Message;
+                    }
+
+                }
+            }
+            return nuevaConsulta;
+
+        }
+
         #endregion
         
         #region Consulta
