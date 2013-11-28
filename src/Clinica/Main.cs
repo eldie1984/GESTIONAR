@@ -295,6 +295,11 @@ namespace Clinica
             bono.MdiParent = this;
         }
 
+        private void bonosFarmaciaVencidosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
 
         
 

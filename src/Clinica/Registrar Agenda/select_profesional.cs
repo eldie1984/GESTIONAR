@@ -28,10 +28,8 @@ namespace Clinica.Registrar_Agenda
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             this.dataAccess = new DataAccessLayer();
-            for (int i =0 ; i < Dias.Count ; i++)
-            {
-                this.dataAccess.AddAgenda(Dias, Desde, Hasta, Convert.ToInt32(dataGridView1.CurrentRow.Cells["prof_id"].Value.ToString()));
-            }
+            
+            this.dataAccess.AddAgenda(Dias, Desde, Hasta, Convert.ToInt32(dataGridView1.CurrentRow.Cells["prof_id"].Value.ToString()));
         }
 
         private void button1_Click(object sender, EventArgs e)

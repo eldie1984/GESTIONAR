@@ -760,14 +760,14 @@ namespace Clinica
 
                 command.Connection = connection;
                 command.Transaction = transaction;
-                command.Parameters.Add("@desde", SqlDbType.Date);
-                command.Parameters.Add("@hasta", SqlDbType.Date);
-                command.Parameters.Add("@hora_inicio", SqlDbType.Time);
-                command.Parameters.Add("@hora_fin", SqlDbType.Time);
+                command.Parameters.Add("@fecha_desde", SqlDbType.Date);
+                command.Parameters.Add("@fecha_hasta", SqlDbType.Date);
+                command.Parameters.Add("@hora_desde", SqlDbType.Time);
+                command.Parameters.Add("@hora_hasta", SqlDbType.Time);
                 command.Parameters.Add("@profesional", SqlDbType.Int);
 
-                
-                command.Parameters["@hasta"].Value = hasta;
+
+                command.Parameters["@fecha_hasta"].Value = hasta;
                 command.Parameters["@profesional"].Value = profesional;
 
 
@@ -776,19 +776,19 @@ namespace Clinica
                 {
                     for (int i = 0; i < dias.Count; )
                     {
-                        command.Parameters["@desde"].Value = helper_desde;
+                        command.Parameters["@fecha_desde"].Value = helper_desde;
                         foreach (Agenda dia in dias)
                         {
-                            if (dia.dia == Convert.ToInt32(helper_desde.DayOfWeek.ToString()))
+                            if (dia.dia == Convert.ToInt32((int)helper_desde.DayOfWeek))
                             {
-                                command.Parameters["@hora_inicio"].Value = dia.horaInicio;
-                                command.Parameters["@hora_fin"].Value = dia.horaFin;
+                                command.Parameters["@hora_desde"].Value = dia.horaInicio;
+                                command.Parameters["@hora_hasta"].Value = dia.horaFin;
                                 i++;
                                 int rows = command.ExecuteNonQuery();
                             }
 
                         }
-                        helper_desde.AddDays(1);
+                        helper_desde=helper_desde.AddDays(1);
                     }
 
                     transaction.Commit();
