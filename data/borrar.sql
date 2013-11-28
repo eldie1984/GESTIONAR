@@ -114,6 +114,10 @@ IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].
 DROP PROCEDURE [GESTIONAR].[ProfesionalBaja]
 GO
 
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[generar_agenda]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [GESTIONAR].[generar_agenda]
+GO
+
 IF  EXISTS (SELECT * FROM sys.schemas WHERE name = 'GESTIONAR')
 DROP SCHEMA [GESTIONAR]
 GO

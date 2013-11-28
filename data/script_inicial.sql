@@ -578,8 +578,8 @@ Select 'Creo la tabla Turno '
 CREATE TABLE [GESTIONAR].[turno](
   [turn_id] [int] IDENTITY(0,1) NOT NULL ,
   [turn_profe_id] [int] NOT NULL REFERENCES GESTIONAR.profesional (prof_id),
-  [turn_afil_id] [int] NOT NULL ,
-  [turn_afi_sub_id] [int] NOT NULL ,
+  [turn_afil_id] [int]  NULL ,
+  [turn_afi_sub_id] [int]  NULL ,
   [turn_hora_inicio] [datetime] null,
   [turn_baja] [bit] NULL,
   [turn_creado] [datetime] NULL,
@@ -1066,3 +1066,30 @@ AS
 		
 		SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[plan_medico] OFF
 GO
+
+
+create procedure GESTIONAR.generar_agenda (@fecha_desde date ,@fecha_hasta date, @hora_desde time, @hora_hasta time ,@profesional int)
+as
+SET NOCOUNT ON
+begin
+declare @fecha date
+declare @hora time
+
+set @fecha=@fecha_desde
+while DATEDIFF(day,@fecha,@fecha_hasta) > 0
+  begin
+  set @hora=@hora_desde
+  while DATEDIFF(minute,@hora,@hora_hasta) > 29
+    begin
+    insert into GESTIONAR.turno (turn_profe_id,turn_hora_inicio,turn_baja,turn_creado,turn_modificado)
+    values
+    (@profesional,@fecha+CONVERT(datetime, @hora),0,SYSDATETIME(),SYSDATETIME())
+    
+    set @hora = DATEADD(minute,30,@hora)
+    select @hora, DATEDIFF(minute,@hora,@hora_hasta)
+    end
+    set @fecha = DATEADD(week,1,@fecha)
+    select @fecha
+  end
+end
+go

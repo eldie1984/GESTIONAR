@@ -748,38 +748,48 @@ namespace Clinica
         public QueryResult AddAgenda(List<Agenda> dias, DateTime desde, DateTime hasta, Int32 profesional)
         {
             QueryResult nuevaConsulta = new QueryResult();
+            DateTime helper_desde=desde;
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
             {
                 connection.Open();
-                SqlCommand command = connection.CreateCommand();
+
+                SqlCommand command = new SqlCommand("GESTIONAR.generar_agenda", connection);
+                command.CommandType = CommandType.StoredProcedure;
                 SqlTransaction transaction;
-                transaction = connection.BeginTransaction("Crear consulta");
+                transaction = connection.BeginTransaction("Transaccion_Agenda");
 
                 command.Connection = connection;
                 command.Transaction = transaction;
+                command.Parameters.Add("@desde", SqlDbType.Date);
+                command.Parameters.Add("@hasta", SqlDbType.Date);
+                command.Parameters.Add("@hora_inicio", SqlDbType.Time);
+                command.Parameters.Add("@hora_fin", SqlDbType.Time);
+                command.Parameters.Add("@profesional", SqlDbType.Int);
+
+                
+                command.Parameters["@hasta"].Value = hasta;
+                command.Parameters["@profesional"].Value = profesional;
+
+
+
                 try
                 {
-                    command.CommandText = @"INSERT INTO [GD2C2013].[GESTIONAR].[consulta] " +
-                                        "([consul_turno_id],[consul_bono_id],[consul_afi_id],[consul_afi_sub_id],[consul_creado],[consul_modificado]) " +
-                                        "values" +
-                                        "(@turno,@bono,@afiliado,@miembro,@creado,@modificado);" +
-                                         "SELECT SCOPE_IDENTITY()";
+                    for (int i = 0; i < dias.Count; )
+                    {
+                        command.Parameters["@desde"].Value = helper_desde;
+                        foreach (Agenda dia in dias)
+                        {
+                            if (dia.dia == Convert.ToInt32(helper_desde.DayOfWeek.ToString()))
+                            {
+                                command.Parameters["@hora_inicio"].Value = dia.horaInicio;
+                                command.Parameters["@hora_fin"].Value = dia.horaFin;
+                                i++;
+                                int rows = command.ExecuteNonQuery();
+                            }
 
-                    command.Parameters.Add("@turno", SqlDbType.Int);
-                    command.Parameters.Add("@bono", SqlDbType.Int);
-                    command.Parameters.Add("@afiliado", SqlDbType.Int);
-                    command.Parameters.Add("@miembro", SqlDbType.Int);
-                    command.Parameters.Add("@creado", SqlDbType.DateTime);
-                    command.Parameters.Add("@modificado", SqlDbType.DateTime);
-
-                    command.Parameters["@turno"].Value = turno;
-                    command.Parameters["@bono"].Value = bono;
-                    command.Parameters["@afiliado"].Value = afiliado;
-                    command.Parameters["@miembro"].Value = miembro;
-                    command.Parameters["@creado"].Value = Helper.GetFechaNow();
-                    command.Parameters["@modificado"].Value = Helper.GetFechaNow();
-
-                    nuevaConsulta.ID = Convert.ToInt32(command.ExecuteScalar());
+                        }
+                        helper_desde.AddDays(1);
+                    }
 
                     transaction.Commit();
                 }

@@ -36,9 +36,9 @@ namespace Clinica.Registrar_Agenda
             if (this.checkBox1.Checked)
             {
                 horaDesde=Convert.ToInt32(this.dateTimePicker2.Value.ToString("HH"));
-                minutosDesde = correct_minutos(Convert.ToInt32(this.dateTimePicker2.Value.ToString("mm")));
+                minutosDesde = Convert.ToInt32(this.dateTimePicker2.Value.ToString("mm"));
                 horaHasta=Convert.ToInt32(this.dateTimePicker1.Value.ToString("HH"));
-                minutosHasta = correct_minutos(Convert.ToInt32(this.dateTimePicker1.Value.ToString("mm")));
+                minutosHasta = Convert.ToInt32(this.dateTimePicker1.Value.ToString("mm"));
                 if (check_horario(horaDesde, minutosDesde, horaHasta, minutosHasta))
                 {
                     dias.Add(new Agenda() { dia = 0, horaInicio = horaDesde + ":" + minutosDesde, horaFin = horaHasta + ":" + minutosHasta });
@@ -61,9 +61,9 @@ namespace Clinica.Registrar_Agenda
             if (this.checkBox2.Checked)
             {
                 horaDesde = Convert.ToInt32(this.dateTimePicker4.Value.ToString("HH"));
-                minutosDesde = correct_minutos(Convert.ToInt32(this.dateTimePicker4.Value.ToString("mm")));
+                minutosDesde = Convert.ToInt32(this.dateTimePicker4.Value.ToString("mm"));
                 horaHasta = Convert.ToInt32(this.dateTimePicker3.Value.ToString("HH"));
-                minutosHasta = correct_minutos(Convert.ToInt32(this.dateTimePicker3.Value.ToString("mm")));
+                minutosHasta = Convert.ToInt32(this.dateTimePicker3.Value.ToString("mm"));
                 if (check_horario(horaDesde, minutosDesde, horaHasta, minutosHasta))
                 {
                     dias.Add(new Agenda() { dia = 0, horaInicio = horaDesde + ":" + minutosDesde, horaFin = horaHasta + ":" + minutosHasta });
@@ -86,9 +86,9 @@ namespace Clinica.Registrar_Agenda
             if (this.checkBox3.Checked)
             {
                 horaDesde = Convert.ToInt32(this.dateTimePicker6.Value.ToString("HH"));
-                minutosDesde = correct_minutos(Convert.ToInt32(this.dateTimePicker6.Value.ToString("mm")));
+                minutosDesde = Convert.ToInt32(this.dateTimePicker6.Value.ToString("mm"));
                 horaHasta = Convert.ToInt32(this.dateTimePicker5.Value.ToString("HH"));
-                minutosHasta = correct_minutos(Convert.ToInt32(this.dateTimePicker5.Value.ToString("mm")));
+                minutosHasta = Convert.ToInt32(this.dateTimePicker5.Value.ToString("mm"));
                 if (check_horario(horaDesde, minutosDesde, horaHasta, minutosHasta))
                 {
                     dias.Add(new Agenda() { dia = 0, horaInicio = horaDesde + ":" + minutosDesde, horaFin = horaHasta + ":" + minutosHasta });
@@ -111,9 +111,9 @@ namespace Clinica.Registrar_Agenda
             if (this.checkBox4.Checked)
             {
                 horaDesde = Convert.ToInt32(this.dateTimePicker8.Value.ToString("HH"));
-                minutosDesde = correct_minutos(Convert.ToInt32(this.dateTimePicker8.Value.ToString("mm")));
+                minutosDesde = Convert.ToInt32(this.dateTimePicker8.Value.ToString("mm"));
                 horaHasta = Convert.ToInt32(this.dateTimePicker7.Value.ToString("HH"));
-                minutosHasta = correct_minutos(Convert.ToInt32(this.dateTimePicker7.Value.ToString("mm")));
+                minutosHasta = Convert.ToInt32(this.dateTimePicker7.Value.ToString("mm"));
                 if (check_horario(horaDesde, minutosDesde, horaHasta, minutosHasta))
                 {
                     dias.Add(new Agenda() { dia = 0, horaInicio = horaDesde + ":" + minutosDesde, horaFin = horaHasta + ":" + minutosHasta });
@@ -136,9 +136,9 @@ namespace Clinica.Registrar_Agenda
             if (this.checkBox5.Checked)
             {
                 horaDesde = Convert.ToInt32(this.dateTimePicker10.Value.ToString("HH"));
-                minutosDesde = correct_minutos(Convert.ToInt32(this.dateTimePicker10.Value.ToString("mm")));
+                minutosDesde = Convert.ToInt32(this.dateTimePicker10.Value.ToString("mm"));
                 horaHasta = Convert.ToInt32(this.dateTimePicker9.Value.ToString("HH"));
-                minutosHasta = correct_minutos(Convert.ToInt32(this.dateTimePicker9.Value.ToString("mm")));
+                minutosHasta = Convert.ToInt32(this.dateTimePicker9.Value.ToString("mm"));
                 if (check_horario(horaDesde, minutosDesde, horaHasta, minutosHasta))
                 {
                     dias.Add(new Agenda() { dia = 0, horaInicio = horaDesde + ":" + minutosDesde, horaFin = horaHasta + ":" + minutosHasta });
@@ -161,9 +161,9 @@ namespace Clinica.Registrar_Agenda
             if (this.checkBox6.Checked)
             {
                 horaDesde = Convert.ToInt32(this.dateTimePicker12.Value.ToString("HH"));
-                minutosDesde = correct_minutos(Convert.ToInt32(this.dateTimePicker12.Value.ToString("mm")));
+                minutosDesde = Convert.ToInt32(this.dateTimePicker12.Value.ToString("mm"));
                 horaHasta = Convert.ToInt32(this.dateTimePicker11.Value.ToString("HH"));
-                minutosHasta = correct_minutos(Convert.ToInt32(this.dateTimePicker11.Value.ToString("mm")));
+                minutosHasta = Convert.ToInt32(this.dateTimePicker11.Value.ToString("mm"));
                 if (check_horario(horaDesde, minutosDesde, horaHasta, minutosHasta) || (horaHasta >= 15 && minutosHasta > 0 ))
                 {
                     dias.Add(new Agenda() { dia = 0, horaInicio = horaDesde + ":" + minutosDesde, horaFin = horaHasta + ":" + minutosHasta });
@@ -304,22 +304,7 @@ namespace Clinica.Registrar_Agenda
                 return true;
             }
             
-        }
-
-        private int correct_minutos(int Minutos)
-        {
-            if (Minutos < 30)
-            {
-                return 00;
-            }
-            else if (Minutos == 30)
-            {
-                return 30;
-            }
-            else
-            {
-                return 30;
-            }
+        
         }
 
         
