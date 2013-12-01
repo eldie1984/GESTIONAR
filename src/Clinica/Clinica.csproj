@@ -192,14 +192,27 @@
     <Compile Include="Model\Compra.cs" />
     <Compile Include="Model\Especialidad.cs" />
     <Compile Include="Model\QueryResult.cs" />
+    <Compile Include="Model\Turno.cs" />
     <Compile Include="Model\Usuario.cs" />
     <Compile Include="Model\Plan.cs" />
     <Compile Include="Model\Profesional.cs" />
-    <Compile Include="Pedir Turno\Turno.cs">
+    <Compile Include="Pedir Turno\BuscarAfiliado.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Pedir Turno\Turno.Designer.cs">
-      <DependentUpon>Turno.cs</DependentUpon>
+    <Compile Include="Pedir Turno\BuscarAfiliado.Designer.cs">
+      <DependentUpon>BuscarAfiliado.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pedir Turno\BuscarProfesional.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pedir Turno\BuscarProfesional.Designer.cs">
+      <DependentUpon>BuscarProfesional.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pedir Turno\PedirTurnos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Pedir Turno\PedirTurnos.Designer.cs">
+      <DependentUpon>PedirTurnos.cs</DependentUpon>
     </Compile>
     <Compile Include="Perfil.cs">
       <SubType>Form</SubType>
@@ -262,6 +275,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pedir Turno\BuscarAfiliado.resx">
+      <DependentUpon>BuscarAfiliado.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pedir Turno\BuscarProfesional.resx">
+      <DependentUpon>BuscarProfesional.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Pedir Turno\PedirTurnos.resx">
+      <DependentUpon>PedirTurnos.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Perfil.resx">
       <DependentUpon>Perfil.cs</DependentUpon>

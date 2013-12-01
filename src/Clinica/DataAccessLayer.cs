@@ -6,13 +6,47 @@ using Clinica.Model;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Data;
-using Clinica.Model;
+
 
 namespace Clinica
 {
     public class DataAccessLayer
     {
         #region GETS
+
+        public List<Turno> GetTurnos_ProfDisp(int profesional)
+        {
+            List<Turno> listado = new List<Turno>();
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+
+                SqlCommand command = new SqlCommand("SELECT turn_id,turn_profe_id,turn_hora_inicio FROM GESTIONAR.turno TUR where TUR.turn_profe_id=@profID and TUR.turn_baja=0 and TUR.turn_afil_id is Null" , connection);
+
+                SqlParameter mainParameter = new SqlParameter("profID", profesional);
+                mainParameter.SqlDbType = SqlDbType.Int;
+
+                command.Parameters.Add(mainParameter);
+
+                SqlDataReader TurReader = command.ExecuteReader();
+
+                while (TurReader.Read())
+                {
+                    int id = TurReader.GetInt32(0);
+                    int prof = TurReader.GetInt32(1);
+                    //int afil = TurReader.GetInt32(2);
+                    //int afil_sub = TurReader.GetInt32(3);
+                    DateTime inicio = TurReader.GetDateTime(2);
+                    
+
+                    listado.Add(new Turno() {Codigo=id,Prof_ID=prof,HoraInicio=inicio });
+                }
+                TurReader.Close();
+
+                return listado;
+            }
+        }
 
         public List<Profesional> GetProfesionales(string fNombre, string fApellido, string fDoc)
         {
@@ -61,6 +95,46 @@ namespace Clinica
                 return listado;
             }
         }
+
+        public List<Profesional> GetProfesionales(int especialidad)
+        {
+            List<Profesional> listado = new List<Profesional>();
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+            
+                SqlCommand command = new SqlCommand("SELECT prof_id,prof_nombre, prof_apellido, prof_nro_documento,prof_tipo_documento,prof_dureccion,prof_telefono,prof_mail,prof_fecha_nacimiento,prof_sexo,prof_matricula FROM GESTIONAR.profesional Prof join [Gestionar].profesional_especialidad PE on Prof.prof_id = PE.espr_prof_id where PE.espr_especialidad_id=@espID and Prof.prof_baja=0", connection);
+
+                SqlParameter mainParameter = new SqlParameter("espID", especialidad);
+                mainParameter.SqlDbType = SqlDbType.Int;
+            
+                command.Parameters.Add(mainParameter);
+              
+                SqlDataReader ProfReader = command.ExecuteReader();
+
+                while (ProfReader.Read())
+                {
+                    int id = ProfReader.GetInt32(0);
+                    string nombre = ProfReader.GetString(1);
+                    string apellido = ProfReader.GetString(2);
+                    decimal nrodoc = ProfReader.GetDecimal(3);
+                    string tipodoc = ProfReader.GetString(4);
+                    string dire = ProfReader.GetString(5);
+                    decimal telefono = ProfReader.GetDecimal(6);
+                    string mail = ProfReader.GetString(7);
+                    DateTime fechaNac = ProfReader.GetDateTime(8);
+                    string sexo = ProfReader.GetString(9);
+                    string matricula = ProfReader.GetString(10);
+
+                    listado.Add(new Profesional() { ID = id, Nombre = nombre, Apellido = apellido, Direccion = dire, Documento = nrodoc, Tipo = tipodoc, Mail = mail, FechaNac = fechaNac, Sexo = sexo, Matricula = matricula, Telefono = telefono });
+                }
+                ProfReader.Close();
+
+                return listado;
+            }
+        }
+
 
         public List<Afiliado> GetAfiliados(string fNombre,string fApellido, string fDoc)
         {
@@ -892,6 +966,44 @@ namespace Clinica
         #endregion
 
         #region UPDATES
+
+        public void UpdateTurno(Turno turno)
+        {
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+
+                SqlCommand command = new SqlCommand("UPDATE GESTIONAR.turno SET turn_profe_id=@prof,turn_afil_id=@afi,turn_afi_sub_id=@afisub,turn_hora_inicio=@inicio, turn_modificado=@modificado where turn_id=@ID", connection);
+
+                SqlParameter profPar = new SqlParameter("prof", turno.Prof_ID);
+                profPar.SqlDbType = SqlDbType.Int;
+                SqlParameter afiPar = new SqlParameter("afi", turno.AFIL_ID);
+                afiPar.SqlDbType = SqlDbType.Int;
+                SqlParameter afisubPar = new SqlParameter("afisub", turno.AFIL_SUBID);
+                afisubPar.SqlDbType = SqlDbType.Int;
+                SqlParameter inicioPar = new SqlParameter("inicio", turno.HoraInicio);
+                inicioPar.SqlDbType = SqlDbType.DateTime;
+                SqlParameter modificadoPar = new SqlParameter("modificado", Helper.GetFechaNow());
+                modificadoPar.SqlDbType = SqlDbType.DateTime;
+                SqlParameter codigoPar = new SqlParameter("ID", turno.Codigo);
+                codigoPar.SqlDbType = SqlDbType.Int;
+
+
+                command.Parameters.Add(profPar);
+                command.Parameters.Add(afiPar);
+                command.Parameters.Add(afisubPar);
+                command.Parameters.Add(inicioPar);
+                command.Parameters.Add(modificadoPar);
+                command.Parameters.Add(codigoPar);
+
+
+                int row = command.ExecuteNonQuery();
+             
+            }
+        }
+
+
         public void UpdateProf(Profesional prof, List<int> especialidades)
         {
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))

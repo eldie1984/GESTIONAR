@@ -276,7 +276,7 @@ namespace Clinica
 
         private void pedidoTurnoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Pedir_Turno.Turno turno = new Clinica.Pedir_Turno.Turno(this.usuario);
+            Pedir_Turno.PedirTurno turno = new Clinica.Pedir_Turno.PedirTurno(this.usuario);
             turno.Show();
             turno.MdiParent = this;
         }
