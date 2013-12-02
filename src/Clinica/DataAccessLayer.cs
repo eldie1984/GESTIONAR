@@ -135,7 +135,6 @@ namespace Clinica
             }
         }
 
-
         public List<Afiliado> GetAfiliados(string fNombre,string fApellido, string fDoc)
         {
             List<Afiliado> listado = new List<Afiliado>();
@@ -349,64 +348,53 @@ namespace Clinica
 
         }
 
-        public Int32 getTurnoId(Int32 profesional, DateTime fecha)
+        public List<Turno> getTurno(Int32 profesional, bool has_consulta)
         {
-            Int32 Resultado = 0;
+            List<Turno> Resultado = new List<Turno>();
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
             {
                 connection.Open();
                 SqlCommand command = connection.CreateCommand();
-                command.CommandText = @"select turn_id  " +
-                "from GESTIONAR.turno , GESTIONAR.consulta " +
-                "where turn_profe_id=@profesional " +
+
+                System.Text.StringBuilder query = new System.Text.StringBuilder();
+
+                query.Append("select turn_id,turn_profe_id,turn_afil_id,turn_afi_sub_id,turn_hora_inicio from GESTIONAR.turno");
+                if (has_consulta)
+                {
+                    query.Append(" , GESTIONAR.consulta " +
+                " where turn_profe_id=@profesional " +
                 "and turn_baja=0 " +
-                "and turn_hora_inicio >= DATEADD(minute,-15,@ahora)  " +
-                "and turn_hora_inicio<DATEADD(minute,15,@ahora)  " +
+                "and cast(turn_hora_inicio as date) = cast(@ahora as date)  " +
                 "and consul_turno_id=turn_id " +
                 "and consul_sintomas is null " +
-                "and consul_enfermedades is null;";
+                "and consul_enfermedades is null;");
+                }
+                else
+                {
+                    query.Append(" where turn_profe_id=@profesional " +
+                "and turn_baja=0 " +
+                "and cast(turn_hora_inicio as date) = cast(@ahora as date) ");
 
+                }
+
+
+                    command.CommandText = query.ToString();
 
                 command.Parameters.Add("@profesional", SqlDbType.Int);
                 command.Parameters.Add("@ahora", SqlDbType.DateTime);
 
                 command.Parameters["@profesional"].Value = profesional;
-                command.Parameters["@ahora"].Value = fecha;
+                command.Parameters["@ahora"].Value = Helper.GetFechaNow();
                 SqlDataReader Reg = command.ExecuteReader();
                 if (Reg.HasRows)
                 {
-                    Reg.Read();
-                    Resultado = Convert.ToInt32(Reg[0].ToString());
+                    while (Reg.Read())
+                    {
+                        Resultado.Add(new Turno { Codigo = Reg.GetInt32(0), Prof_ID = Reg.GetInt32(1), AFIL_ID = Reg.GetInt32(2), AFIL_SUBID = Reg.GetInt32(3), HoraInicio = Reg.GetDateTime(4) });
+                    }
                 }
             }
             return Resultado;
-        }
-
-        public List<string> getFuncID(Int32 rol_id)
-        {
-            List <string> funcion = new List <string>();
-            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
-            {
-                connection.Open();
-                SqlCommand command = connection.CreateCommand();
-                command.CommandText = @"select fu.func_name from GESTIONAR.Rol_funcionalidad rf ,GESTIONAR.funcionalidad fu  " +
-                                      "where rf.rolf_rol_id = @rol_id  " +
-                                      "and fu.func_id=rf.rolf_func_id  " +
-                                      "order by rf.rolf_func_id desc";
-                command.Parameters.Add("@rol_id", SqlDbType.Int);
-                command.Parameters["@rol_id"].Value = rol_id;
-                SqlDataReader especReader = command.ExecuteReader();
-                while (especReader.Read())
-                {
-
-                    string cod = especReader.GetString(0);
-
-                    funcion.Add(cod);
-                }
-                especReader.Close();
-            }
-            return funcion;
-
         }
 
         public Usuario getUser(Int32 user_id, Int32 rol_id)
@@ -470,6 +458,108 @@ namespace Clinica
             }
             return Resultado;
         }
+
+        public List<Rol> getRol()
+        {
+            List<Rol> Resultado = new List<Rol>();
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = @"select rol_id,rol_nombre,rol_borrado from GESTIONAR.Rol;";
+
+                SqlDataReader Reg = command.ExecuteReader();
+                if (Reg.HasRows)
+                {
+                    while (Reg.Read())
+                    {
+                        Resultado.Add(new Rol() { id = Reg.GetInt32(0), nombre = Reg.GetString(1), borrado = Reg.GetBoolean(2) });
+                    }
+                }
+            }
+            return Resultado;
+        }
+
+        public List<Rol> getRol(Int32 user_id)
+        {
+            List<Rol> Resultado = new List<Rol>();
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = @"select rol_id,rol_nombre from GESTIONAR.rol, GESTIONAR.rol_usuario
+            where rolu_rol_id=rol_id
+            and rolu_user_id=@user_id";
+
+                command.Parameters.Add("@user_id", SqlDbType.Int);
+                command.Parameters["@user_id"].Value = user_id;
+
+                SqlDataReader Reg = command.ExecuteReader();
+                if (Reg.HasRows)
+                {
+                    while (Reg.Read())
+                    {
+                        Resultado.Add(new Rol() { id = Reg.GetInt32(0), nombre = Reg.GetString(1), borrado = false });
+                    }
+                }
+            }
+            return Resultado;
+        }
+
+        public List<Funcion> getFunc(int rol_id)
+        {
+            List<Funcion> Resultado = new List<Funcion>();
+            bool state;
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = @"(select f.func_id, f.func_name,1 as 'Habilitado' from GESTIONAR.Rol_funcionalidad rf
+                                        left join GESTIONAR.funcionalidad f on rf.rolf_func_id=f.func_id
+                                        where rolf_rol_id=@rol_id)
+                                        union 
+                                        (select func_id,func_name,0 from GESTIONAR.funcionalidad
+                                        where func_id not IN (select rolf_func_id from GESTIONAR.Rol_funcionalidad
+						                where rolf_rol_id=@rol_id) )";
+                command.Parameters.Add("@rol_id", SqlDbType.Int);
+                command.Parameters["@rol_id"].Value = rol_id;
+                SqlDataReader Reg = command.ExecuteReader();
+                if (Reg.HasRows)
+                {
+                    while (Reg.Read())
+                    {
+                        if (Reg.GetInt32(2) == 1) { state = true; }
+                        else { state = false; }
+                        Resultado.Add(new Funcion() { id = Reg.GetInt32(0), nombre = Reg.GetString(1), estado = state });
+                    }
+                }
+            }
+            return Resultado;
+        }
+
+        public List<Medicamento> getMedicamento()
+        {
+            List<Medicamento> Resultado = new List<Medicamento>();
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = @"select -1 as 'medic_id', '' as 'medic_descripcion' " +
+                                        "union " +
+                                        "select medic_id,medic_descripcion from GESTIONAR.medicamento;";
+
+                SqlDataReader Reg = command.ExecuteReader();
+                if (Reg.HasRows)
+                {
+                    while (Reg.Read())
+                    {
+                        Resultado.Add(new Medicamento() { ID = Reg.GetInt32(0), descripcion = Reg.GetString(1) });
+                    }
+                }
+            }
+            return Resultado;
+        }
+
         #endregion
 
         #region ADDS
@@ -589,7 +679,6 @@ namespace Clinica
                 return nuevoAfiliado;
             }
         }
-
 
         //agrega afiliado de un grupo familiar
         public void AddAfiliadoGrupo(Afiliado afi)
@@ -888,6 +977,69 @@ namespace Clinica
             }
             return nuevaConsulta;
 
+        }
+
+        public QueryResult AddRolFunction(List<Funcion> funciones, Int32 Rol_id)
+        {
+            QueryResult nuevaConsulta = new QueryResult();
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                SqlTransaction transaction;
+                transaction = connection.BeginTransaction("Crear consulta");
+
+                command.Connection = connection;
+                command.Transaction = transaction;
+                try
+                {
+                    command.CommandText = @"INSERT INTO [GD2C2013].[GESTIONAR].[Rol_funcionalidad] " +
+                                                   "([rolf_rol_id] " +
+                                                   ",[rolf_func_id] " +
+                                                   ",[rolf_creado] " +
+                                                   ",[rolf_modificado]) " +
+                                             "VALUES " +
+                                             "(@Rol,@funciones,@creado,@modificado)";
+
+                    command.Parameters.Add("@Rol", SqlDbType.Int);
+                    command.Parameters.Add("@funciones", SqlDbType.Int);
+                    command.Parameters.Add("@creado", SqlDbType.DateTime);
+                    command.Parameters.Add("@modificado", SqlDbType.DateTime);
+
+                    command.Parameters["@Rol"].Value = Rol_id;
+
+                    foreach (Funcion funcion in funciones)
+                    {
+
+                        command.Parameters["@funciones"].Value = funcion.id;
+                        command.Parameters["@creado"].Value = Helper.GetFechaNow();
+                        command.Parameters["@modificado"].Value = Helper.GetFechaNow();
+                        command.ExecuteNonQuery();
+                    }
+
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Commit Exception Type: {0}", ex.GetType());
+                    Console.WriteLine("  Message: {0}", ex.Message);
+                    nuevaConsulta.mensaje = nuevaConsulta.mensaje + "Commit Exception Type: " + ex.GetType() + "\n" + "  Message: " + ex.Message;
+                    nuevaConsulta.ID = -1;
+                    try
+                    {
+                        transaction.Rollback();
+                    }
+                    catch (Exception ex2)
+                    {
+                        Console.WriteLine("Rollback Exception Type: {0}", ex2.GetType());
+                        Console.WriteLine("  Message: {0}", ex2.Message);
+                        nuevaConsulta.mensaje = nuevaConsulta.mensaje + "\n" + "Rollback Exception Type: " + ex.GetType() + "\n" + "  Message: " + ex.Message;
+                    }
+
+                }
+            }
+            return nuevaConsulta;
         }
 
         #endregion
@@ -1330,6 +1482,124 @@ namespace Clinica
                 if (!Reg.HasRows)
                 {
                     Resultado = true;
+                }
+
+            }
+            return Resultado;
+        }
+
+        #endregion
+
+        # region Login
+
+        public QueryResult Buscar(string user, string password)
+        {
+            QueryResult Resultado;  
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = @"select usua_id, usua_logins from GESTIONAR.usuario where usua_username=@user and usua_password = @password";
+                
+                command.Parameters.Add("@user", SqlDbType.NVarChar);
+                command.Parameters.Add("@password", SqlDbType.NVarChar);
+
+                command.Parameters["@user"].Value = user;
+                command.Parameters["@password"].Value = password;
+                
+                SqlDataReader Reg = command.ExecuteReader();
+                if (Reg.Read())
+                {
+                    if (Convert.ToInt32(Reg[1]) < 3)
+                    {
+                        Resultado = new QueryResult() { correct = true, ID = Convert.ToInt32(Reg[0]), mensaje = "Bienvenido Datos correctos" };
+
+                        QueryResult salida = reset_login(Convert.ToInt32(Reg[0]));
+
+                        if (salida.correct == false)
+                        {
+                            Resultado.correct = salida.correct;
+                            Resultado.mensaje = Resultado.mensaje + '\n' + salida.mensaje;
+                        }
+                    }
+                    else
+                    {
+                        Resultado = new QueryResult() { correct = false, mensaje = "Usuario Inhabilitado" };
+                    }
+                }
+                else
+                {
+                    Resultado = new QueryResult() { correct = false, mensaje = "Usuario/Contraseña invalidos" };
+                    
+                    QueryResult salida= fail_login(Convert.ToInt32(Reg[1]));
+
+                    if (salida.correct == false)
+                    {
+                        Resultado.mensaje = Resultado.mensaje + '\n' + salida.mensaje;
+                    }
+                }
+
+            }
+            return Resultado;
+        }
+
+        private QueryResult fail_login (Int32 user_id)
+        {
+        QueryResult Resultado = new QueryResult();
+
+            
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = @"update GESTIONAR.usuario
+                                       set usua_logins=usua_logins+1
+                                           where usua_id= @user_id";
+
+                command.Parameters.Add("@user_id", SqlDbType.Int);
+
+                command.Parameters["@user_id"].Value = user_id;
+
+                Int32 Reg = command.ExecuteNonQuery();
+                if (Reg > 0)
+                {
+                    Resultado.correct = true;
+                }
+                else
+                {
+                    Resultado.correct = false;
+                    Resultado.mensaje  = "No se puedo actualizar los login's del usuario";
+                }
+
+            }
+            return Resultado;
+        }
+
+        private QueryResult reset_login (Int32 user_id)
+        {
+            QueryResult Resultado = new QueryResult();
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = @"update Gestionar.usuario
+                                       set usua_logins=0
+                                           where usua_id=@user_id";
+
+                                command.Parameters.Add("@user_id", SqlDbType.Int);
+
+                command.Parameters["@user_id"].Value = user_id;
+
+                Int32 Reg = command.ExecuteNonQuery();
+                if (Reg > 0)
+                {
+                    Resultado.correct = true;
+                }
+                else
+                {
+                    Resultado.correct = false;
+                    Resultado.mensaje  = "No se puedo resetear los login's del usuario";
                 }
 
             }

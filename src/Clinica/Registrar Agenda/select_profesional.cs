@@ -16,6 +16,7 @@ namespace Clinica.Registrar_Agenda
         private DateTime Desde;
         private DateTime Hasta;
         private DataAccessLayer dataAccess;
+        public Form padre;
 
         public select_profesional(List<Agenda> dias,DateTime desde,DateTime hasta)
         {
@@ -23,20 +24,44 @@ namespace Clinica.Registrar_Agenda
             this.Dias = dias;
             this.Desde = desde;
             this.Hasta = hasta;
+            this.dataAccess = new DataAccessLayer();
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            this.dataAccess = new DataAccessLayer();
+
+
+            QueryResult salida = this.dataAccess.AddAgenda(Dias, Desde, Hasta, Convert.ToInt32(dataGridView1.CurrentRow.Cells["ID"].Value.ToString()));
+
+            if (salida.ID == 0)
+            {
+                this.Close();
+                padre.Close();
+            }
+            else
+            {
+                MessageBox.Show("Ocurrio un error al generar la agenda", "Error");
+            }
+             
             
-            this.dataAccess.AddAgenda(Dias, Desde, Hasta, Convert.ToInt32(dataGridView1.CurrentRow.Cells["prof_id"].Value.ToString()));
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Formularios profesional = new Formularios();
-            DataSet profeLista = profesional.listarProfesionales(textBox1.Text);
-            dataGridView1.DataSource = profeLista.Tables[0].DefaultView;
+            //Formularios profesional = new Formularios();
+            //DataSet profeLista = profesional.listarProfesionales(textBox1.Text);
+            //dataGridView1.DataSource = profeLista.Tables[0].DefaultView;
+            if (textBox1.Text != string.Empty)
+            {
+                List<Profesional> profesionales_list = this.dataAccess.GetProfesionales(textBox1.Text, null, null);
+                profesionales_list.AddRange(this.dataAccess.GetProfesionales(null, textBox1.Text, null));
+                dataGridView1.DataSource = (from profesional in profesionales_list
+                                            select new { ID = profesional.ID, Nombre = profesional.Nombre, Apellido = profesional.Apellido }).ToList();
+            }
+            else
+            {
+                dataGridView1.DataSource = this.dataAccess.GetProfesionales(null, null, null);
+            }
         }
     }
 }

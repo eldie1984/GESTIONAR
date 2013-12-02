@@ -28,6 +28,7 @@ namespace Clinica
             //Application.Run(new Generar_Receta.Bono_farmacia(56566, 6263));
             
             Application.Run(new Login());
+            //Application.Run(new Generar_Receta.medicamentos(23,23,23));
             //Application.Run(new Registrar_Agenda.Seleccion_dias(0));
             //ejemplo traer fecha del sistema
            // DateTime a = Helper.GetFechaNow();

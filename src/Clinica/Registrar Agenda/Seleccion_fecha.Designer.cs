@@ -103,6 +103,7 @@
             this.Controls.Add(this.dateTimePicker1);
             this.Name = "Seleccion_fecha";
             this.Text = "Seleccion de fecha";
+            this.Load += new System.EventHandler(this.Seleccion_fecha_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

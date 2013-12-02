@@ -15,6 +15,7 @@ namespace Clinica.Registrar_Agenda
         List<Agenda> dias;
         DateTime Desde;
         DateTime Hasta;
+        public Form padre;
 
         public Seleccion_fecha(List<Agenda> Dias)
         {
@@ -32,16 +33,24 @@ namespace Clinica.Registrar_Agenda
             Desde = Convert.ToDateTime(this.dateTimePicker1.Value.ToString("yyyy/MM/dd"));
             Hasta = Convert.ToDateTime(this.dateTimePicker2.Value.ToString("yyyy/MM/dd"));
 
-            if (Desde < Helper.GetFechaNow().AddDays(120) || Hasta <= Helper.GetFechaNow().AddDays(120) || Desde != Hasta)
+            if (Desde < Helper.GetFechaNow().AddDays(120) && Hasta <= Helper.GetFechaNow().AddDays(120) && Desde != Hasta
+                && Hasta>Desde)
             {
                 select_profesional profesional = new select_profesional(dias,Desde,Hasta);
                 profesional.Show();
+                profesional.padre = this.padre;
                 this.Hide();
             }
             else
             {
                 MessageBox.Show("Las fechas Desde y Hasta de la jornada no pueden ser mayores a 120 dias ni ser iguales", "Error");
             }
+        }
+
+        private void Seleccion_fecha_Load(object sender, EventArgs e)
+        {
+            dateTimePicker1.Value = Helper.GetFechaNow();
+            dateTimePicker2.Value = Helper.GetFechaNow();
         }
     }
 }

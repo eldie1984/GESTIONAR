@@ -22,7 +22,18 @@ namespace Clinica.Registrar_Agenda
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            dateTimePicker1.Value = Helper.GetFechaNow();
+            dateTimePicker2.Value = Helper.GetFechaNow();
+            dateTimePicker3.Value = Helper.GetFechaNow();
+            dateTimePicker4.Value = Helper.GetFechaNow();
+            dateTimePicker5.Value = Helper.GetFechaNow();
+            dateTimePicker6.Value = Helper.GetFechaNow();
+            dateTimePicker7.Value = Helper.GetFechaNow();
+            dateTimePicker8.Value = Helper.GetFechaNow();
+            dateTimePicker9.Value = Helper.GetFechaNow();
+            dateTimePicker10.Value = Helper.GetFechaNow();
+            dateTimePicker11.Value = Helper.GetFechaNow();
+            dateTimePicker12.Value = Helper.GetFechaNow();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -41,7 +52,7 @@ namespace Clinica.Registrar_Agenda
                 minutosHasta = Convert.ToInt32(this.dateTimePicker1.Value.ToString("mm"));
                 if (check_horario(horaDesde, minutosDesde, horaHasta, minutosHasta))
                 {
-                    dias.Add(new Agenda() { dia = 0, horaInicio = horaDesde + ":" + minutosDesde, horaFin = horaHasta + ":" + minutosHasta });
+                    dias.Add(new Agenda() { dia = 1, horaInicio = horaDesde + ":" + minutosDesde, horaFin = horaHasta + ":" + minutosHasta });
                     sum_horas = sum_horas + horaHasta - horaDesde;
                     if (minutosHasta - minutosDesde > 0)
                     {
@@ -66,7 +77,7 @@ namespace Clinica.Registrar_Agenda
                 minutosHasta = Convert.ToInt32(this.dateTimePicker3.Value.ToString("mm"));
                 if (check_horario(horaDesde, minutosDesde, horaHasta, minutosHasta))
                 {
-                    dias.Add(new Agenda() { dia = 0, horaInicio = horaDesde + ":" + minutosDesde, horaFin = horaHasta + ":" + minutosHasta });
+                    dias.Add(new Agenda() { dia = 2, horaInicio = horaDesde + ":" + minutosDesde, horaFin = horaHasta + ":" + minutosHasta });
                     sum_horas = sum_horas + horaHasta - horaDesde;
                     if (minutosHasta - minutosDesde > 0)
                     {
@@ -91,7 +102,7 @@ namespace Clinica.Registrar_Agenda
                 minutosHasta = Convert.ToInt32(this.dateTimePicker5.Value.ToString("mm"));
                 if (check_horario(horaDesde, minutosDesde, horaHasta, minutosHasta))
                 {
-                    dias.Add(new Agenda() { dia = 0, horaInicio = horaDesde + ":" + minutosDesde, horaFin = horaHasta + ":" + minutosHasta });
+                    dias.Add(new Agenda() { dia = 3, horaInicio = horaDesde + ":" + minutosDesde, horaFin = horaHasta + ":" + minutosHasta });
                     sum_horas = sum_horas + horaHasta - horaDesde;
                     if (minutosHasta - minutosDesde > 0)
                     {
@@ -116,7 +127,7 @@ namespace Clinica.Registrar_Agenda
                 minutosHasta = Convert.ToInt32(this.dateTimePicker7.Value.ToString("mm"));
                 if (check_horario(horaDesde, minutosDesde, horaHasta, minutosHasta))
                 {
-                    dias.Add(new Agenda() { dia = 0, horaInicio = horaDesde + ":" + minutosDesde, horaFin = horaHasta + ":" + minutosHasta });
+                    dias.Add(new Agenda() { dia = 4, horaInicio = horaDesde + ":" + minutosDesde, horaFin = horaHasta + ":" + minutosHasta });
                     sum_horas = sum_horas + horaHasta - horaDesde;
                     if (minutosHasta - minutosDesde > 0)
                     {
@@ -141,7 +152,7 @@ namespace Clinica.Registrar_Agenda
                 minutosHasta = Convert.ToInt32(this.dateTimePicker9.Value.ToString("mm"));
                 if (check_horario(horaDesde, minutosDesde, horaHasta, minutosHasta))
                 {
-                    dias.Add(new Agenda() { dia = 0, horaInicio = horaDesde + ":" + minutosDesde, horaFin = horaHasta + ":" + minutosHasta });
+                    dias.Add(new Agenda() { dia = 5, horaInicio = horaDesde + ":" + minutosDesde, horaFin = horaHasta + ":" + minutosHasta });
                     sum_horas = sum_horas + horaHasta - horaDesde;
                     if (minutosHasta - minutosDesde > 0)
                     {
@@ -166,7 +177,7 @@ namespace Clinica.Registrar_Agenda
                 minutosHasta = Convert.ToInt32(this.dateTimePicker11.Value.ToString("mm"));
                 if (check_horario(horaDesde, minutosDesde, horaHasta, minutosHasta) || (horaHasta >= 15 && minutosHasta > 0 ))
                 {
-                    dias.Add(new Agenda() { dia = 0, horaInicio = horaDesde + ":" + minutosDesde, horaFin = horaHasta + ":" + minutosHasta });
+                    dias.Add(new Agenda() { dia = 6, horaInicio = horaDesde + ":" + minutosDesde, horaFin = horaHasta + ":" + minutosHasta });
                     sum_horas = sum_horas + horaHasta - horaDesde;
                     if (minutosHasta - minutosDesde > 0)
                     {
@@ -188,6 +199,7 @@ namespace Clinica.Registrar_Agenda
             {
                 Seleccion_fecha horario = new Seleccion_fecha(dias);
                 horario.Show();
+                horario.padre = this;
                 this.Hide();
             }
             else

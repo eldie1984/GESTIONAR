@@ -17,20 +17,21 @@ namespace Clinica
         public Form parentForm;
         private DataAccessLayer dataAccess;
 
-        public Main(Int32 rol , Int32 usuario)
+        public Main(Usuario user)
         {
             this.dataAccess = new DataAccessLayer();
             InitializeComponent();
-            this.usuario = this.dataAccess.getUser(usuario,rol);
+            //this.usuario = this.dataAccess.getUser(usuario,rol);
+            this.usuario = user;
         }
 
         private void Main_Load(object sender, EventArgs e)
         {
             this.dataAccess = new DataAccessLayer();
-            List<string> listaFunciones = this.dataAccess.getFuncID(this.usuario.rol);
+            List<Funcion> listaFunciones = this.dataAccess.getFunc(this.usuario.rol).Where(Funcion => Funcion.estado = true).ToList();
             for(int i=0; i < listaFunciones.Count() ; i++)
             {
-                string menu = listaFunciones[i];
+                string menu = listaFunciones[i].nombre;
                 var m = menuStrip1.Items.Find(menu, true);
                 var consulta = consultaToolStripMenuItem.DropDownItems.Find(menu, true);
                 var rol = aBMToolStripMenuItem.DropDownItems.Find(menu, true);

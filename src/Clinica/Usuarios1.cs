@@ -40,98 +40,98 @@ namespace Clinica
             get { return this.contraseña; }
             set { this.contraseña = value; }
         }
-        public bool Buscar()
-        {
-            bool Resultado = false;
+        //public bool Buscar()
+        //{
+        //    bool Resultado = false;
 
-            this.sql = string.Format(@"select usua_logins from GESTIONAR.usuario where usua_username='{0}' and usua_password = '{1}'", this.usuario, this.contraseña);
-            this.comandosSql = new SqlCommand(this.sql, this.cnn);
-            this.cnn.Open();
-            SqlDataReader Reg = null;
-            Reg = this.comandosSql.ExecuteReader();
-            if (Reg.Read())
-            {
-                if (Convert.ToInt32(Reg[0]) < 3)
-                {
-                    Resultado = true;
-                    this.mensaje = "Bienvenido Datos correctos";
-                }
-                else
-                {
-                    this.mensaje = "Usuario Inhabilitado";
-                }
-            }
-            else
-            {
+        //    this.sql = string.Format(@"select usua_logins from GESTIONAR.usuario where usua_username='{0}' and usua_password = '{1}'", this.usuario, this.contraseña);
+        //    this.comandosSql = new SqlCommand(this.sql, this.cnn);
+        //    this.cnn.Open();
+        //    SqlDataReader Reg = null;
+        //    Reg = this.comandosSql.ExecuteReader();
+        //    if (Reg.Read())
+        //    {
+        //        if (Convert.ToInt32(Reg[0]) < 3)
+        //        {
+        //            Resultado = true;
+        //            this.mensaje = "Bienvenido Datos correctos";
+        //        }
+        //        else
+        //        {
+        //            this.mensaje = "Usuario Inhabilitado";
+        //        }
+        //    }
+        //    else
+        //    {
 
-                this.mensaje = "Usuario/Contraseña invalidos";
-            }
-            this.cnn.Close();
-            return Resultado;
-        }
-        public bool fail_login()
-        {
-            bool Resultado = false;
-            Int32 result = 0;
-            this.sql = string.Format(@"update GESTIONAR.usuario
-                                       set usua_logins=usua_logins+1
-                                           where usua_username= '{0}'", this.usuario);
-            this.comandosSql = new SqlCommand(this.sql, this.cnn);
-            this.cnn.Open();
-            result = this.comandosSql.ExecuteNonQuery();
-            if (result > 0)
-            {
-                Resultado = true;
-            }
-            else
-            {
-                Resultado = false;
-            }
-            this.cnn.Close();
-            return Resultado;
-        }
-        public bool reset_login()
-        {
-            bool Resultado = false;
-            Int32 result = 0;
-            this.sql = string.Format(@"update Gestionar.usuario
-                                       set usua_logins=0
-                                           where usua_username= '{0}'", this.usuario);
-            this.comandosSql = new SqlCommand(this.sql, this.cnn);
-            this.cnn.Open();
-            result = this.comandosSql.ExecuteNonQuery();
-            if (result > 0)
-            {
-                Resultado = true;
-            }
-            else
-            {
-                Resultado = false;
-            }
-            this.cnn.Close();
-            return Resultado;
-        }
-        public Int32 getId()
-        {
+        //        this.mensaje = "Usuario/Contraseña invalidos";
+        //    }
+        //    this.cnn.Close();
+        //    return Resultado;
+        //}
+//        public bool fail_login()
+//        {
+//            bool Resultado = false;
+//            Int32 result = 0;
+//            this.sql = string.Format(@"update GESTIONAR.usuario
+//                                       set usua_logins=usua_logins+1
+//                                           where usua_username= '{0}'", this.usuario);
+//            this.comandosSql = new SqlCommand(this.sql, this.cnn);
+//            this.cnn.Open();
+//            result = this.comandosSql.ExecuteNonQuery();
+//            if (result > 0)
+//            {
+//                Resultado = true;
+//            }
+//            else
+//            {
+//                Resultado = false;
+//            }
+//            this.cnn.Close();
+//            return Resultado;
+//        }
+//        public bool reset_login()
+//        {
+//            bool Resultado = false;
+//            Int32 result = 0;
+//            this.sql = string.Format(@"update Gestionar.usuario
+//                                       set usua_logins=0
+//                                           where usua_username= '{0}'", this.usuario);
+//            this.comandosSql = new SqlCommand(this.sql, this.cnn);
+//            this.cnn.Open();
+//            result = this.comandosSql.ExecuteNonQuery();
+//            if (result > 0)
+//            {
+//                Resultado = true;
+//            }
+//            else
+//            {
+//                Resultado = false;
+//            }
+//            this.cnn.Close();
+//            return Resultado;
+//        }
+        //public Int32 getId()
+        //{
             
-            Int32 result = 0;
-            this.sql = string.Format(@"select usua_id from GESTIONAR.usuario where usua_username='{0}'", this.usuario);
-            this.comandosSql = new SqlCommand(this.sql, this.cnn);
-            this.cnn.Open();
-            SqlDataReader Reg = null;
-            Reg = this.comandosSql.ExecuteReader();
-            if (Reg.Read())
-            {
-                result = Convert.ToInt32(Reg[0]);
+        //    Int32 result = 0;
+        //    this.sql = string.Format(@"select usua_id from GESTIONAR.usuario where usua_username='{0}'", this.usuario);
+        //    this.comandosSql = new SqlCommand(this.sql, this.cnn);
+        //    this.cnn.Open();
+        //    SqlDataReader Reg = null;
+        //    Reg = this.comandosSql.ExecuteReader();
+        //    if (Reg.Read())
+        //    {
+        //        result = Convert.ToInt32(Reg[0]);
                
-            }
-            else
-            {
+        //    }
+        //    else
+        //    {
 
-                result=-1;
-            }
-            this.cnn.Close();
-            return result;
-        }
+        //        result=-1;
+        //    }
+        //    this.cnn.Close();
+        //    return result;
+        //}
     }
 }

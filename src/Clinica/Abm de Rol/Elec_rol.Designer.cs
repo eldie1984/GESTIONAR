@@ -89,7 +89,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.rolCombo);
             this.Name = "Elec_rol";
-            this.Text = "Form1";
+            this.Text = "Eleccion del rol";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

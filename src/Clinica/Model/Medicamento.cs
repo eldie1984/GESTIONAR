@@ -5,12 +5,10 @@ using System.Text;
 
 namespace Clinica.Model
 {
-    public class QueryResult
+    public class Medicamento
     {
         public Int32 ID { get; set; }
 
-        public bool correct { get; set; }
-
-        public string mensaje { get; set; }
+        public string descripcion { get; set; }
     }
 }

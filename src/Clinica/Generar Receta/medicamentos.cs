@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Clinica.Model;
 
 namespace Clinica.Generar_Receta
 {
@@ -27,6 +28,7 @@ namespace Clinica.Generar_Receta
             this.consulta = consulta;
             this.bono_id = bono;
             this.afil_id=afiliado;
+            this.dataAccess = new DataAccessLayer();
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -37,7 +39,7 @@ namespace Clinica.Generar_Receta
 
         private void button1_Click(object sender, EventArgs e)
         {
-            this.dataAccess = new DataAccessLayer();
+            
             if (Convert.ToInt32(comboBox1.SelectedValue) != -1 && comboBox2.SelectedItem != null)
             {
                 if (arr[0] == 0 && check_lista(Convert.ToInt32(comboBox1.SelectedValue)))
@@ -197,36 +199,57 @@ namespace Clinica.Generar_Receta
             comboBox9.Items.Add("2");
             comboBox9.Items.Add("3");
 
-            Formularios datos_med = new Formularios();
-            Formularios datos_med1 = new Formularios();
-            Formularios datos_med2 = new Formularios();
-            Formularios datos_med3 = new Formularios();
-            Formularios datos_med4 = new Formularios();
-            DataSet medicamentos = datos_med.llenaComboBoxMedic();
-            DataSet medicamentos1 = datos_med1.llenaComboBoxMedic();
-            DataSet medicamentos2 = datos_med2.llenaComboBoxMedic();
-            DataSet medicamentos3 = datos_med3.llenaComboBoxMedic();
-            DataSet medicamentos4 = datos_med4.llenaComboBoxMedic();
-            comboBox1.DataSource = medicamentos.Tables[0].DefaultView;
-            //se especifica el campo de la tabla
-            comboBox1.DisplayMember = "medic_descripcion";
-            comboBox1.ValueMember = "medic_id";
-            comboBox4.DataSource = medicamentos1.Tables[0].DefaultView;
-            //se especifica el campo de la tabla
-            comboBox4.DisplayMember = "medic_descripcion";
-            comboBox4.ValueMember = "medic_id";
-            comboBox6.DataSource = medicamentos2.Tables[0].DefaultView;
-            //se especifica el campo de la tabla
-            comboBox6.DisplayMember = "medic_descripcion";
-            comboBox6.ValueMember = "medic_id";
-            comboBox8.DataSource = medicamentos3.Tables[0].DefaultView;
-            //se especifica el campo de la tabla
-            comboBox8.DisplayMember = "medic_descripcion";
-            comboBox8.ValueMember = "medic_id";
-            comboBox10.DataSource = medicamentos4.Tables[0].DefaultView;
-            //se especifica el campo de la tabla
-            comboBox10.DisplayMember = "medic_descripcion";
-            comboBox10.ValueMember = "medic_id";
+            List<Medicamento> Lista_medicamentos = this.dataAccess.getMedicamento();
+            comboBox1.DataSource = this.dataAccess.getMedicamento(); ;
+            comboBox1.DisplayMember = "descripcion";
+            comboBox1.ValueMember = "id";
+
+            comboBox4.DataSource = this.dataAccess.getMedicamento(); ;
+            comboBox4.DisplayMember = "descripcion";
+            comboBox4.ValueMember = "id";
+
+            comboBox6.DataSource = this.dataAccess.getMedicamento(); ;
+            comboBox6.DisplayMember = "descripcion";
+            comboBox6.ValueMember = "id";
+
+            comboBox8.DataSource = this.dataAccess.getMedicamento(); ;
+            comboBox8.DisplayMember = "descripcion";
+            comboBox8.ValueMember = "id";
+
+            comboBox10.DataSource = this.dataAccess.getMedicamento(); ;
+            comboBox10.DisplayMember = "descripcion";
+            comboBox10.ValueMember = "id";
+
+            //Formularios datos_med = new Formularios();
+            //Formularios datos_med1 = new Formularios();
+            //Formularios datos_med2 = new Formularios();
+            //Formularios datos_med3 = new Formularios();
+            //Formularios datos_med4 = new Formularios();
+            //DataSet medicamentos = datos_med.llenaComboBoxMedic();
+            //DataSet medicamentos1 = datos_med1.llenaComboBoxMedic();
+            //DataSet medicamentos2 = datos_med2.llenaComboBoxMedic();
+            //DataSet medicamentos3 = datos_med3.llenaComboBoxMedic();
+            //DataSet medicamentos4 = datos_med4.llenaComboBoxMedic();
+            //comboBox1.DataSource = medicamentos.Tables[0].DefaultView;
+            ////se especifica el campo de la tabla
+            //comboBox1.DisplayMember = "medic_descripcion";
+            //comboBox1.ValueMember = "medic_id";
+            //comboBox4.DataSource = medicamentos1.Tables[0].DefaultView;
+            ////se especifica el campo de la tabla
+            //comboBox4.DisplayMember = "medic_descripcion";
+            //comboBox4.ValueMember = "medic_id";
+            //comboBox6.DataSource = medicamentos2.Tables[0].DefaultView;
+            ////se especifica el campo de la tabla
+            //comboBox6.DisplayMember = "medic_descripcion";
+            //comboBox6.ValueMember = "medic_id";
+            //comboBox8.DataSource = medicamentos3.Tables[0].DefaultView;
+            ////se especifica el campo de la tabla
+            //comboBox8.DisplayMember = "medic_descripcion";
+            //comboBox8.ValueMember = "medic_id";
+            //comboBox10.DataSource = medicamentos4.Tables[0].DefaultView;
+            ////se especifica el campo de la tabla
+            //comboBox10.DisplayMember = "medic_descripcion";
+            //comboBox10.ValueMember = "medic_id";
             for (int i=0; i< 5; i++)
             {arr[i]=0;}
             
@@ -240,10 +263,6 @@ namespace Clinica.Generar_Receta
                 {
                     MessageBox.Show("Existen medicamentos que ya han sido elegidos, por favor corrijalos", "Error");
                     return false;
-                }
-                else
-                {
-                    return true;
                 }
             }
             return true;

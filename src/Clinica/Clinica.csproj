@@ -134,7 +134,6 @@
       <DependentUpon>CompraBonos.cs</DependentUpon>
     </Compile>
     <Compile Include="DataAccessLayer.cs" />
-    <Compile Include="Funciones.cs" />
     <Compile Include="Login.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -191,7 +190,10 @@
     <Compile Include="Model\BonoFarmacia.cs" />
     <Compile Include="Model\Compra.cs" />
     <Compile Include="Model\Especialidad.cs" />
+    <Compile Include="Model\Funcion.cs" />
+    <Compile Include="Model\Medicamento.cs" />
     <Compile Include="Model\QueryResult.cs" />
+    <Compile Include="Model\Rol.cs" />
     <Compile Include="Model\Turno.cs" />
     <Compile Include="Model\Usuario.cs" />
     <Compile Include="Model\Plan.cs" />
@@ -375,7 +377,6 @@
     <Compile Include="Registro Resultado Atencion\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Usuarios1.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

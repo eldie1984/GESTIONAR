@@ -6,11 +6,15 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Security.Cryptography;
+using Clinica.Model;
 
 namespace Clinica
 {
     public partial class Login : Form
     {
+        private DataAccessLayer dataAccess;
+
         public Login()
         {
             InitializeComponent();
@@ -18,22 +22,20 @@ namespace Clinica
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Usuarios1 Usuario0b = new Usuarios1();
-            Usuario0b.Usuario = this.text1.Text;
-            Usuario0b.Contraseña = Usuario0b.getHashSha256(this.text2.Text);
-            if (Usuario0b.Buscar() == true)
+            this.dataAccess = new DataAccessLayer();
+            QueryResult resultado;
+            resultado=this.dataAccess.Buscar(this.text1.Text,getHashSha256(this.text2.Text));
+            if ( resultado.correct == true)
             {
-                MessageBox.Show(Usuario0b.Mensaje, "Login");
-                Usuario0b.reset_login();
-                Perfil perfil = new Perfil(Usuario0b.getId());
+                MessageBox.Show(resultado.mensaje, "Login");
+                Perfil perfil = new Perfil(resultado.ID);
                 perfil.Show();
                 perfil.parent = this;
                 this.Hide();
             }
             else
             {
-                MessageBox.Show(Usuario0b.Mensaje, "Error");
-                Usuario0b.fail_login();
+                MessageBox.Show(resultado.mensaje, "Error");
                 text2.Text = string.Empty;
 
             }
@@ -43,10 +45,17 @@ namespace Clinica
         {
             this.Close();
         }
-
-        private void Login_Load(object sender, EventArgs e)
+        public string getHashSha256(string text)
         {
-
+            byte[] bytes = Encoding.UTF8.GetBytes(text);
+            SHA256Managed hashstring = new SHA256Managed();
+            byte[] hash = hashstring.ComputeHash(bytes);
+            string hashString = string.Empty;
+            foreach (byte x in hash)
+            {
+                hashString += String.Format("{0:x2}", x);
+            }
+            return hashString;
         }
     }
 }

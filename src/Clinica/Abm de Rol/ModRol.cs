@@ -6,55 +6,65 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using System.Data.SqlClient;
+using Clinica.Model;
 
 namespace Clinica.Abm_de_Rol
 {
     public partial class ModRol : Form
     {
-        public Int32 rol_id = -1 ;
-        private SqlDataReader lectura;
+        private Rol rolSeleccionado;
+        private DataAccessLayer dataAccess;
+        private List<Funcion> funciones;
+        public Form padre;
 
-        public ModRol()
+        public ModRol(Rol rol)
         {
             InitializeComponent();
+            this.rolSeleccionado = rol;
+
         }
 
         private void ModRol_Load(object sender, EventArgs e)
         {
-            if (rol_id >= 0)
+            funciones = new List<Funcion>();
+            this.dataAccess = new DataAccessLayer();
+
+            if (rolSeleccionado.id >= 0)
             {
-                Formularios datos_rol = new Formularios();
-                Formularios datos_func = new Formularios();
-                lectura = datos_rol.datos_rol(this.rol_id);
-                DataSet FuncLista = datos_func.datos_func(this.rol_id);
-                if (lectura == null)
-                {
-                    MessageBox.Show("No hay ningun cliente cargado");
+                 this.textBox1.Text = rolSeleccionado.nombre;
+                 this.checkBox1.Checked = rolSeleccionado.borrado;
 
-                }
-                else
-                {
-                 lectura.Read();
-                 this.textBox1.Text = lectura["rol_nombre"].ToString();
-                 this.checkBox1.Checked = Convert.ToBoolean(lectura["rol_borrado"]);
+                 funciones = this.dataAccess.getFunc(rolSeleccionado.id);
 
-                 
-                 dataGridView1.DataSource = FuncLista.Tables[0].DefaultView;
-                 //dataGridView1.Columns["Habilitado"].ReadOnly = false;
-                 //dataGridView1.Columns[2].ValueType = typeof(CheckBox);
-                //    DataGridViewTextBoxColumn colid= new DataGridViewTextBoxColumn();
-                
-                     
-                     //.Columns["Habilitado"].CellType = "DataGridViewCheckBoxCell";
-                 
-                }
+                 foreach (Funcion funcion in funciones)
+                 {
+                     dataGridView1.Rows.Add(funcion.id,funcion.nombre,funcion.estado);
+                 }
             }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            this.dataAccess = new DataAccessLayer();
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                foreach (Funcion funcion in this.funciones)
+                {
+                    string value = dataGridView1.Rows[i].Cells[2].Value.ToString();
+                    if (Convert.ToInt32(dataGridView1.Rows[i].Cells[0].Value.ToString()) == funcion.id)
+                    {
+                        funcion.estado = Convert.ToBoolean(dataGridView1.Rows[i].Cells[2].Value.ToString());
+                    }
+                }
+            }
+            dataAccess.AddRolFunction(funciones.Where(Funcion => Funcion.estado == true).ToList(), rolSeleccionado.id);
+            this.Close();
+        }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            padre.Show();
         }
         
     }

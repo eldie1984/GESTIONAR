@@ -892,6 +892,7 @@ INSERT INTO [GD2C2013].[GESTIONAR].[medicamento]
            ,[medic_modificado])
      select distinct(Bono_Farmacia_Medicamento),SYSDATETIME(),SYSDATETIME() from gd_esquema.Maestra
 where Bono_Farmacia_Fecha_Impresion is not null
+and Bono_Farmacia_Medicamento is not null
 
 select 'Creo la tabla medicamento_bono'
 

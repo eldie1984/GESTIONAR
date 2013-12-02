@@ -20,22 +20,28 @@ namespace Clinica.Registro_de_LLegada
         {
             InitializeComponent();
             this.profe_id = profesional;
+            this.dataAccess = new DataAccessLayer();
         }
 
         private void CheckTurno_Load(object sender, EventArgs e)
         {
-            Formularios datos_turn = new Formularios();
-            DataSet turnos = datos_turn.llenaComboBoxTurno(this.profe_id);
+            //Formularios datos_turn = new Formularios();
+            //DataSet turnos = datos_turn.llenaComboBoxTurno(this.profe_id);
 
-            comboBox1.DataSource = turnos.Tables[0].DefaultView;
-            //se especifica el campo de la tabla
-            comboBox1.DisplayMember = "Turno";
-            comboBox1.ValueMember = "turn_id";
+            //comboBox1.DataSource = turnos.Tables[0].DefaultView;
+            ////se especifica el campo de la tabla
+            //comboBox1.DisplayMember = "Turno";
+            //comboBox1.ValueMember = "turn_id";
+            
+            this.comboBox1.DataSource = (from turno in this.dataAccess.getTurno(this.profe_id, false)
+                                         select new { ID = turno.Codigo, Horario = turno.HoraInicio.ToString("HH:mm") }).ToList(); ;
+            comboBox1.DisplayMember = "Horario";
+            comboBox1.ValueMember = "ID";
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            this.dataAccess = new DataAccessLayer();
+            
             try
             {
                 Convert.ToInt32(maskedTextBox1.Text);
