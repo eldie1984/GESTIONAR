@@ -28,7 +28,7 @@ namespace Clinica
         private void Main_Load(object sender, EventArgs e)
         {
             this.dataAccess = new DataAccessLayer();
-            List<Funcion> listaFunciones = this.dataAccess.getFunc(this.usuario.rol).Where(Funcion => Funcion.estado = true).ToList();
+            List<Funcion> listaFunciones = this.dataAccess.getFunc(this.usuario.rol).Where(Funcion => Funcion.estado == true).ToList();
             for(int i=0; i < listaFunciones.Count() ; i++)
             {
                 string menu = listaFunciones[i].nombre;

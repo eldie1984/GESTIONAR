@@ -1392,6 +1392,60 @@ namespace Clinica
             }
         }
 
+        public QueryResult DelRolFunction(List<Funcion> funciones, Int32 Rol_id)
+        {
+            QueryResult nuevaConsulta = new QueryResult();
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                SqlTransaction transaction;
+                transaction = connection.BeginTransaction("Crear consulta");
+
+                command.Connection = connection;
+                command.Transaction = transaction;
+                try
+                {
+                    command.CommandText = @"delete from [GD2C2013].[GESTIONAR].[Rol_funcionalidad] " +
+                                             " where rolf_func_id = @funciones " +
+                                               " and rolf_rol_id = @Rol" ;
+
+                    command.Parameters.Add("@Rol", SqlDbType.Int);
+                    command.Parameters.Add("@funciones", SqlDbType.Int);
+
+                    command.Parameters["@Rol"].Value = Rol_id;
+
+                    foreach (Funcion funcion in funciones)
+                    {
+
+                        command.Parameters["@funciones"].Value = funcion.id;
+                        command.ExecuteNonQuery();
+                    }
+
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Commit Exception Type: {0}", ex.GetType());
+                    Console.WriteLine("  Message: {0}", ex.Message);
+                    nuevaConsulta.mensaje = nuevaConsulta.mensaje + "Commit Exception Type: " + ex.GetType() + "\n" + "  Message: " + ex.Message;
+                    nuevaConsulta.ID = -1;
+                    try
+                    {
+                        transaction.Rollback();
+                    }
+                    catch (Exception ex2)
+                    {
+                        Console.WriteLine("Rollback Exception Type: {0}", ex2.GetType());
+                        Console.WriteLine("  Message: {0}", ex2.Message);
+                        nuevaConsulta.mensaje = nuevaConsulta.mensaje + "\n" + "Rollback Exception Type: " + ex.GetType() + "\n" + "  Message: " + ex.Message;
+                    }
+
+                }
+            }
+            return nuevaConsulta;
+        }
         #endregion
 
         #region CHECK
@@ -1503,7 +1557,7 @@ namespace Clinica
                 
                 command.Parameters.Add("@user", SqlDbType.NVarChar);
                 command.Parameters.Add("@password", SqlDbType.NVarChar);
-
+                
                 command.Parameters["@user"].Value = user;
                 command.Parameters["@password"].Value = password;
                 

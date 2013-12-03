@@ -417,7 +417,6 @@ insert into [GESTIONAR].[Rol_funcionalidad]
  ([rolf_rol_id],[rolf_func_id],[rolf_creado],[rolf_modificado])
  values
 (1,0,SYSDATETIME(),SYSDATETIME()),
-(1,1,SYSDATETIME(),SYSDATETIME()),
 (1,2,SYSDATETIME(),SYSDATETIME()),
 (1,3,SYSDATETIME(),SYSDATETIME()),
 (1,4,SYSDATETIME(),SYSDATETIME()),
@@ -461,22 +460,12 @@ insert into [GESTIONAR].[Rol_funcionalidad]
 (1,42,SYSDATETIME(),SYSDATETIME()),
 (1,43,SYSDATETIME(),SYSDATETIME()),
 (1,44,SYSDATETIME(),SYSDATETIME()),
-(1,31,SYSDATETIME(),SYSDATETIME()),
-(2,2,SYSDATETIME(),SYSDATETIME()),
-(2,5,SYSDATETIME(),SYSDATETIME()),
-(2,8,SYSDATETIME(),SYSDATETIME()),
-(2,10,SYSDATETIME(),SYSDATETIME()),
-(2,13,SYSDATETIME(),SYSDATETIME()),
-(2,14,SYSDATETIME(),SYSDATETIME()),
-(2,15,SYSDATETIME(),SYSDATETIME()),
-(2,16,SYSDATETIME(),SYSDATETIME()),
-(2,20,SYSDATETIME(),SYSDATETIME()),
-(2,21,SYSDATETIME(),SYSDATETIME()),
-(2,22,SYSDATETIME(),SYSDATETIME()),
-(2,23,SYSDATETIME(),SYSDATETIME()),
-(2,24,SYSDATETIME(),SYSDATETIME()),
-(2,25,SYSDATETIME(),SYSDATETIME()),
-(2,26,SYSDATETIME(),SYSDATETIME())
+(0,0,SYSDATETIME(),SYSDATETIME()),
+(0,1,SYSDATETIME(),SYSDATETIME()),
+(2,33,SYSDATETIME(),SYSDATETIME()),
+(2,35,SYSDATETIME(),SYSDATETIME()),
+(2,36,SYSDATETIME(),SYSDATETIME())
+
 
 
 GO
@@ -701,31 +690,31 @@ INSERT INTO [GD2C2013].[GESTIONAR].[compra]
       and g1.Paciente_Dni=afi_nro_documento
       group by afi_id ,afi_sub_id,afi_plan,g1.Paciente_Dni,g1.Compra_Bono_Fecha)
 
-INSERT INTO [GD2C2013].[GESTIONAR].[compra]
-           ([compra_afi_id]
-           ,[compra_afi_sub_id]
-           ,[compra_cant_farmacia]
-           ,[compra_cant_consulta]
-           ,[compra_plan_id]
-           ,[compra_creado]
-           ,[compra_modificado])
-            (
-select 
-      afi_id
-      ,afi_sub_id
-      ,COUNT(*) 
-         ,0
-         ,afi_plan
-        ,g1.Compra_Bono_Fecha,g1.Compra_Bono_Fecha
-      from gd_esquema.Maestra g1,GESTIONAR.afiliado 
-      where g1.Compra_Bono_Fecha is not null
-      and g1.Bono_Consulta_Numero is null
-      and g1.Paciente_Dni=afi_nro_documento
-      and not exists  (select * from GESTIONAR.compra
-        where compra_afi_id=afi_id
-        and compra_afi_sub_id=afi_sub_id
-        and compra_creado=Compra_Bono_Fecha)
-      group by afi_id ,afi_sub_id,afi_plan,g1.Paciente_Dni,g1.Compra_Bono_Fecha)
+-- INSERT INTO [GD2C2013].[GESTIONAR].[compra]
+--            ([compra_afi_id]
+--            ,[compra_afi_sub_id]
+--            ,[compra_cant_farmacia]
+--            ,[compra_cant_consulta]
+--            ,[compra_plan_id]
+--            ,[compra_creado]
+--            ,[compra_modificado])
+--             (
+-- select 
+--       afi_id
+--       ,afi_sub_id
+--       ,COUNT(*) 
+--          ,0
+--          ,afi_plan
+--         ,g1.Compra_Bono_Fecha,g1.Compra_Bono_Fecha
+--       from gd_esquema.Maestra g1,GESTIONAR.afiliado 
+--       where g1.Compra_Bono_Fecha is not null
+--       and g1.Bono_Consulta_Numero is null
+--       and g1.Paciente_Dni=afi_nro_documento
+--      -- and not exists  (select * from GESTIONAR.compra
+--      --   where compra_afi_id=afi_id
+--      --   and compra_afi_sub_id=afi_sub_id
+--      --   and compra_creado=Compra_Bono_Fecha)
+--       group by afi_id ,afi_sub_id,afi_plan,g1.Paciente_Dni,g1.Compra_Bono_Fecha)
 
 select 'Creo la tabla bono_consulta'
 
@@ -828,7 +817,7 @@ select 'Creo la tabla bono_farmacia'
 
 CREATE TABLE [GESTIONAR].[bono_farmacia](
   [bofa_id] [int] IDENTITY(0,1) NOT NULL ,
-  [bofa_compra_id] [int] NOT NULL REFERENCES GESTIONAR.compra (compra_id),
+  [bofa_compra_id] [int]  NULL REFERENCES GESTIONAR.compra (compra_id),
   [bofa_afi_id] [int] NOT NULL ,
   [bofa_afi_sub_id] [int] NOT NULL,
   [bofa_bono_consulta_id] [int] NULL REFERENCES GESTIONAR.bono_consulta (boco_id),
@@ -851,19 +840,24 @@ SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[bono_farmacia] ON
 
 INSERT INTO [GD2C2013].[GESTIONAR].[bono_farmacia]
            ([bofa_id]
-           ,[bofa_compra_id]
            ,[bofa_afi_id]
            ,[bofa_afi_sub_id]
+           ,[bofa_bono_consulta_id]
            ,[bofa_plan_id]
            ,[bofa_creado]
            ,[bofa_modificado])
-           (select Bono_Farmacia_Numero,compra_id, compra_afi_id,compra_afi_sub_id,afi_plan,Bono_Farmacia_Fecha_Impresion,SYSDATETIME()
-from gd_esquema.Maestra, GESTIONAR.compra,GESTIONAR.afiliado
+           (select Bono_Farmacia_Numero, afi_id,afi_sub_id,Bono_Consulta_Numero,afi_plan,Bono_Farmacia_Fecha_Impresion, SYSDATETIME()
+from gd_esquema.Maestra,GESTIONAR.afiliado
 where Bono_Farmacia_Numero is not null
-and compra_afi_id=afi_id
-and compra_afi_sub_id=afi_sub_id
-and afi_nro_documento=Paciente_Dni
-and compra_creado=Compra_Bono_Fecha)
+and Bono_Consulta_Numero is not null
+and afi_nro_documento=Paciente_Dni)
+--            (select Bono_Farmacia_Numero,compra_id, compra_afi_id,compra_afi_sub_id,afi_plan,Bono_Farmacia_Fecha_Impresion,SYSDATETIME()
+-- from gd_esquema.Maestra, GESTIONAR.compra,GESTIONAR.afiliado
+-- where Bono_Farmacia_Numero is not null
+-- and compra_afi_id=afi_id
+-- and compra_afi_sub_id=afi_sub_id
+-- and afi_nro_documento=Paciente_Dni
+-- and compra_creado=Compra_Bono_Fecha)
 
 SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[bono_farmacia] OFF
 
@@ -1093,4 +1087,47 @@ while DATEDIFF(day,@fecha,@fecha_hasta) > 0
     select @fecha
   end
 end
+go
+
+
+CREATE TRIGGER GESTIONAR.rol_func_checker 
+   ON  GESTIONAR.Rol_funcionalidad
+   instead of  INSERT
+AS 
+BEGIN
+  -- SET NOCOUNT ON added to prevent extra result sets from
+  -- interfering with SELECT statements.
+  SET NOCOUNT ON;
+
+    -- Insert statements for trigger here
+    declare @rol int, @func int , @creado datetime, @modificado datetime
+    declare cur_inserted cursor for select * from inserted;
+
+open cur_inserted
+
+fetch next from cur_inserted into @rol,@func,@creado,@modificado
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+  if not exists ( select * from GESTIONAR.Rol_funcionalidad where rolf_rol_id = @rol
+  and rolf_func_id = @func)
+  BEGIN
+    insert into [GESTIONAR].[Rol_funcionalidad]
+      ([rolf_rol_id],[rolf_func_id],[rolf_creado],[rolf_modificado])
+    values
+           (@rol,@func,@creado,@modificado);
+    
+     end
+     
+     fetch next from cur_inserted into @rol,@func,@creado,@modificado
+     
+end
+
+close  cur_inserted
+
+deallocate cur_inserted
+
+
+END
+
 go

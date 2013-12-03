@@ -50,7 +50,7 @@ namespace Clinica.Abm_de_Rol
             {
                 foreach (Funcion funcion in this.funciones)
                 {
-                    string value = dataGridView1.Rows[i].Cells[2].Value.ToString();
+                   
                     if (Convert.ToInt32(dataGridView1.Rows[i].Cells[0].Value.ToString()) == funcion.id)
                     {
                         funcion.estado = Convert.ToBoolean(dataGridView1.Rows[i].Cells[2].Value.ToString());
@@ -58,6 +58,7 @@ namespace Clinica.Abm_de_Rol
                 }
             }
             dataAccess.AddRolFunction(funciones.Where(Funcion => Funcion.estado == true).ToList(), rolSeleccionado.id);
+            dataAccess.DelRolFunction(funciones.Where(Funcion => Funcion.estado == false).ToList(), rolSeleccionado.id);
             this.Close();
         }
 

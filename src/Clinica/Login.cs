@@ -22,22 +22,29 @@ namespace Clinica
 
         private void button1_Click(object sender, EventArgs e)
         {
-            this.dataAccess = new DataAccessLayer();
-            QueryResult resultado;
-            resultado=this.dataAccess.Buscar(this.text1.Text,getHashSha256(this.text2.Text));
-            if ( resultado.correct == true)
+            if (this.text1.Text != string.Empty && this.text2.Text != string.Empty)
             {
-                MessageBox.Show(resultado.mensaje, "Login");
-                Perfil perfil = new Perfil(resultado.ID);
-                perfil.Show();
-                perfil.parent = this;
-                this.Hide();
+                this.dataAccess = new DataAccessLayer();
+                QueryResult resultado;
+                resultado = this.dataAccess.Buscar(this.text1.Text, getHashSha256(this.text2.Text));
+                if (resultado.correct == true)
+                {
+                    MessageBox.Show(resultado.mensaje, "Login");
+                    Perfil perfil = new Perfil(resultado.ID);
+                    perfil.Show();
+                    perfil.parent = this;
+                    this.Hide();
+                }
+                else
+                {
+                    MessageBox.Show(resultado.mensaje, "Error");
+                    text2.Text = string.Empty;
+
+                }
             }
             else
             {
-                MessageBox.Show(resultado.mensaje, "Error");
-                text2.Text = string.Empty;
-
+                MessageBox.Show("El Usuario y/o la password no pueden estar vacios", "Error");
             }
         }
 
