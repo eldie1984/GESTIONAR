@@ -880,9 +880,11 @@ CREATE TABLE [GESTIONAR].[cancelacion](
   [cancel_id] [int] IDENTITY(0,1) NOT NULL ,
   [cancel_tipo] varchar(255) NULL ,
   [cancel_descripcion] varchar(255) NULL,
-  [cancel_consulta_id] [int] NOT NULL REFERENCES GESTIONAR.consulta (consul_id),
+  [cancel_turno_id] [int] NOT NULL REFERENCES GESTIONAR.turno (turn_id),
   [cancel_creado] [datetime] NULL,
   [cancel_modificado] [datetime] NULL,
+  [cancel_afil_id] [int] NULL,
+  [cancel_afil_sub_id] [int] NULL,
   CONSTRAINT [PK_GESTIONAR.cancelacion] PRIMARY KEY CLUSTERED 
   (
     [cancel_id] ASC
@@ -1284,6 +1286,57 @@ group by boco_afi_id,boco_afi_sub_id, DATEPART(MONTH, boco_modificado)
 
 end 
 
+GO
+
+CREATE PROCEDURE GESTIONAR.CancelarTurnoAfil 
+    @turnoID int,
+	@motivo varchar(255)
+    
+AS 
+
+    SET NOCOUNT ON;
+   
+	Declare @AFIID int;
+	Declare @SUBID int;
+   
+	SET @AFIID = (select turn_afil_id from GESTIONAR.turno WHERE turn_id = @turnoID)
+   	SET @SUBID = (select turn_afi_sub_id from GESTIONAR.turno WHERE turn_id = @turnoID)
+   
+	INSERT INTO [GD2C2013].[GESTIONAR].[cancelacion] (cancel_tipo,cancel_descripcion,cancel_turno_id,cancel_afil_id,cancel_afil_sub_id,cancel_creado)
+	VALUES ('AFILIADO',@motivo,@turnoID,@AFIID,@SUBID,GETDATE())
+   
+   
+    UPDATE GESTIONAR.turno
+    SET turn_afil_id = NULL , turn_afi_sub_id = NULL
+    WHERE turn_id = @turnoID
+		
+		
+GO
+
+
+CREATE PROCEDURE GESTIONAR.CancelarTurnoProf 
+	@profID int,
+    @desde Date,
+	@hasta Date,
+	@motivo varchar(255)
+    
+AS 
+
+    SET NOCOUNT ON;
+   
+   INSERT INTO [GD2C2013].[GESTIONAR].[cancelacion]
+           (cancel_tipo,cancel_descripcion,cancel_turno_id,cancel_afil_id,cancel_afil_sub_id,cancel_creado)
+           (select 'PROFESIONAL',@motivo, turn_id,turn_afil_id,turn_afi_sub_id,GETDATE()
+from GESTIONAR.turno 
+where turn_profe_id = @profID and CAST(turn_hora_inicio AS DATE) >= @desde and CAST(turn_hora_inicio AS DATE)  <= @hasta)
+   
+   
+   
+    UPDATE GESTIONAR.turno
+    SET turn_baja = 1
+    WHERE turn_profe_id = @profID and CAST(turn_hora_inicio AS DATE) >= @desde and CAST(turn_hora_inicio AS DATE)  <= @hasta
+		
+		
 GO
 
 
