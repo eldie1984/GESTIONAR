@@ -32,7 +32,13 @@ namespace Clinica.Cancelar_Atencion
             else if (this.usuario.rol == 2)
             {
                 splitContainer1.Panel2Collapsed = true;
-                //this.listadoTurnos = 
+                DateTime tomorrow = Helper.GetFechaNow().AddDays(1);
+                this.listadoTurnos = this.dataAccess.GetTurnos_Afil(this.usuario.user_rel, this.usuario.user_rel_sub).Where(x => x.HoraInicio.Date>=tomorrow).ToList();
+
+                this.comboBoxTunoAfil.DisplayMember = "HoraInicio";
+                this.comboBoxTunoAfil.ValueMember = "Codigo";
+                this.comboBoxTunoAfil.DataSource = this.listadoTurnos;
+
             }
             else
             {
@@ -44,6 +50,34 @@ namespace Clinica.Cancelar_Atencion
 
             
             
+        }
+
+        private void buttonCancelPac_Click(object sender, EventArgs e)
+        {
+            if(this.comboBoxTunoAfil.SelectedValue!=null)
+            {
+            int selTurn = (int)this.comboBoxTunoAfil.SelectedValue;
+            this.dataAccess.BajaTurnoAfil(selTurn, this.textBoxMotivoAfil.Text);
+            MessageBox.Show("Turno Cancelado exitosamente");
+            this.Close();
+            }
+            else
+                {
+                    MessageBox.Show("Debe seleccionar un turno");
+                }
+        }
+
+        private void buttonCancelProf_Click(object sender, EventArgs e)
+        {
+            DateTime desde = this.dateTimeDesde.Value.Date;
+            
+            
+            DateTime hasta = this.dateTimeHasta.Value.Date;
+            
+            string motivo = this.textBoxMotivoProf.Text;
+            this.dataAccess.BajaTurnosProf(this.usuario.user_rel,desde,hasta,motivo);
+            MessageBox.Show("Periodo de turnos Cancelado exitosamente");
+            this.Close();
         }
     }
 }

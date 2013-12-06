@@ -48,6 +48,44 @@ namespace Clinica
             }
         }
 
+        public List<Turno> GetTurnos_Afil(int afi_id,int afi_sub_id)
+        {
+            List<Turno> listado = new List<Turno>();
+
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+
+                SqlCommand command = new SqlCommand("SELECT turn_id,turn_profe_id,turn_afil_id,turn_afi_sub_id,turn_hora_inicio FROM GESTIONAR.turno TUR where TUR.turn_baja=0 and TUR.turn_afil_id=@afiID and turn_afi_sub_id=@afiSub", connection);
+
+                SqlParameter mainParameter = new SqlParameter("afiID", afi_id);
+                mainParameter.SqlDbType = SqlDbType.Int;
+                SqlParameter subParameter = new SqlParameter("afiSub", afi_sub_id);
+                mainParameter.SqlDbType = SqlDbType.Int;
+
+                command.Parameters.Add(mainParameter);
+                command.Parameters.Add(subParameter);
+
+                SqlDataReader TurReader = command.ExecuteReader();
+
+                while (TurReader.Read())
+                {
+                    int id = TurReader.GetInt32(0);
+                    int prof = TurReader.GetInt32(1);
+                    int afil = TurReader.GetInt32(2);
+                    int afil_sub = TurReader.GetInt32(3);
+                    DateTime inicio = TurReader.GetDateTime(4);
+
+
+                    listado.Add(new Turno() { Codigo = id, Prof_ID = prof, HoraInicio = inicio, AFIL_ID=afil,AFIL_SUBID=afil_sub });
+                }
+                TurReader.Close();
+
+                return listado;
+            }
+        }
+
+
         public List<Profesional> GetProfesionales(string fNombre, string fApellido, string fDoc)
         {
             List<Profesional> listado = new List<Profesional>();
@@ -1443,6 +1481,54 @@ namespace Clinica
                 int rows = command.ExecuteNonQuery();
             }
         }
+
+        public void BajaTurnoAfil(int turnoID,string motivo)
+        {
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+
+                SqlCommand command = new SqlCommand("GESTIONAR.CancelarTurnoAfil", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter idparm = new SqlParameter("turnoID", turnoID);
+                command.Parameters.Add(idparm);
+
+                SqlParameter motivParm = new SqlParameter("motivo", motivo);
+                command.Parameters.Add(motivParm);
+
+                int rows = command.ExecuteNonQuery();
+            }
+        }
+
+
+        public void BajaTurnosProf(int profID,DateTime desde, DateTime hasta, string motivo)
+        {
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+
+                SqlCommand command = new SqlCommand("GESTIONAR.CancelarTurnoProf", connection);
+                command.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter idparm = new SqlParameter("profID", profID);
+                command.Parameters.Add(idparm);
+
+                SqlParameter desdepar = new SqlParameter("desde", desde);
+                command.Parameters.Add(desdepar);
+
+                SqlParameter hastapar = new SqlParameter("hasta", hasta);
+                command.Parameters.Add(hastapar);
+
+                SqlParameter motivParm = new SqlParameter("motivo", motivo);
+                command.Parameters.Add(motivParm);
+
+                int rows = command.ExecuteNonQuery();
+            }
+        }
+
+
+
 
         public QueryResult DelRolFunction(List<Funcion> funciones, Int32 Rol_id)
         {
