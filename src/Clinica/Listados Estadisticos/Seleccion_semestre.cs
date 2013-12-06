@@ -11,9 +11,12 @@ namespace Clinica.Listados_Estadisticos
 {
     public partial class Seleccion_semestre : Form
     {
-        public Seleccion_semestre()
+        private Int32 reporte;
+        public Seleccion_semestre(Int32 numeroreporte)
         {
             InitializeComponent();
+            this.reporte = numeroreporte;
+
         }
 
         private void Seleccion_semestre_Load(object sender, EventArgs e)
@@ -30,7 +33,7 @@ namespace Clinica.Listados_Estadisticos
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Pantalla pantalla = new Pantalla();
+            Pantalla pantalla = new Pantalla(Convert.ToInt32(comboBox1.SelectedText),Convert.ToInt32(comboBox2.SelectedText),this.reporte);
             pantalla.Show();
             this.Hide();
         }

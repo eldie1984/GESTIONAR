@@ -237,7 +237,7 @@ namespace Clinica
             {
                 connection.Open();
 
-                SqlCommand command = new SqlCommand("SELECT Espe_Codigo, Espe_Descripcion FROM GESTIONAR.Especialidad", connection);
+                SqlCommand command = new SqlCommand("SELECT espe_Codigo, espe_Descripcion FROM GESTIONAR.Especialidad", connection);
                 SqlDataReader especReader = command.ExecuteReader();
 
                 while (especReader.Read())
@@ -885,6 +885,8 @@ namespace Clinica
                     nuevaConsulta.ID = Convert.ToInt32(command.ExecuteScalar());
                     
                     transaction.Commit();
+
+                    updateBono(bono, afiliado, miembro);
                 }
                 catch (Exception ex)
                 {
@@ -997,14 +999,12 @@ namespace Clinica
                                                    "([rolf_rol_id] " +
                                                    ",[rolf_func_id] " +
                                                    ",[rolf_creado] " +
-                                                   ",[rolf_modificado]) " +
                                              "VALUES " +
                                              "(@Rol,@funciones,@creado,@modificado)";
 
                     command.Parameters.Add("@Rol", SqlDbType.Int);
                     command.Parameters.Add("@funciones", SqlDbType.Int);
                     command.Parameters.Add("@creado", SqlDbType.DateTime);
-                    command.Parameters.Add("@modificado", SqlDbType.DateTime);
 
                     command.Parameters["@Rol"].Value = Rol_id;
 
@@ -1013,7 +1013,6 @@ namespace Clinica
 
                         command.Parameters["@funciones"].Value = funcion.id;
                         command.Parameters["@creado"].Value = Helper.GetFechaNow();
-                        command.Parameters["@modificado"].Value = Helper.GetFechaNow();
                         command.ExecuteNonQuery();
                     }
 
@@ -1321,6 +1320,59 @@ namespace Clinica
                     command.Parameters["@turno_id"].Value = id_turno;
                     command.Parameters["@Sintoma"].Value = sintoma;
                     command.Parameters["@Enfermedad"].Value = enfermedad;
+                    command.Parameters["@modificado"].Value = Helper.GetFechaNow();
+                    command.ExecuteNonQuery();
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Commit Exception Type: {0}", ex.GetType());
+                    Console.WriteLine("  Message: {0}", ex.Message);
+                    resultado = resultado + "Commit Exception Type: " + ex.GetType() + "\n" + "  Message: " + ex.Message;
+                    try
+                    {
+                        transaction.Rollback();
+                    }
+                    catch (Exception ex2)
+                    {
+                        Console.WriteLine("Rollback Exception Type: {0}", ex2.GetType());
+                        Console.WriteLine("  Message: {0}", ex2.Message);
+                        resultado = resultado + "\n" + "Rollback Exception Type: " + ex.GetType() + "\n" + "  Message: " + ex.Message;
+                    }
+
+                }
+
+            }
+            return resultado;
+
+        }
+
+        public string updateBono(int bono, int afiliado, int miembro)
+        {
+            string resultado = string.Empty;
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                SqlTransaction transaction;
+                transaction = connection.BeginTransaction("Crear consulta");
+
+                command.Connection = connection;
+                command.Transaction = transaction;
+                try
+                {
+                    command.CommandText = @"update GESTIONAR.bono_consulta	set boco_numero_consulta = (select max(boco_numero_consulta) from GESTIONAR.bono_consulta where boco_afi_id=@afil_id  
+						and  boco_afi_sub_id=@afil_sub_id)+1	where boco_id=@bono_consulta";
+
+
+                    command.Parameters.Add("@afil_id", SqlDbType.Int);
+                    command.Parameters.Add("@afil_sub_id", SqlDbType.Int);
+                    command.Parameters.Add("@bono_consulta", SqlDbType.Int);
+                    command.Parameters.Add("@modificado", SqlDbType.DateTime);
+
+                    command.Parameters["@afil_id"].Value = bono;
+                    command.Parameters["@afil_sub_id"].Value = afiliado;
+                    command.Parameters["@bono_consulta"].Value = miembro;
                     command.Parameters["@modificado"].Value = Helper.GetFechaNow();
                     command.ExecuteNonQuery();
                     transaction.Commit();

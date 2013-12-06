@@ -8,6 +8,8 @@ GO
 CREATE SCHEMA [GESTIONAR] AUTHORIZATION [gd]
 GO
 
+Select 'Creo la tabla estado Civil'
+
 CREATE TABLE [GESTIONAR].[estado_civil](
     esta_id [int] IDENTITY(0,1) NOT NULL,
     esta_nombre [varchar](30) NULL,
@@ -19,6 +21,8 @@ CREATE TABLE [GESTIONAR].[estado_civil](
   )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
   ) ON [PRIMARY]
   GO
+  
+Select 'Populo la tabla estado Civil'
 
 insert into [GD2C2013].[GESTIONAR].[estado_civil]
     ([esta_nombre],
@@ -91,7 +95,7 @@ CREATE TABLE [GESTIONAR].[afiliado](
     afi_sexo [char] (1),
     afi_estado_id [int] NOT NULL REFERENCES GESTIONAR.estado_civil (esta_id),
     afi_cant_hijos [int],
-    afi_plan [int] NULL,
+    afi_plan [int] NOT NULL REFERENCES GESTIONAR.plan_medico (plan_id),
     afi_baja [bit] NULL,
     afi_creado [datetime] NULL,
     afi_modificado [datetime] NULL, 
@@ -117,6 +121,8 @@ CREATE TABLE [GESTIONAR].[Hist_Plan_Afiliado](
   )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
   ) ON [PRIMARY]
   GO
+  
+select 'Populo la tabla Afiliado'
 
 INSERT INTO [GESTIONAR].[afiliado](
 	afi_sub_id,
@@ -162,6 +168,7 @@ INSERT INTO [GESTIONAR].[afiliado](
       ,[Plan_Med_Codigo]);
 GO
 
+select 'Creo la tabla Profesional'
 
 CREATE TABLE [GESTIONAR].[profesional](
     prof_id [int] IDENTITY(0,1) NOT NULL,
@@ -186,7 +193,7 @@ CREATE TABLE [GESTIONAR].[profesional](
 
   GO
 
-
+select 'Populo la tabla profesional'
 
 insert into [GESTIONAR].[profesional](
     prof_nombre,
@@ -201,8 +208,8 @@ insert into [GESTIONAR].[profesional](
     prof_matricula,
     prof_creado,
     prof_modificado,
-	prof_baja)
-(SELECT m.Medico_Nombre,
+	  prof_baja)
+    (SELECT m.Medico_Nombre,
      m.Medico_Apellido,
      'DNI',
        m.Medico_Dni,
@@ -215,9 +222,9 @@ insert into [GESTIONAR].[profesional](
        ,SYSDATETIME()
        ,SYSDATETIME()
 	   ,0
-FROM gd_esquema.Maestra m
-WHERE m.Medico_Apellido IS NOT NULL
-GROUP BY m.Medico_Apellido,
+    FROM gd_esquema.Maestra m
+    WHERE m.Medico_Apellido IS NOT NULL
+    GROUP BY m.Medico_Apellido,
          m.Medico_Direccion,
          m.Medico_Dni,
          m.Medico_Fecha_Nac,
@@ -226,84 +233,107 @@ GROUP BY m.Medico_Apellido,
          m.Medico_Telefono)
 GO
 
-CREATE TABLE [GESTIONAR].[Tipo_Especialidad](
+select 'Creo la tabla tipo especialidad'
+
+CREATE TABLE [GESTIONAR].[tipo_especialidad](
   [tipoe_Codigo] [int] IDENTITY(10049,1) NOT NULL ,
   [tipoe_Descripcion] [varchar](255) NULL,
   tipoe_creado [datetime] NULL,
   tipoe_modificado [datetime] NULL
-CONSTRAINT [PK_GESTIONAR.Tipo_Especialidad] PRIMARY KEY CLUSTERED 
+CONSTRAINT [PK_GESTIONAR.tipo_especialidad] PRIMARY KEY CLUSTERED 
   (
     [tipoe_codigo] ASC
   )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
   ) ON [PRIMARY]
 GO
 
-SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[Tipo_Especialidad] ON
+SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[tipo_especialidad] ON
 GO
-INSERT INTO [GD2C2013].[GESTIONAR].[Tipo_Especialidad]
+
+select 'Populo la tabla tipo especialidad'
+
+INSERT INTO [GD2C2013].[GESTIONAR].[tipo_especialidad]
            (tipoe_Codigo
            ,[tipoe_Descripcion]
            ,[tipoe_creado]
            ,[tipoe_modificado])
-     (select Tipo_Especialidad_Codigo,Tipo_Especialidad_Descripcion 
+     (select tipo_especialidad_Codigo,tipo_especialidad_Descripcion 
      ,SYSDATETIME()
        ,SYSDATETIME()
      from gd_esquema.Maestra
-     where Tipo_Especialidad_Codigo is not null
-group by Tipo_Especialidad_Codigo,Tipo_Especialidad_Descripcion)
+     where tipo_especialidad_Codigo is not null
+group by tipo_especialidad_Codigo,tipo_especialidad_Descripcion)
 
 GO
 
-SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[Tipo_Especialidad] OFF
+SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[tipo_especialidad] OFF
 GO
 
+select 'Creo la tabla especialidad'
 
-CREATE TABLE [GESTIONAR].[Especialidad](
-  [Espe_Codigo] [int] IDENTITY(10049,1) NOT NULL ,
-  [Espe_Descripcion] [varchar](255) NULL,
-  espe_tipo_id [int] NOT NULL REFERENCES GESTIONAR.Tipo_Especialidad (tipoe_codigo),
-  Espe_creado [datetime] NULL,
-  Espe_modificado[datetime] NULL
-CONSTRAINT [PK_GESTIONAR.Especialidad] PRIMARY KEY CLUSTERED 
+CREATE TABLE [GESTIONAR].[especialidad](
+  [espe_Codigo] [int] IDENTITY(10049,1) NOT NULL ,
+  [espe_Descripcion] [varchar](255) NULL,
+  [espe_tipo_id] [int] NOT NULL REFERENCES GESTIONAR.tipo_especialidad (tipoe_codigo),
+  [espe_creado] [datetime] NULL,
+  [espe_modificado] [datetime] NULL
+CONSTRAINT [PK_GESTIONAR.especialidad] PRIMARY KEY CLUSTERED 
   (
-    [Espe_Codigo] ASC
+    [espe_Codigo] ASC
   )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
   ) ON [PRIMARY]
   GO
 
-SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[Especialidad] ON
+SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[especialidad] ON
 GO
-  INSERT INTO [GD2C2013].[GESTIONAR].[Especialidad]
-           ([Espe_Codigo]
-           ,[Espe_Descripcion]
-           ,espe_tipo_id
-           ,[Espe_creado]
-           ,[Espe_modificado])
-     (select especialidad_codigo,Especialidad_Descripcion,Tipo_Especialidad_Codigo
+
+select 'Populo la tabla especialidad'
+
+  INSERT INTO [GD2C2013].[GESTIONAR].[especialidad]
+           ([espe_Codigo]
+           ,[espe_Descripcion]
+           ,[espe_tipo_id]
+           ,[espe_creado]
+           ,[espe_modificado])
+     (select especialidad_codigo,especialidad_Descripcion,tipo_especialidad_Codigo
       ,SYSDATETIME()
        ,SYSDATETIME()
       from gd_esquema.Maestra
-where Especialidad_Codigo is not null
-group by especialidad_codigo,Especialidad_Descripcion,Tipo_Especialidad_Codigo)
+where especialidad_Codigo is not null
+group by especialidad_codigo,especialidad_Descripcion,tipo_especialidad_Codigo)
 
 GO
-SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[Especialidad] OFF
+SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[especialidad] OFF
 GO
 
-
+Select 'Creo la tabla de relacion profesional especialidad'
 
 CREATE TABLE [GESTIONAR].[profesional_especialidad](
-  [espr_Codigo] [int] IDENTITY(10049,1) NOT NULL ,
+  [espr_id] [int] IDENTITY(0,1) NOT NULL ,
   [espr_prof_id] [int] NOT NULL REFERENCES GESTIONAR.profesional (prof_id),
-  [espr_especialidad_id] [int] NOT NULL REFERENCES GESTIONAR.Especialidad (Espe_Codigo),
+  [espr_especialidad_id] [int] NOT NULL REFERENCES GESTIONAR.especialidad (espe_Codigo),
   [espr_creado] [datetime] NULL,
   [espr_modificado] [datetime] NULL
-CONSTRAINT [PK_GESTIONAR.prof_Especialidad] PRIMARY KEY CLUSTERED 
+CONSTRAINT [PK_GESTIONAR.prof_especialidad] PRIMARY KEY CLUSTERED 
   (
-    [espr_Codigo] ASC
+    [espr_id] ASC
   )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
   ) ON [PRIMARY]
   GO
+  
+select 'Creo las relaciones de la tabla profesional especialidad'
+
+INSERT INTO [GD2C2013].[GESTIONAR].[profesional_especialidad]
+           ([espr_prof_id]
+           ,[espr_especialidad_id]
+           ,[espr_creado]
+           ,[espr_modificado])
+     (select prof_id,Espe_Codigo,SYSDATETIME(),SYSDATETIME() from gd_esquema.Maestra,GESTIONAR.profesional,GESTIONAR.Especialidad
+where prof_nro_documento=Medico_Dni
+and Espe_Codigo=Especialidad_Codigo
+group by prof_id,Espe_Codigo)
+GO
+
 
 Select 'Creo tabla funcionalidad'
 GO
@@ -370,25 +400,25 @@ INSERT INTO [GESTIONAR].[funcionalidad]([func_name],[func_creado],[func_modifica
  ('afiliadosQueUsaronPeroNoCompraronToolStripMenuItem',SYSDATETIME(),SYSDATETIME())
 
 
-Select 'Creo tabla Rol'
+Select 'Creo tabla rol'
 
 GO
 
-CREATE TABLE [GESTIONAR].[Rol](
+CREATE TABLE [GESTIONAR].[rol](
       [rol_id] [int] IDENTITY(0,1) NOT NULL,
       [rol_nombre] [nvarchar](255) NULL,
       [rol_creado] [datetime] NULL,
       [rol_modificado] [datetime] NULL,
       [rol_borrado] [bit] NULL
-      CONSTRAINT [PK_GESTIONAR.Rol] PRIMARY KEY CLUSTERED 
+      CONSTRAINT [PK_GESTIONAR.rol] PRIMARY KEY CLUSTERED 
 (
   [rol_id] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-Select 'Creo los Roles'
+Select 'Creo los roles'
 GO
-insert into GESTIONAR.Rol (rol_nombre,rol_creado,rol_modificado,rol_borrado)
+insert into GESTIONAR.rol (rol_nombre,rol_creado,rol_modificado,rol_borrado)
 values
 ('Profesional',SYSDATETIME(),SYSDATETIME(),0),
 ('Administrativo',SYSDATETIME(),SYSDATETIME(),0),
@@ -397,13 +427,12 @@ values
 GO
 Select 'Creo tabla rol funcionalidad'
 GO
-CREATE TABLE [GESTIONAR].[Rol_funcionalidad](
+CREATE TABLE [GESTIONAR].[rol_funcionalidad](
       [rolf_id] [int] IDENTITY(0,1) NOT NULL,
       [rolf_rol_id] [int] NOT NULL REFERENCES GESTIONAR.rol (rol_id),
       [rolf_func_id] [int] NOT NULL REFERENCES GESTIONAR.funcionalidad (func_id),
-      [rolf_creado] [datetime] NULL,
-      [rolf_modificado] [datetime] NULL
-CONSTRAINT [PK_GESTIONAR.Rol_funcionalidad] PRIMARY KEY CLUSTERED 
+      [rolf_creado] [datetime] NULL
+CONSTRAINT [PK_GESTIONAR.rol_funcionalidad] PRIMARY KEY CLUSTERED 
 (
   [rolf_id] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
@@ -413,58 +442,58 @@ GO
 Select 'Creo la relacion entre el rol y la funcionalidad'
 GO
 
-insert into [GESTIONAR].[Rol_funcionalidad]
- ([rolf_rol_id],[rolf_func_id],[rolf_creado],[rolf_modificado])
+insert into [GESTIONAR].[rol_funcionalidad]
+ ([rolf_rol_id],[rolf_func_id],[rolf_creado])
  values
-(1,0,SYSDATETIME(),SYSDATETIME()),
-(1,2,SYSDATETIME(),SYSDATETIME()),
-(1,3,SYSDATETIME(),SYSDATETIME()),
-(1,4,SYSDATETIME(),SYSDATETIME()),
-(1,5,SYSDATETIME(),SYSDATETIME()),
-(1,6,SYSDATETIME(),SYSDATETIME()),
-(1,7,SYSDATETIME(),SYSDATETIME()),
-(1,8,SYSDATETIME(),SYSDATETIME()),
-(1,9,SYSDATETIME(),SYSDATETIME()),
-(1,10,SYSDATETIME(),SYSDATETIME()),
-(1,11,SYSDATETIME(),SYSDATETIME()),
-(1,12,SYSDATETIME(),SYSDATETIME()),
-(1,13,SYSDATETIME(),SYSDATETIME()),
-(1,14,SYSDATETIME(),SYSDATETIME()),
-(1,15,SYSDATETIME(),SYSDATETIME()),
-(1,16,SYSDATETIME(),SYSDATETIME()),
-(1,17,SYSDATETIME(),SYSDATETIME()),
-(1,18,SYSDATETIME(),SYSDATETIME()),
-(1,19,SYSDATETIME(),SYSDATETIME()),
-(1,20,SYSDATETIME(),SYSDATETIME()),
-(1,21,SYSDATETIME(),SYSDATETIME()),
-(1,22,SYSDATETIME(),SYSDATETIME()),
-(1,23,SYSDATETIME(),SYSDATETIME()),
-(1,24,SYSDATETIME(),SYSDATETIME()),
-(1,25,SYSDATETIME(),SYSDATETIME()),
-(1,26,SYSDATETIME(),SYSDATETIME()),
-(1,27,SYSDATETIME(),SYSDATETIME()),
-(1,28,SYSDATETIME(),SYSDATETIME()),
-(1,29,SYSDATETIME(),SYSDATETIME()),
-(1,30,SYSDATETIME(),SYSDATETIME()),
-(1,31,SYSDATETIME(),SYSDATETIME()),
-(1,32,SYSDATETIME(),SYSDATETIME()),
-(1,33,SYSDATETIME(),SYSDATETIME()),
-(1,34,SYSDATETIME(),SYSDATETIME()),
-(1,35,SYSDATETIME(),SYSDATETIME()),
-(1,36,SYSDATETIME(),SYSDATETIME()),
-(1,37,SYSDATETIME(),SYSDATETIME()),
-(1,38,SYSDATETIME(),SYSDATETIME()),
-(1,39,SYSDATETIME(),SYSDATETIME()),
-(1,40,SYSDATETIME(),SYSDATETIME()),
-(1,41,SYSDATETIME(),SYSDATETIME()),
-(1,42,SYSDATETIME(),SYSDATETIME()),
-(1,43,SYSDATETIME(),SYSDATETIME()),
-(1,44,SYSDATETIME(),SYSDATETIME()),
-(0,0,SYSDATETIME(),SYSDATETIME()),
-(0,1,SYSDATETIME(),SYSDATETIME()),
-(2,33,SYSDATETIME(),SYSDATETIME()),
-(2,35,SYSDATETIME(),SYSDATETIME()),
-(2,36,SYSDATETIME(),SYSDATETIME())
+(1,0,SYSDATETIME()),
+(1,2,SYSDATETIME()),
+(1,3,SYSDATETIME()),
+(1,4,SYSDATETIME()),
+(1,5,SYSDATETIME()),
+(1,6,SYSDATETIME()),
+(1,7,SYSDATETIME()),
+(1,8,SYSDATETIME()),
+(1,9,SYSDATETIME()),
+(1,10,SYSDATETIME()),
+(1,11,SYSDATETIME()),
+(1,12,SYSDATETIME()),
+(1,13,SYSDATETIME()),
+(1,14,SYSDATETIME()),
+(1,15,SYSDATETIME()),
+(1,16,SYSDATETIME()),
+(1,17,SYSDATETIME()),
+(1,18,SYSDATETIME()),
+(1,19,SYSDATETIME()),
+(1,20,SYSDATETIME()),
+(1,21,SYSDATETIME()),
+(1,22,SYSDATETIME()),
+(1,23,SYSDATETIME()),
+(1,24,SYSDATETIME()),
+(1,25,SYSDATETIME()),
+(1,26,SYSDATETIME()),
+(1,27,SYSDATETIME()),
+(1,28,SYSDATETIME()),
+(1,29,SYSDATETIME()),
+(1,30,SYSDATETIME()),
+(1,31,SYSDATETIME()),
+(1,32,SYSDATETIME()),
+(1,33,SYSDATETIME()),
+(1,34,SYSDATETIME()),
+(1,35,SYSDATETIME()),
+(1,36,SYSDATETIME()),
+(1,37,SYSDATETIME()),
+(1,38,SYSDATETIME()),
+(1,39,SYSDATETIME()),
+(1,40,SYSDATETIME()),
+(1,41,SYSDATETIME()),
+(1,42,SYSDATETIME()),
+(1,43,SYSDATETIME()),
+(1,44,SYSDATETIME()),
+(0,0,SYSDATETIME()),
+(0,1,SYSDATETIME()),
+(2,33,SYSDATETIME()),
+(2,35,SYSDATETIME()),
+(2,36,SYSDATETIME())
 
 
 
@@ -537,8 +566,7 @@ CREATE TABLE [GESTIONAR].[rol_usuario](
       [rolu_rol_id] [int] NOT NULL REFERENCES GESTIONAR.rol (rol_id),
       [rol_relacion] [int] NULL,
       [rol_relacion_sub] [int] NULL,
-      [rolu_creado] [datetime] NULL,
-      [rolu_modificado] [datetime] NULL
+      [rolu_creado] [datetime] NULL
 ) ON [PRIMARY]
 
 GO
@@ -546,14 +574,14 @@ Select 'Creo las relaciones entre el usuario y el rol'
 
 
   insert into [GESTIONAR].[rol_usuario]
-  ([rolu_user_id],[rolu_rol_id],[rolu_creado],[rolu_modificado],rol_relacion)
+  ([rolu_user_id],[rolu_rol_id],[rolu_creado],rol_relacion)
   values
-  (0,0,SYSDATETIME(),SYSDATETIME(),23),
-  (1,0,SYSDATETIME(),SYSDATETIME(),1),
-  (2,1,SYSDATETIME(),SYSDATETIME(),2),
-  (3,1,SYSDATETIME(),SYSDATETIME(),3),
-  (4,2,SYSDATETIME(),SYSDATETIME(),4),
-  (5,2,SYSDATETIME(),SYSDATETIME(),5)
+  (0,0,SYSDATETIME(),23),
+  (1,0,SYSDATETIME(),1),
+  (2,1,SYSDATETIME(),2),
+  (3,1,SYSDATETIME(),3),
+  (4,2,SYSDATETIME(),4),
+  (5,2,SYSDATETIME(),5)
   
   
   GO
@@ -605,46 +633,46 @@ and Turno_Numero is not null
 )
 SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[turno] OFF
 
-select 'Creo la tabla agenda'
+--select 'Creo la tabla agenda'
 
-CREATE TABLE [GESTIONAR].[agenda](
-  [agend_id] [int] IDENTITY(0,1) NOT NULL ,
-  [agen_profe_id] [int] NOT NULL REFERENCES GESTIONAR.profesional (prof_id),
-  [agen_afil_id] [int] NOT NULL,
-  [agend_afil_sub_id] [int] NOT NULL ,
-  [agen_hora_inicio] [datetime] null,
-  [agen_baja] [bit] NULL,
-  [agen_creado] [datetime] NULL,
-  [agen_modificado] [datetime] NULL,
-  foreign key (agen_afil_id,agend_afil_sub_id) references GESTIONAR.afiliado (afi_id,afi_sub_id),
-  CONSTRAINT [PK_GESTIONAR.agenda] PRIMARY KEY CLUSTERED 
-  (
-    [agend_id] ASC
-  )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-  ) ON [PRIMARY]
-GO
+-- CREATE TABLE [GESTIONAR].[agenda](
+--   [agend_id] [int] IDENTITY(0,1) NOT NULL ,
+--   [agen_profe_id] [int] NOT NULL REFERENCES GESTIONAR.profesional (prof_id),
+--   [agen_afil_id] [int] NOT NULL,
+--   [agend_afil_sub_id] [int] NOT NULL ,
+--   [agen_hora_inicio] [datetime] null,
+--   [agen_baja] [bit] NULL,
+--   [agen_creado] [datetime] NULL,
+--   [agen_modificado] [datetime] NULL,
+--   foreign key (agen_afil_id,agend_afil_sub_id) references GESTIONAR.afiliado (afi_id,afi_sub_id),
+--   CONSTRAINT [PK_GESTIONAR.agenda] PRIMARY KEY CLUSTERED 
+--   (
+--     [agend_id] ASC
+--   )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+--   ) ON [PRIMARY]
+-- GO
 
-select 'Populo la tabla agenda'
+-- select 'Populo la tabla agenda'
 
-insert into GESTIONAR.agenda (
-[agen_profe_id],
-[agen_afil_id],
-[agend_afil_sub_id],
-[agen_hora_inicio],
-[agen_baja],
-[agen_creado],
-[agen_modificado])
-(select p.prof_id,af.afi_id,af.afi_sub_id, m.turno_fecha,0,SYSDATETIME(),SYSDATETIME()
-from gd_esquema.Maestra m
-inner join GESTIONAR.afiliado af on af.afi_nro_documento = m.Paciente_Dni
-inner join GESTIONAR.profesional p on p.prof_nro_documento=m.Medico_Dni
-)
-GO
+-- insert into GESTIONAR.agenda (
+-- [agen_profe_id],
+-- [agen_afil_id],
+-- [agend_afil_sub_id],
+-- [agen_hora_inicio],
+-- [agen_baja],
+-- [agen_creado],
+-- [agen_modificado])
+-- (select p.prof_id,af.afi_id,af.afi_sub_id, m.turno_fecha,0,SYSDATETIME(),SYSDATETIME()
+-- from gd_esquema.Maestra m
+-- inner join GESTIONAR.afiliado af on af.afi_nro_documento = m.Paciente_Dni
+-- inner join GESTIONAR.profesional p on p.prof_nro_documento=m.Medico_Dni
+-- )
+-- GO
 
 select 'Creo la tabla compra'
 
 CREATE TABLE [GESTIONAR].[compra](
-  [compra_id] [int] IDENTITY(0,1) NOT NULL ,
+  [compra_id] [int] IDENTITY(384069,1) NOT NULL ,
   [compra_afi_id] [int] NOT NULL ,
   [compra_afi_sub_id] [int] NOT NULL,
   [compra_suma] [int] NULL,
@@ -664,31 +692,77 @@ GO
 
 select 'Populo la tabla compra'
 
+SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[compra] ON
+
 INSERT INTO [GD2C2013].[GESTIONAR].[compra]
-           ([compra_afi_id]
+           ([compra_id]
+           ,[compra_afi_id]
            ,[compra_afi_sub_id]
            ,[compra_cant_farmacia]
            ,[compra_cant_consulta]
            ,[compra_plan_id]
            ,[compra_creado]
            ,[compra_modificado])
-            (select 
-      afi_id
+            ((select
+  Bono_Consulta_Numero
+      ,afi_id
       ,afi_sub_id
-      ,(select COUNT(*) 
-        from gd_esquema.Maestra g2
-        where g2.Compra_Bono_Fecha is not null 
-        and g2.Bono_Consulta_Numero is null
-        and g2.Paciente_Dni=g1.Paciente_Dni
-        and g2.Compra_Bono_Fecha=g1.Compra_Bono_Fecha)
-         ,COUNT(*)
-         ,afi_plan
-        ,g1.Compra_Bono_Fecha,g1.Compra_Bono_Fecha
-      from gd_esquema.Maestra g1,GESTIONAR.afiliado 
-      where g1.Compra_Bono_Fecha is not null
-      and g1.Bono_Farmacia_Numero is null
-      and g1.Paciente_Dni=afi_nro_documento
-      group by afi_id ,afi_sub_id,afi_plan,g1.Paciente_Dni,g1.Compra_Bono_Fecha)
+      ,0
+      ,1
+       ,afi_plan
+        ,Compra_Bono_Fecha,Compra_Bono_Fecha
+      from gd_esquema.Maestra,GESTIONAR.afiliado 
+      where Compra_Bono_Fecha is not null
+      and Bono_Consulta_Numero is not null
+      and Paciente_Dni=afi_nro_documento
+      group by Bono_Consulta_Numero
+      ,afi_id
+      ,afi_sub_id
+       ,afi_plan
+        ,Compra_Bono_Fecha,Compra_Bono_Fecha)
+     union 
+      (select
+  Bono_Farmacia_Numero+200000
+      ,afi_id
+      ,afi_sub_id
+      ,1
+      ,0
+       ,afi_plan
+        ,Compra_Bono_Fecha,Compra_Bono_Fecha
+      from gd_esquema.Maestra,GESTIONAR.afiliado 
+      where Compra_Bono_Fecha is not null
+      and Paciente_Dni=afi_nro_documento
+      and Bono_Farmacia_Numero is not null
+      group by Bono_Farmacia_Numero
+      ,afi_id
+      ,afi_sub_id
+       ,afi_plan
+        ,Compra_Bono_Fecha,Compra_Bono_Fecha)
+      )
+
+SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[compra] OFF
+
+
+
+
+
+      --       (select 
+      -- afi_id
+      -- ,afi_sub_id
+      -- ,(select COUNT(*) 
+      --   from gd_esquema.Maestra g2
+      --   where g2.Compra_Bono_Fecha is not null 
+      --   and g2.Bono_Consulta_Numero is null
+      --   and g2.Paciente_Dni=g1.Paciente_Dni
+      --   and g2.Compra_Bono_Fecha=g1.Compra_Bono_Fecha)
+      --    ,COUNT(*)
+      --    ,afi_plan
+      --   ,g1.Compra_Bono_Fecha,g1.Compra_Bono_Fecha
+      -- from gd_esquema.Maestra g1,GESTIONAR.afiliado 
+      -- where g1.Compra_Bono_Fecha is not null
+      -- and g1.Bono_Farmacia_Numero is null
+      -- and g1.Paciente_Dni=afi_nro_documento
+      -- group by afi_id ,afi_sub_id,afi_plan,g1.Paciente_Dni,g1.Compra_Bono_Fecha)
 
 -- INSERT INTO [GD2C2013].[GESTIONAR].[compra]
 --            ([compra_afi_id]
@@ -720,10 +794,11 @@ select 'Creo la tabla bono_consulta'
 
 CREATE TABLE [GESTIONAR].[bono_consulta](
   [boco_id] [int] IDENTITY(181694,1) NOT NULL ,
-  [boco_compra_id] [int] NOT NULL REFERENCES GESTIONAR.compra (compra_id),
+  [boco_compra_id] [int] NULL REFERENCES GESTIONAR.compra (compra_id),
   [boco_afi_id] [int] NOT NULL ,
   [boco_afi_sub_id] [int] NOT NULL,
   [boco_plan_id] [int] NOT NULL REFERENCES GESTIONAR.plan_medico (plan_id),
+  [boco_numero_consulta] [int] null,
   [boco_creado] [datetime] NULL,
   [boco_modificado] [datetime] NULL,
   foreign key (boco_afi_id,boco_afi_sub_id) references GESTIONAR.afiliado (afi_id,afi_sub_id),
@@ -744,17 +819,18 @@ INSERT INTO [GD2C2013].[GESTIONAR].[bono_consulta]
            ,[boco_afi_id]
            ,[boco_afi_sub_id]
            ,[boco_plan_id]
+           ,[boco_numero_consulta]
            ,[boco_creado]
            ,[boco_modificado]) 
-           (select Bono_Consulta_Numero,compra_id, afi_id,afi_sub_id,afi_plan,SYSDATETIME(),SYSDATETIME()
+           (select Bono_Consulta_Numero,compra_id, afi_id,afi_sub_id,afi_plan,0,SYSDATETIME(),SYSDATETIME()
 from gd_esquema.Maestra,GESTIONAR.compra c, GESTIONAR.afiliado
-where c.compra_afi_id=afi_id
-and c.compra_afi_sub_id=afi_sub_id
-and Paciente_Dni=afi_nro_documento
+where c.compra_id=Bono_Consulta_Numero
 and c.compra_creado=Compra_Bono_Fecha
-and Bono_Consulta_Numero is not null)
+and Paciente_Dni=afi_nro_documento)
 
 SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[bono_consulta] OFF
+
+
 
 select 'Creo la tabla consulta'
 
@@ -776,6 +852,8 @@ CREATE TABLE [GESTIONAR].[consulta](
   ) ON [PRIMARY]
 
 GO
+
+
 
 select 'Populo la tabla consulta'
 
@@ -840,24 +918,19 @@ SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[bono_farmacia] ON
 
 INSERT INTO [GD2C2013].[GESTIONAR].[bono_farmacia]
            ([bofa_id]
+           ,[bofa_compra_id]
            ,[bofa_afi_id]
            ,[bofa_afi_sub_id]
            ,[bofa_bono_consulta_id]
            ,[bofa_plan_id]
            ,[bofa_creado]
            ,[bofa_modificado])
-           (select Bono_Farmacia_Numero, afi_id,afi_sub_id,Bono_Consulta_Numero,afi_plan,Bono_Farmacia_Fecha_Impresion, SYSDATETIME()
+           (select Bono_Farmacia_Numero,(Bono_Farmacia_Numero+200000), afi_id,afi_sub_id,Bono_Consulta_Numero,afi_plan,Bono_Farmacia_Fecha_Impresion, SYSDATETIME()
 from gd_esquema.Maestra,GESTIONAR.afiliado
 where Bono_Farmacia_Numero is not null
 and Bono_Consulta_Numero is not null
 and afi_nro_documento=Paciente_Dni)
---            (select Bono_Farmacia_Numero,compra_id, compra_afi_id,compra_afi_sub_id,afi_plan,Bono_Farmacia_Fecha_Impresion,SYSDATETIME()
--- from gd_esquema.Maestra, GESTIONAR.compra,GESTIONAR.afiliado
--- where Bono_Farmacia_Numero is not null
--- and compra_afi_id=afi_id
--- and compra_afi_sub_id=afi_sub_id
--- and afi_nro_documento=Paciente_Dni
--- and compra_creado=Compra_Bono_Fecha)
+           
 
 SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[bono_farmacia] OFF
 
@@ -1091,7 +1164,7 @@ go
 
 
 CREATE TRIGGER GESTIONAR.rol_func_checker 
-   ON  GESTIONAR.Rol_funcionalidad
+   ON  GESTIONAR.rol_funcionalidad
    instead of  INSERT
 AS 
 BEGIN
@@ -1100,26 +1173,26 @@ BEGIN
   SET NOCOUNT ON;
 
     -- Insert statements for trigger here
-    declare @rol int, @func int , @creado datetime, @modificado datetime
+    declare @rol int, @func int , @creado datetime
     declare cur_inserted cursor for select * from inserted;
 
 open cur_inserted
 
-fetch next from cur_inserted into @rol,@func,@creado,@modificado
+fetch next from cur_inserted into @rol,@func,@creado
 
 WHILE @@FETCH_STATUS = 0
 BEGIN
-  if not exists ( select * from GESTIONAR.Rol_funcionalidad where rolf_rol_id = @rol
+  if not exists ( select * from GESTIONAR.rol_funcionalidad where rolf_rol_id = @rol
   and rolf_func_id = @func)
   BEGIN
-    insert into [GESTIONAR].[Rol_funcionalidad]
-      ([rolf_rol_id],[rolf_func_id],[rolf_creado],[rolf_modificado])
+    insert into [GESTIONAR].[rol_funcionalidad]
+      ([rolf_rol_id],[rolf_func_id],[rolf_creado])
     values
-           (@rol,@func,@creado,@modificado);
+           (@rol,@func,@creado);
     
      end
      
-     fetch next from cur_inserted into @rol,@func,@creado,@modificado
+     fetch next from cur_inserted into @rol,@func,@creado
      
 end
 
@@ -1131,3 +1204,89 @@ deallocate cur_inserted
 END
 
 go
+
+
+create procedure [GESTIONAR].[estadisticas] (@semestre bit,@anio datetime,@informe int, @fecha date)
+as 
+begin
+if @informe = 1
+  begin 
+    select  top 5 e.Espe_Descripcion , MAX (pe.espr_prof_id)
+    from 
+      GESTIONAR.profesional_especialidad pe
+      ,GESTIONAR.Especialidad e
+      ,GESTIONAR.turno t
+      ,GESTIONAR.cancelacion ca
+      ,GESTIONAR.consulta
+    where 
+      consul_id=cancel_consulta_id
+      and consul_turno_id=turn_id
+      and turn_profe_id=espr_prof_id
+      and espr_especialidad_id=espe_Codigo
+      and (DATEPART(YEAR, t.turn_creado)) = @anio 
+        and ((datepart(MONTH, t.turn_creado) in (1, 2, 3, 4, 5, 6) 
+          and @semestre = 0 ) 
+        or (datepart(MONTH, t.turn_creado) in (7, 8, 9, 10, 11, 12) 
+          and @semestre = 1 ))
+    group by Espe_Descripcion, DATEPART(MONTH, t.turn_creado)
+    order by COUNT(*) desc
+end
+else
+  if @informe = 2
+  begin
+    select top 5 DATEPART(MONTH, DATEADD(DAY,60,bofa_creado)),afi_id, count(bf.bofa_id)
+    from GESTIONAR.afiliado a
+    , GESTIONAR.bono_farmacia bf
+    where 
+      a.afi_id = bf.bofa_afi_id 
+      and DATEDIFF(D,bf.bofa_creado,@fecha) > 60 
+      and bf.bofa_bono_consulta_id is null
+      and DATEPART(YEAR, DATEADD(DAY,60,bofa_creado)) = @anio 
+        and ((datepart(MONTH, DATEADD(DAY,60,bofa_creado)) in (1, 2, 3, 4, 5, 6) 
+          and @semestre = 0 ) 
+        or (datepart(MONTH, DATEADD(DAY,60,bofa_creado)) in (7, 8, 9, 10, 11, 12) 
+          and @semestre = 1 ))
+    group by a.afi_id, DATEPART(MONTH, DATEADD(DAY,60,bofa_creado))
+    order by COUNT(*) desc
+  end
+  else
+    if @informe = 3
+    begin
+      select top 5 DATEPART(MONTH, consul_modificado),e.Espe_Descripcion, COUNT(bf.bofa_bono_consulta_id) 
+      from 
+        GESTIONAR.bono_farmacia bf
+        , GESTIONAR.profesional_especialidad pe
+        , GESTIONAR.Especialidad e
+        , GESTIONAR.turno t
+        ,GESTIONAR.consulta
+      where 
+        bofa_bono_consulta_id = consul_bono_id
+        and consul_turno_id=turn_id
+        and turn_profe_id=espr_prof_id
+        and espr_especialidad_id=espe_Codigo
+        and DATEPART(YEAR, consul_modificado) = @anio and ((datepart(MONTH, consul_modificado) in (1, 2, 3, 4, 5, 6) and @semestre = 0 ) or (datepart(MONTH, consul_modificado) in (7, 8, 9, 10, 11, 12) and @semestre = 1 ))
+      group by e.Espe_Descripcion, DATEPART(MONTH, consul_modificado)
+      order by COUNT(*) desc
+    end
+    else
+      select top 10 
+DATEPART(MONTH, boco_modificado),
+  boco_afi_id,boco_afi_sub_id
+  , count(boco_numero_consulta)
+from 
+   GESTIONAR.compra cp
+  , GESTIONAR.bono_consulta bc
+where 
+  compra_afi_id=boco_afi_id
+  and compra_afi_sub_id != boco_afi_sub_id
+and boco_numero_consulta is not null
+group by boco_afi_id,boco_afi_sub_id, DATEPART(MONTH, boco_modificado)
+
+end 
+
+GO
+
+
+
+
+

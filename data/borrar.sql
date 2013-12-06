@@ -102,6 +102,10 @@ IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].
 DROP PROCEDURE [GESTIONAR].[AfiliadoUpdate]
 GO
 
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[estadisticas]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [GESTIONAR].[estadisticas]
+GO
+
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[AfiliadoGrupoInsert]') AND type in (N'P', N'PC'))
 DROP PROCEDURE [GESTIONAR].[AfiliadoGrupoInsert]
 GO
