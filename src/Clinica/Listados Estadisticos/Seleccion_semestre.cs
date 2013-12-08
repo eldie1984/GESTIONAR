@@ -33,7 +33,7 @@ namespace Clinica.Listados_Estadisticos
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Pantalla pantalla = new Pantalla(Convert.ToInt32(comboBox1.SelectedText),Convert.ToInt32(comboBox2.SelectedText),this.reporte);
+            Pantalla pantalla = new Pantalla(Convert.ToInt32(comboBox1.SelectedText),Convert.ToInt32(comboBox2.SelectedText)-1,this.reporte);
             pantalla.Show();
             this.Hide();
         }

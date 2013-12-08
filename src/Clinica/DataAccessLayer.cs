@@ -455,7 +455,16 @@ namespace Clinica
 
                 if (Reg.Read())
                 {
-                    int cod = Reg.GetInt32(0);
+                    int cod ;
+                    if (!Reg.IsDBNull(0))
+                    {
+                        cod = Reg.GetInt32(0); ;
+                    }
+                    else
+                    {
+                        cod = -1;
+                    }
+                    
                     int cod_sub;
                     if (!Reg.IsDBNull(1))
                     {
@@ -1033,18 +1042,29 @@ namespace Clinica
                 command.Transaction = transaction;
                 try
                 {
+
+                    command.CommandText = @"delete from [GD2C2013].[GESTIONAR].[Rol_funcionalidad] where rolf_rol_id=@Rol";
+
+                    command.Parameters.Add("@Rol", SqlDbType.Int);
+
+                    command.Parameters["@Rol"].Value = Rol_id;
+
+                    command.ExecuteNonQuery();
+
                     command.CommandText = @"INSERT INTO [GD2C2013].[GESTIONAR].[Rol_funcionalidad] " +
                                                    "([rolf_rol_id] " +
                                                    ",[rolf_func_id] " +
-                                                   ",[rolf_creado] " +
+                                                   ",[rolf_creado] )" +
                                              "VALUES " +
-                                             "(@Rol,@funciones,@creado,@modificado)";
+                                             "(@Rol,@funciones,@creado)";
 
-                    command.Parameters.Add("@Rol", SqlDbType.Int);
+                    
                     command.Parameters.Add("@funciones", SqlDbType.Int);
                     command.Parameters.Add("@creado", SqlDbType.DateTime);
 
-                    command.Parameters["@Rol"].Value = Rol_id;
+                    //command.Parameters.Add("@Rol", SqlDbType.Int);
+
+                    //command.Parameters["@Rol"].Value = Rol_id;
 
                     foreach (Funcion funcion in funciones)
                     {
@@ -1399,8 +1419,10 @@ namespace Clinica
                 command.Transaction = transaction;
                 try
                 {
-                    command.CommandText = @"update GESTIONAR.bono_consulta	set boco_numero_consulta = (select max(boco_numero_consulta) from GESTIONAR.bono_consulta where boco_afi_id=@afil_id  
-						and  boco_afi_sub_id=@afil_sub_id)+1	where boco_id=@bono_consulta";
+                    command.CommandText = @"update GESTIONAR.bono_consulta
+	set boco_numero_consulta = (select max(boco_numero_consulta) from GESTIONAR.bono_consulta where boco_afi_id=@afil_id  
+						and  boco_afi_sub_id=@afil_sub_id)+1
+	where boco_id=@bono_consulta";
 
 
                     command.Parameters.Add("@afil_id", SqlDbType.Int);
@@ -1799,5 +1821,65 @@ namespace Clinica
         }
 
         #endregion
+
+        public List<estadistica> Estadistica(Int32 anio ,Int32 semestre,Int32 informe)
+        {
+            List<estadistica> nuevaConsulta = new List<estadistica>();
+            
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+
+                SqlCommand command = new SqlCommand("GESTIONAR.estadisticas", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                SqlTransaction transaction;
+                transaction = connection.BeginTransaction("Transaccion estadistica");
+
+                command.Connection = connection;
+                command.Transaction = transaction;
+                command.Parameters.Add("@semestre", SqlDbType.Bit);
+                command.Parameters.Add("@anio", SqlDbType.DateTime);
+                command.Parameters.Add("@informe", SqlDbType.Int);
+                command.Parameters.Add("@fecha", SqlDbType.Date);
+
+
+                command.Parameters["@semestre"].Value =semestre;
+                command.Parameters["@anio"].Value =anio;
+                command.Parameters["@informe"].Value =informe;
+                command.Parameters["@fecha"].Value = Helper.GetFechaNow();
+
+
+
+                try
+                {
+                     SqlDataReader Reg = command.ExecuteReader();
+                    
+                    while(Reg.Read())
+                    {
+                        nuevaConsulta.Add(new estadistica { mes =Reg.GetString(0) , dato =Reg.GetString(1) , cantidad=Reg.GetInt32(2)});
+                    }
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Commit Exception Type: {0}", ex.GetType());
+                    Console.WriteLine("  Message: {0}", ex.Message);
+                    
+                    try
+                    {
+                        transaction.Rollback();
+                    }
+                    catch (Exception ex2)
+                    {
+                        Console.WriteLine("Rollback Exception Type: {0}", ex2.GetType());
+                        Console.WriteLine("  Message: {0}", ex2.Message);
+                        
+                    }
+
+                }
+            }
+            return nuevaConsulta;
+        }
     }
 }

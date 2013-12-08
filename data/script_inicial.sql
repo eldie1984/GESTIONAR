@@ -491,6 +491,8 @@ insert into [GESTIONAR].[rol_funcionalidad]
 (1,44,SYSDATETIME()),
 (0,0,SYSDATETIME()),
 (0,1,SYSDATETIME()),
+(0,33,SYSDATETIME()),
+(0,36,SYSDATETIME()),
 (2,33,SYSDATETIME()),
 (2,35,SYSDATETIME()),
 (2,36,SYSDATETIME())
@@ -527,17 +529,7 @@ INSERT INTO [GESTIONAR].[usuario]
            ,[usua_modificado]
            ,[usua_habilitado])
      VALUES
-           ('Administrador'
-           ,'e8fd3b177583c5e1ff6d09068f75bf02a76576dca567e0e96fa3229fb4448533'
-           ,SYSDATETIME()
-           ,SYSDATETIME()
-           ,1)
-           ,('Admin'
-           ,'e8fd3b177583c5e1ff6d09068f75bf02a76576dca567e0e96fa3229fb4448533'
-           ,SYSDATETIME()
-           ,SYSDATETIME()
-           ,1)
-           ,('Agustin'
+           ('Agustin'
            ,'e8fd3b177583c5e1ff6d09068f75bf02a76576dca567e0e96fa3229fb4448533'
            ,SYSDATETIME()
            ,SYSDATETIME()
@@ -574,14 +566,17 @@ Select 'Creo las relaciones entre el usuario y el rol'
 
 
   insert into [GESTIONAR].[rol_usuario]
-  ([rolu_user_id],[rolu_rol_id],[rolu_creado],rol_relacion)
+  ([rolu_user_id],[rolu_rol_id],[rolu_creado],rol_relacion,rol_relacion_sub)
   values
-  (0,0,SYSDATETIME(),23),
-  (1,0,SYSDATETIME(),1),
-  (2,1,SYSDATETIME(),2),
-  (3,1,SYSDATETIME(),3),
-  (4,2,SYSDATETIME(),4),
-  (5,2,SYSDATETIME(),5)
+  (0,1,SYSDATETIME(),null,null),
+  (0,0,SYSDATETIME(),23,null),
+  (1,1,SYSDATETIME(),null,null),
+  (1,2,SYSDATETIME(),1,1),
+  (2,0,SYSDATETIME(),13,null),
+  (2,2,SYSDATETIME(),2,1),
+  (3,1,SYSDATETIME(),3,null)
+
+ 
   
   
   GO
@@ -1165,47 +1160,47 @@ end
 go
 
 
-CREATE TRIGGER GESTIONAR.rol_func_checker 
-   ON  GESTIONAR.rol_funcionalidad
-   instead of  INSERT
-AS 
-BEGIN
-  -- SET NOCOUNT ON added to prevent extra result sets from
-  -- interfering with SELECT statements.
-  SET NOCOUNT ON;
+-- CREATE TRIGGER GESTIONAR.rol_func_checker 
+--    ON  GESTIONAR.rol_funcionalidad
+--    instead of  INSERT
+-- AS 
+-- BEGIN
+--   -- SET NOCOUNT ON added to prevent extra result sets from
+--   -- interfering with SELECT statements.
+--   SET NOCOUNT ON;
 
-    -- Insert statements for trigger here
-    declare @rol int, @func int , @creado datetime
-    declare cur_inserted cursor for select * from inserted;
+--     -- Insert statements for trigger here
+--     declare @rol int, @func int , @creado datetime
+--     declare cur_inserted cursor for select * from inserted;
 
-open cur_inserted
+-- open cur_inserted
 
-fetch next from cur_inserted into @rol,@func,@creado
+-- fetch next from cur_inserted into @rol,@func,@creado
 
-WHILE @@FETCH_STATUS = 0
-BEGIN
-  if not exists ( select * from GESTIONAR.rol_funcionalidad where rolf_rol_id = @rol
-  and rolf_func_id = @func)
-  BEGIN
-    insert into [GESTIONAR].[rol_funcionalidad]
-      ([rolf_rol_id],[rolf_func_id],[rolf_creado])
-    values
-           (@rol,@func,@creado);
+-- WHILE @@FETCH_STATUS = 0
+-- BEGIN
+--   if not exists ( select * from GESTIONAR.rol_funcionalidad where rolf_rol_id = @rol
+--   and rolf_func_id = @func)
+--   BEGIN
+--     insert into [GESTIONAR].[rol_funcionalidad]
+--       ([rolf_rol_id],[rolf_func_id],[rolf_creado])
+--     values
+--            (@rol,@func,@creado);
     
-     end
+--      end
      
-     fetch next from cur_inserted into @rol,@func,@creado
+--      fetch next from cur_inserted into @rol,@func,@creado
      
-end
+-- end
 
-close  cur_inserted
+-- close  cur_inserted
 
-deallocate cur_inserted
+-- deallocate cur_inserted
 
 
-END
+-- END
 
-go
+-- go
 
 
 create procedure [GESTIONAR].[estadisticas] (@semestre bit,@anio datetime,@informe int, @fecha date)
@@ -1213,16 +1208,14 @@ as
 begin
 if @informe = 1
   begin 
-    select  top 5 e.Espe_Descripcion , MAX (pe.espr_prof_id)
+    select  top 5 DATEPART(MONTH, t.turn_creado),e.Espe_Descripcion , MAX (pe.espr_prof_id)
     from 
       GESTIONAR.profesional_especialidad pe
       ,GESTIONAR.Especialidad e
       ,GESTIONAR.turno t
       ,GESTIONAR.cancelacion ca
-      ,GESTIONAR.consulta
     where 
-      consul_id=cancel_consulta_id
-      and consul_turno_id=turn_id
+      cancel_turno_id=turn_id
       and turn_profe_id=espr_prof_id
       and espr_especialidad_id=espe_Codigo
       and (DATEPART(YEAR, t.turn_creado)) = @anio 

@@ -122,6 +122,21 @@ IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].
 DROP PROCEDURE [GESTIONAR].[generar_agenda]
 GO
 
+
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[CancelarTurnoAfil]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [GESTIONAR].[CancelarTurnoAfil]
+GO
+
+
+
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[CancelarTurnoProf]') AND type in (N'P', N'PC'))
+DROP PROCEDURE [GESTIONAR].[CancelarTurnoProf]
+GO
+
+
+
 IF  EXISTS (SELECT * FROM sys.schemas WHERE name = 'GESTIONAR')
 DROP SCHEMA [GESTIONAR]
 GO

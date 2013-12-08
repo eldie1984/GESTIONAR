@@ -298,7 +298,30 @@ namespace Clinica
 
         private void bonosFarmaciaVencidosToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Listados_Estadisticos.Seleccion_semestre estadistica = new Clinica.Listados_Estadisticos.Seleccion_semestre(2);
+            estadistica.Show();
+            estadistica.MdiParent = this;
+        }
 
+        private void especialidadesConCancelacionesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Listados_Estadisticos.Seleccion_semestre estadistica = new Clinica.Listados_Estadisticos.Seleccion_semestre(1);
+            estadistica.Show();
+            estadistica.MdiParent = this;
+        }
+
+        private void bonosFarmaciaRecetadosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Listados_Estadisticos.Seleccion_semestre estadistica = new Clinica.Listados_Estadisticos.Seleccion_semestre(3);
+            estadistica.Show();
+            estadistica.MdiParent = this;
+        }
+
+        private void afiliadosQueUsaronPeroNoCompraronToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Listados_Estadisticos.Seleccion_semestre estadistica = new Clinica.Listados_Estadisticos.Seleccion_semestre(4);
+            estadistica.Show();
+            estadistica.MdiParent = this;
         }
 
 

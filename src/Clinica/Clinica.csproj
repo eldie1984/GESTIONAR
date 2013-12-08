@@ -134,6 +134,18 @@
       <DependentUpon>CompraBonos.cs</DependentUpon>
     </Compile>
     <Compile Include="DataAccessLayer.cs" />
+    <Compile Include="Listados Estadisticos\Pantalla.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Listados Estadisticos\Pantalla.Designer.cs">
+      <DependentUpon>Pantalla.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Listados Estadisticos\Seleccion_semestre.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Listados Estadisticos\Seleccion_semestre.Designer.cs">
+      <DependentUpon>Seleccion_semestre.cs</DependentUpon>
+    </Compile>
     <Compile Include="Login.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -165,12 +177,6 @@
       <DependentUpon>Sintomas.cs</DependentUpon>
     </Compile>
     <Compile Include="Helper.cs" />
-    <Compile Include="Listados Estadisticos\Form1.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Listados Estadisticos\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
     <Compile Include="Login\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -189,6 +195,7 @@
     <Compile Include="Model\BonoFarmacia.cs" />
     <Compile Include="Model\Compra.cs" />
     <Compile Include="Model\Especialidad.cs" />
+    <Compile Include="Model\estadistica.cs" />
     <Compile Include="Model\Funcion.cs" />
     <Compile Include="Model\Medicamento.cs" />
     <Compile Include="Model\QueryResult.cs" />
@@ -255,6 +262,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Compra de Bono\CompraBonos.resx">
       <DependentUpon>CompraBonos.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Listados Estadisticos\Pantalla.resx">
+      <DependentUpon>Pantalla.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Listados Estadisticos\Seleccion_semestre.resx">
+      <DependentUpon>Seleccion_semestre.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Login.resx">
       <DependentUpon>Login.cs</DependentUpon>

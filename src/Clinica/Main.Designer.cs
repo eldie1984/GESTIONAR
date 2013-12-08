@@ -136,7 +136,7 @@
             // altaRolToolStripMenuItem
             // 
             this.altaRolToolStripMenuItem.Name = "altaRolToolStripMenuItem";
-            this.altaRolToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.altaRolToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.altaRolToolStripMenuItem.Text = "Alta Rol";
             this.altaRolToolStripMenuItem.Visible = false;
             this.altaRolToolStripMenuItem.Click += new System.EventHandler(this.altaRolToolStripMenuItem_Click);
@@ -144,7 +144,7 @@
             // bajaRolToolStripMenuItem
             // 
             this.bajaRolToolStripMenuItem.Name = "bajaRolToolStripMenuItem";
-            this.bajaRolToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.bajaRolToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.bajaRolToolStripMenuItem.Text = "Baja Rol";
             this.bajaRolToolStripMenuItem.Visible = false;
             this.bajaRolToolStripMenuItem.Click += new System.EventHandler(this.bajaRolToolStripMenuItem_Click);
@@ -152,7 +152,7 @@
             // modificarRolToolStripMenuItem
             // 
             this.modificarRolToolStripMenuItem.Name = "modificarRolToolStripMenuItem";
-            this.modificarRolToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.modificarRolToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.modificarRolToolStripMenuItem.Text = "Modificar Rol";
             this.modificarRolToolStripMenuItem.Visible = false;
             this.modificarRolToolStripMenuItem.Click += new System.EventHandler(this.modificarRolToolStripMenuItem_Click);
@@ -160,7 +160,7 @@
             // listarRolesToolStripMenuItem
             // 
             this.listarRolesToolStripMenuItem.Name = "listarRolesToolStripMenuItem";
-            this.listarRolesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.listarRolesToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.listarRolesToolStripMenuItem.Text = "Listar Roles";
             this.listarRolesToolStripMenuItem.Visible = false;
             this.listarRolesToolStripMenuItem.Click += new System.EventHandler(this.listarRolesToolStripMenuItem_Click);
@@ -356,7 +356,7 @@
             // altaPlanToolStripMenuItem
             // 
             this.altaPlanToolStripMenuItem.Name = "altaPlanToolStripMenuItem";
-            this.altaPlanToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.altaPlanToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.altaPlanToolStripMenuItem.Text = "Alta Plan";
             this.altaPlanToolStripMenuItem.Visible = false;
             this.altaPlanToolStripMenuItem.Click += new System.EventHandler(this.altaPlanToolStripMenuItem_Click);
@@ -364,7 +364,7 @@
             // bajaPlanToolStripMenuItem
             // 
             this.bajaPlanToolStripMenuItem.Name = "bajaPlanToolStripMenuItem";
-            this.bajaPlanToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.bajaPlanToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.bajaPlanToolStripMenuItem.Text = "Baja Plan";
             this.bajaPlanToolStripMenuItem.Visible = false;
             this.bajaPlanToolStripMenuItem.Click += new System.EventHandler(this.bajaPlanToolStripMenuItem_Click);
@@ -372,7 +372,7 @@
             // mToolStripMenuItem
             // 
             this.mToolStripMenuItem.Name = "mToolStripMenuItem";
-            this.mToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.mToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.mToolStripMenuItem.Text = "Modificar Plan";
             this.mToolStripMenuItem.Visible = false;
             this.mToolStripMenuItem.Click += new System.EventHandler(this.mToolStripMenuItem_Click);
@@ -380,7 +380,7 @@
             // listarPlanToolStripMenuItem
             // 
             this.listarPlanToolStripMenuItem.Name = "listarPlanToolStripMenuItem";
-            this.listarPlanToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.listarPlanToolStripMenuItem.Size = new System.Drawing.Size(140, 22);
             this.listarPlanToolStripMenuItem.Text = "Listar Plan";
             this.listarPlanToolStripMenuItem.Visible = false;
             this.listarPlanToolStripMenuItem.Click += new System.EventHandler(this.listarPlanToolStripMenuItem_Click);
@@ -432,7 +432,7 @@
             // comprarBonosToolStripMenuItem
             // 
             this.comprarBonosToolStripMenuItem.Name = "comprarBonosToolStripMenuItem";
-            this.comprarBonosToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.comprarBonosToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.comprarBonosToolStripMenuItem.Text = "Comprar Bonos";
             this.comprarBonosToolStripMenuItem.Visible = false;
             this.comprarBonosToolStripMenuItem.Click += new System.EventHandler(this.comprarBonosToolStripMenuItem_Click);
@@ -463,6 +463,7 @@
             this.especialidadesConCancelacionesToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
             this.especialidadesConCancelacionesToolStripMenuItem.Text = "Especialidades con cancelaciones";
             this.especialidadesConCancelacionesToolStripMenuItem.Visible = false;
+            this.especialidadesConCancelacionesToolStripMenuItem.Click += new System.EventHandler(this.especialidadesConCancelacionesToolStripMenuItem_Click);
             // 
             // bonosFarmaciaRecetadosToolStripMenuItem
             // 
@@ -470,6 +471,7 @@
             this.bonosFarmaciaRecetadosToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
             this.bonosFarmaciaRecetadosToolStripMenuItem.Text = "Bonos Farmacia Recetados";
             this.bonosFarmaciaRecetadosToolStripMenuItem.Visible = false;
+            this.bonosFarmaciaRecetadosToolStripMenuItem.Click += new System.EventHandler(this.bonosFarmaciaRecetadosToolStripMenuItem_Click);
             // 
             // afiliadosQueUsaronPeroNoCompraronToolStripMenuItem
             // 
@@ -477,6 +479,7 @@
             this.afiliadosQueUsaronPeroNoCompraronToolStripMenuItem.Size = new System.Drawing.Size(265, 22);
             this.afiliadosQueUsaronPeroNoCompraronToolStripMenuItem.Text = "Afiliados que usaron pero no compraron";
             this.afiliadosQueUsaronPeroNoCompraronToolStripMenuItem.Visible = false;
+            this.afiliadosQueUsaronPeroNoCompraronToolStripMenuItem.Click += new System.EventHandler(this.afiliadosQueUsaronPeroNoCompraronToolStripMenuItem_Click);
             // 
             // Main
             // 
