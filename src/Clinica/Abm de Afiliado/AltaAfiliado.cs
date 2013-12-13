@@ -62,9 +62,21 @@ namespace Clinica.Abm_de_Afiliado
             afiliado.Sub_ID = this.subid;
             afiliado.ID = this.idGrupoFamiliar;
 
+            if (afiliado.Nombre == String.Empty)
+                erroresValida.Add("El campo Nombre es obligatorio");
+
+            if (afiliado.Apellido == String.Empty)
+                erroresValida.Add("El campo Apellido es obligatorio");
+
+            if (this.textBoxDoc.Text == String.Empty)
+                erroresValida.Add("El campo Documento es obligatorio");
+
             try
             {
                 afiliado.Documento = Convert.ToInt32(this.textBoxDoc.Text);
+                bool DNIRepetido = this.dataAccess.GetAfiliados(null, null, this.textBoxDoc.Text).Count()>0;
+                if(DNIRepetido)
+                    erroresValida.Add("Ya existe un afiliado cargado con ese documento! No puede cargar otro.");
             }
             catch
             {
@@ -78,9 +90,9 @@ namespace Clinica.Abm_de_Afiliado
             {
                 erroresValida.Add("Telefono puede ser solo numerico");
             }
+          
 
-
-
+            
 
             if (erroresValida.Count > 0)
             {

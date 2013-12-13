@@ -33,6 +33,11 @@ namespace Clinica.Abm_de_Profesional
 
             if (int.TryParse(this.textBoxDocumento.Text, out n))
             { filtrodoc = n.ToString(); }
+            else if (this.textBoxDocumento.Text != String.Empty)
+            {
+                MessageBox.Show("El campo de filtro Documento debe ser numerico");
+                return;
+            }
 
 
             var listadoProf = this.dataAccess.GetProfesionales(filtronombre, filtroape, filtrodoc);

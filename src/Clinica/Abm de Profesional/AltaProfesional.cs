@@ -94,9 +94,26 @@ namespace Clinica.Abm_de_Profesional
             prof.Matricula = this.textBoxMatric.Text;
             prof.Sexo = this.comboBoxSexo.SelectedValue.ToString();
             prof.Tipo = this.comboBoxDoc.SelectedValue.ToString();
+
+            if (prof.Nombre == String.Empty)
+                erroresValida.Add("El campo Nombre es obligatorio");
+
+            if (prof.Apellido == String.Empty)
+                erroresValida.Add("El campo Apellido es obligatorio");
+
+            if (this.textBoxDoc.Text == String.Empty)
+                erroresValida.Add("El campo Documento es obligatorio");
+
+            if (prof.Matricula == String.Empty)
+                erroresValida.Add("El campo Matricula es obligatorio");
+
+
             try
             {
                 prof.Documento = Convert.ToInt32(this.textBoxDoc.Text);
+                bool DNIRepetido = this.dataAccess.GetProfesionales(null, null, this.textBoxDoc.Text).Count() > 0;
+                if (DNIRepetido)
+                    erroresValida.Add("Ya existe un profesional cargado con ese documento! No puede cargar otro.");
             }
             catch
             {
@@ -110,6 +127,12 @@ namespace Clinica.Abm_de_Profesional
             {
                 erroresValida.Add("Telefono puede ser solo numerico");
             }
+
+            if (this.checkedEspecialidades.CheckedItems.Count == 0)
+            {
+                erroresValida.Add("Debe seleccionar por lo menos una especialidad");
+            }
+
 
             List<int> especialidadesSelec = new List<int>();
             foreach (object esp in this.checkedEspecialidades.CheckedItems)

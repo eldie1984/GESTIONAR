@@ -37,10 +37,17 @@ namespace Clinica.Abm_de_Afiliado
             string filtrodoc = String.Empty;
 
             int n;
-            
-            if(int.TryParse(this.textBoxDocumento.Text,out n))
-            {filtrodoc=n.ToString();}
 
+            if (int.TryParse(this.textBoxDocumento.Text, out n))
+            { 
+                filtrodoc = n.ToString(); 
+            }
+
+            else if (this.textBoxDocumento.Text != String.Empty)
+            {
+                MessageBox.Show("El campo de filtro Documento debe ser numerico");
+                return;
+            }
 
 
             var listadoAfil = this.dataAccess.GetAfiliados(filtronombre,filtroape,filtrodoc);
