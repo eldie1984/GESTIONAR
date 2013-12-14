@@ -861,7 +861,7 @@ INSERT INTO [GD2C2013].[GESTIONAR].[bono_consulta]
            ,[boco_numero_consulta]
            ,[boco_creado]
            ,[boco_modificado]) 
-           (select Bono_Consulta_Numero,compra_id, afi_id,afi_sub_id,afi_plan,0,SYSDATETIME(),SYSDATETIME()
+           (select Bono_Consulta_Numero,compra_id, afi_id,afi_sub_id,afi_plan,0,Compra_Bono_Fecha,Bono_Consulta_Fecha_Impresion
 from gd_esquema.Maestra,GESTIONAR.compra c, GESTIONAR.afiliado
 where c.compra_id=Bono_Consulta_Numero
 and c.compra_creado=Compra_Bono_Fecha
@@ -905,7 +905,7 @@ INSERT INTO [GD2C2013].[GESTIONAR].[consulta]
            ,[consul_afi_sub_id]
            ,[consul_creado]
            ,[consul_modificado])
-           (select Consulta_Sintomas,Consulta_Enfermedades,Turno_Numero,Bono_Consulta_Numero,boco_afi_id,boco_afi_sub_id,SYSDATETIME(),SYSDATETIME()
+           (select Consulta_Sintomas,Consulta_Enfermedades,Turno_Numero,Bono_Consulta_Numero,boco_afi_id,boco_afi_sub_id,Turno_Fecha,Turno_Fecha
 from gd_esquema.Maestra,GESTIONAR.bono_consulta 
 where boco_id=Bono_Consulta_Numero
 and Consulta_Enfermedades is not null
@@ -1013,7 +1013,7 @@ INSERT INTO [GD2C2013].[GESTIONAR].[bono_farmacia]
            ,[bofa_plan_id]
            ,[bofa_creado]
            ,[bofa_modificado])
-           (select Bono_Farmacia_Numero,(Bono_Farmacia_Numero+200000), afi_id,afi_sub_id,consul_id,afi_plan,Bono_Farmacia_Fecha_Impresion, SYSDATETIME()
+           (select Bono_Farmacia_Numero,(Bono_Farmacia_Numero+200000), afi_id,afi_sub_id,consul_id,afi_plan,Bono_Farmacia_Fecha_Impresion,Bono_Farmacia_Fecha_Impresion
 from gd_esquema.Maestra,GESTIONAR.afiliado,GESTIONAR.consulta
 where Bono_Farmacia_Numero is not null
 and Bono_Consulta_Numero is not null
@@ -1311,12 +1311,12 @@ go
 -- go
 
 
-create procedure [GESTIONAR].[estadisticas] (@semestre bit,@anio datetime,@informe int, @fecha date)
+create procedure [GESTIONAR].[estadisticas] (@semestre bit,@anio int,@informe int, @fecha datetime)
 as 
 begin
 if @informe = 1
   begin 
-    select  top 5 DATEPART(MONTH, t.turn_creado),e.Espe_Descripcion , MAX (pe.espr_prof_id)
+    select DATEPART(MONTH, t.turn_hora_inicio) as 'Mes' ,e.Espe_Descripcion , COUNT(*)
     from 
       GESTIONAR.profesional_especialidad pe
       ,GESTIONAR.Especialidad e
@@ -1326,36 +1326,49 @@ if @informe = 1
       cancel_turno_id=turn_id
       and turn_profe_id=espr_prof_id
       and espr_especialidad_id=espe_Codigo
-      and (DATEPART(YEAR, t.turn_creado)) = @anio 
-        and ((datepart(MONTH, t.turn_creado) in (1, 2, 3, 4, 5, 6) 
-          and @semestre = 0 ) 
-        or (datepart(MONTH, t.turn_creado) in (7, 8, 9, 10, 11, 12) 
-          and @semestre = 1 ))
-    group by Espe_Descripcion, DATEPART(MONTH, t.turn_creado)
+      and (DATEPART(YEAR, t.turn_hora_inicio)) = @anio  and ((datepart(MONTH, t.turn_hora_inicio) in (1, 2, 3, 4, 5, 6)  and @semestre = 0 ) or (datepart(MONTH, t.turn_hora_inicio) in (7, 8, 9, 10, 11, 12) and @semestre = 1 ))
+      and espe_Codigo in (select  top 5 espr_especialidad_id
+    from 
+      GESTIONAR.profesional_especialidad pe
+      ,GESTIONAR.turno t
+      ,GESTIONAR.cancelacion ca
+    where 
+      cancel_turno_id=turn_id
+      and turn_profe_id=espr_prof_id
+      and (DATEPART(YEAR, t.turn_hora_inicio)) = @anio  and ((datepart(MONTH, t.turn_hora_inicio) in (1, 2, 3, 4, 5, 6)  and @semestre = 0 ) or (datepart(MONTH, t.turn_hora_inicio) in (7, 8, 9, 10, 11, 12) and @semestre = 1 ))
+    group by espr_especialidad_id
+    order by COUNT(*) desc)
+    group by Espe_Descripcion, DATEPART(MONTH, t.turn_hora_inicio)
     order by COUNT(*) desc
 end
 else
   if @informe = 2
   begin
-    select top 5 DATEPART(MONTH, DATEADD(DAY,60,bofa_creado)),afi_id, count(bf.bofa_id)
+    select DATEPART(MONTH, bofa_creado) as 'Mes comprado', DATEPART(MONTH, DATEADD(DAY,60,bofa_creado)) as 'Mes Vencido',afi_apellido+' '+afi_nombre, count(bf.bofa_id) as 'Cantidad'
     from GESTIONAR.afiliado a
     , GESTIONAR.bono_farmacia bf
     where 
       a.afi_id = bf.bofa_afi_id 
       and DATEDIFF(D,bf.bofa_creado,@fecha) > 60 
       and bf.bofa_consulta_id is null
-      and DATEPART(YEAR, DATEADD(DAY,60,bofa_creado)) = @anio 
-        and ((datepart(MONTH, DATEADD(DAY,60,bofa_creado)) in (1, 2, 3, 4, 5, 6) 
-          and @semestre = 0 ) 
-        or (datepart(MONTH, DATEADD(DAY,60,bofa_creado)) in (7, 8, 9, 10, 11, 12) 
-          and @semestre = 1 ))
-    group by a.afi_id, DATEPART(MONTH, DATEADD(DAY,60,bofa_creado))
+      and DATEPART(YEAR, DATEADD(DAY,60,bofa_creado)) = @anio  and ((datepart(MONTH, DATEADD(DAY,60,bofa_creado)) in (1, 2, 3, 4, 5, 6)  and @semestre = 0 ) or (datepart(MONTH, DATEADD(DAY,60,bofa_creado)) in (7, 8, 9, 10, 11, 12) and @semestre = 1 ))
+      and (afi_id*10+afi_sub_id) in (select top 5 afi_id*10+afi_sub_id
+    from GESTIONAR.afiliado a
+    , GESTIONAR.bono_farmacia bf
+    where 
+      a.afi_id = bf.bofa_afi_id 
+      and DATEDIFF(D,bf.bofa_creado,@fecha) > 60 
+      and bf.bofa_consulta_id is null
+      and DATEPART(YEAR, DATEADD(DAY,60,bofa_creado)) = @anio  and ((datepart(MONTH, DATEADD(DAY,60,bofa_creado)) in (1, 2, 3, 4, 5, 6)  and @semestre = 0 ) or (datepart(MONTH, DATEADD(DAY,60,bofa_creado)) in (7, 8, 9, 10, 11, 12) and @semestre = 1 ))
+    group by afi_id*10+afi_sub_id
+    order by COUNT(*) desc)
+    group by afi_apellido+' '+afi_nombre, DATEPART(MONTH, DATEADD(DAY,60,bofa_creado)),DATEPART(MONTH, bofa_creado)
     order by COUNT(*) desc
   end
   else
     if @informe = 3
     begin
-      select top 5 DATEPART(MONTH, consul_modificado),e.Espe_Descripcion, COUNT(*) 
+      select DATEPART(MONTH, consul_modificado),e.Espe_Descripcion, COUNT(*) 
       from 
         GESTIONAR.bono_farmacia bf
         , GESTIONAR.profesional_especialidad pe
@@ -1367,15 +1380,36 @@ else
         and consul_turno_id=turn_id
         and turn_profe_id=espr_prof_id
         and espr_especialidad_id=espe_Codigo
+        and espe_Codigo in (select top 5 espr_especialidad_id
+      from 
+        GESTIONAR.bono_farmacia bf
+        , GESTIONAR.profesional_especialidad pe
+        , GESTIONAR.turno t
+        ,GESTIONAR.consulta
+      where 
+        bofa_consulta_id = consul_id
+        and consul_turno_id=turn_id
+        and turn_profe_id=espr_prof_id
+        and DATEPART(YEAR, consul_modificado) = @anio and ((datepart(MONTH, consul_modificado) in (1, 2, 3, 4, 5, 6) and @semestre = 0 ) or (datepart(MONTH, consul_modificado) in (7, 8, 9, 10, 11, 12) and @semestre = 1 ))
+      group by espr_especialidad_id
+      order by COUNT(*) desc)
         and DATEPART(YEAR, consul_modificado) = @anio and ((datepart(MONTH, consul_modificado) in (1, 2, 3, 4, 5, 6) and @semestre = 0 ) or (datepart(MONTH, consul_modificado) in (7, 8, 9, 10, 11, 12) and @semestre = 1 ))
       group by e.Espe_Descripcion, DATEPART(MONTH, consul_modificado)
       order by COUNT(*) desc
     end
     else
-      select top 10 
-DATEPART(MONTH, boco_modificado),
-  boco_afi_id,boco_afi_sub_id
-  , count(boco_numero_consulta)
+      select afi_nombre+' '+afi_apellido,DATEPART(MONTH, boco_modificado),COUNT(*) from GESTIONAR.afiliado,
+GESTIONAR.compra cp
+  , GESTIONAR.bono_consulta bc
+where 
+compra_afi_id=boco_afi_id
+  and compra_afi_sub_id != boco_afi_sub_id
+and boco_numero_consulta is not null
+and boco_afi_id = afi_id
+and boco_afi_sub_id=afi_sub_id
+and DATEPART(YEAR, boco_modificado) = @anio and ((datepart(MONTH, boco_modificado) in (1, 2, 3, 4, 5, 6) and @semestre = 0 ) or (datepart(MONTH, boco_modificado) in (7, 8, 9, 10, 11, 12) and @semestre = 1 ))
+and (afi_id*10+afi_sub_id) in (
+select top 10 boco_afi_id*10+boco_afi_sub_id as 'afiliado'
 from 
    GESTIONAR.compra cp
   , GESTIONAR.bono_consulta bc
@@ -1383,10 +1417,13 @@ where
   compra_afi_id=boco_afi_id
   and compra_afi_sub_id != boco_afi_sub_id
 and boco_numero_consulta is not null
-group by boco_afi_id,boco_afi_sub_id, DATEPART(MONTH, boco_modificado)
+and DATEPART(YEAR, boco_modificado) = @anio and ((datepart(MONTH, boco_modificado) in (1, 2, 3, 4, 5, 6) and @semestre = 0 ) or (datepart(MONTH, boco_modificado) in (7, 8, 9, 10, 11, 12) and @semestre = 1 ))
+group by boco_afi_id*10+boco_afi_sub_id
+order by count(boco_numero_consulta) desc)
+group by afi_nombre+' '+afi_apellido,DATEPART(MONTH, boco_modificado)
+order by count(boco_numero_consulta) desc
 
 end 
-
 GO
 
 CREATE PROCEDURE GESTIONAR.CancelarTurnoAfil 
@@ -1439,8 +1476,3 @@ where turn_profe_id = @profID and CAST(turn_hora_inicio AS DATE) >= @desde and C
 		
 		
 GO
-
-
-
-
-

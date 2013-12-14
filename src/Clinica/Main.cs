@@ -298,28 +298,28 @@ namespace Clinica
 
         private void bonosFarmaciaVencidosToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Listados_Estadisticos.Seleccion_semestre estadistica = new Clinica.Listados_Estadisticos.Seleccion_semestre(2);
+            Listados_Estadisticos.Seleccion_semestre estadistica = new Clinica.Listados_Estadisticos.Seleccion_semestre(2,bonosFarmaciaVencidosToolStripMenuItem.Text);
             estadistica.Show();
             estadistica.MdiParent = this;
         }
 
         private void especialidadesConCancelacionesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Listados_Estadisticos.Seleccion_semestre estadistica = new Clinica.Listados_Estadisticos.Seleccion_semestre(1);
+            Listados_Estadisticos.Seleccion_semestre estadistica = new Clinica.Listados_Estadisticos.Seleccion_semestre(1,especialidadesConCancelacionesToolStripMenuItem.Text);
             estadistica.Show();
             estadistica.MdiParent = this;
         }
 
         private void bonosFarmaciaRecetadosToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Listados_Estadisticos.Seleccion_semestre estadistica = new Clinica.Listados_Estadisticos.Seleccion_semestre(3);
+            Listados_Estadisticos.Seleccion_semestre estadistica = new Clinica.Listados_Estadisticos.Seleccion_semestre(3,bonosFarmaciaRecetadosToolStripMenuItem.Text);
             estadistica.Show();
             estadistica.MdiParent = this;
         }
 
         private void afiliadosQueUsaronPeroNoCompraronToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Listados_Estadisticos.Seleccion_semestre estadistica = new Clinica.Listados_Estadisticos.Seleccion_semestre(4);
+            Listados_Estadisticos.Seleccion_semestre estadistica = new Clinica.Listados_Estadisticos.Seleccion_semestre(4,afiliadosQueUsaronPeroNoCompraronToolStripMenuItem.Text);
             estadistica.Show();
             estadistica.MdiParent = this;
         }

@@ -12,10 +12,11 @@ namespace Clinica.Listados_Estadisticos
     public partial class Seleccion_semestre : Form
     {
         private Int32 reporte;
-        public Seleccion_semestre(Int32 numeroreporte)
+        public Seleccion_semestre(Int32 numeroreporte, string titular)
         {
             InitializeComponent();
             this.reporte = numeroreporte;
+            this.Text = titular;
 
         }
 
@@ -33,9 +34,17 @@ namespace Clinica.Listados_Estadisticos
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Pantalla pantalla = new Pantalla(Convert.ToInt32(comboBox1.SelectedText),Convert.ToInt32(comboBox2.SelectedText)-1,this.reporte);
-            pantalla.Show();
-            this.Hide();
+            if (comboBox1.SelectedItem != string.Empty && comboBox2.SelectedItem != string.Empty)
+            {
+                Pantalla pantalla = new Pantalla(Convert.ToInt32(comboBox1.SelectedItem), Convert.ToInt32(comboBox2.SelectedItem) - 1, this.reporte, this.Text);
+                pantalla.padre = this;
+                pantalla.Show();
+                this.Hide();
+            }
+            else
+            {
+                MessageBox.Show("Debe ingresar un año o un semestre para continuar", "Informacion", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)

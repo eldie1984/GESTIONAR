@@ -1769,12 +1769,15 @@ namespace Clinica
                 else
                 {
                     Resultado = new QueryResult() { correct = false, mensaje = "Usuario/Contraseña invalidos" };
-                    
-                    QueryResult salida= fail_login(Convert.ToInt32(Reg[1]));
 
-                    if (salida.correct == false)
+                    if (Reg.HasRows)
                     {
-                        Resultado.mensaje = Resultado.mensaje + '\n' + salida.mensaje;
+                        QueryResult salida = fail_login(Convert.ToInt32(Reg[1]));
+
+                        if (salida.correct == false)
+                        {
+                            Resultado.mensaje = Resultado.mensaje + '\n' + salida.mensaje;
+                        }
                     }
                 }
 
@@ -1863,9 +1866,9 @@ namespace Clinica
                 command.Connection = connection;
                 command.Transaction = transaction;
                 command.Parameters.Add("@semestre", SqlDbType.Bit);
-                command.Parameters.Add("@anio", SqlDbType.DateTime);
+                command.Parameters.Add("@anio", SqlDbType.Int);
                 command.Parameters.Add("@informe", SqlDbType.Int);
-                command.Parameters.Add("@fecha", SqlDbType.Date);
+                command.Parameters.Add("@fecha", SqlDbType.DateTime);
 
 
                 command.Parameters["@semestre"].Value =semestre;
@@ -1881,7 +1884,18 @@ namespace Clinica
                     
                     while(Reg.Read())
                     {
-                        nuevaConsulta.Add(new estadistica { mes =Reg.GetString(0) , dato =Reg.GetString(1) , cantidad=Reg.GetInt32(2)});
+                        if (informe == 1 || informe == 3)
+                        {
+                            nuevaConsulta.Add(new estadistica { mes = Reg.GetInt32(0), dato = Reg.GetString(1), cantidad = Reg.GetInt32(2) });
+                        }
+                        else if (informe == 2)
+                        {
+                            nuevaConsulta.Add(new estadistica { mes_vencimiento = Reg.GetInt32(1), mes_comprado = Reg.GetInt32(0), dato = Reg.GetString(2), cantidad = Reg.GetInt32(3) });
+                        }
+                        else
+                        {
+                            nuevaConsulta.Add(new estadistica { dato = Reg.GetString(0), mes = Reg.GetInt32(1), cantidad = Reg.GetInt32(2)});
+                        }
                     }
 
                     transaction.Commit();
@@ -1902,6 +1916,7 @@ namespace Clinica
                         
                     }
 
+                    
                 }
             }
             return nuevaConsulta;
