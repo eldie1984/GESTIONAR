@@ -11,16 +11,16 @@ namespace Clinica.Generar_Receta
 {
     public partial class Bono_farmacia : Form
     {
-        private Int32 consulta;
+        private Int32 turno;
         private Int32 afil_id;
         public Form padre ;
         private DataAccessLayer dataAccess;
         public List<Int32> medic_hist = new List<Int32>();
 
-        public Bono_farmacia(Int32 consulta, Int32 afiliado)
+        public Bono_farmacia(Int32 turno, Int32 afiliado)
         {
             InitializeComponent();
-            this.consulta = consulta;
+            this.turno = turno;
             this.afil_id = afiliado;
             this.padre = this;
         }
@@ -41,7 +41,7 @@ namespace Clinica.Generar_Receta
             }
             if (error == false && this.dataAccess.checkBono(bono_id))
             {
-                medicamentos medic = new medicamentos(this.consulta, bono_id, this.afil_id);
+                medicamentos medic = new medicamentos(this.turno, bono_id, this.afil_id);
                 medic.medic_hist = this.medic_hist;
                 medic.Show();
                 this.Hide();
@@ -66,9 +66,5 @@ namespace Clinica.Generar_Receta
             }
         }
 
-        private void Bono_farmacia_Load(object sender, EventArgs e)
-        {
-
-        }
     }
 }

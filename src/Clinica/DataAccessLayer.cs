@@ -85,7 +85,6 @@ namespace Clinica
             }
         }
 
-
         public List<Profesional> GetProfesionales(string fNombre, string fApellido, string fDoc)
         {
             List<Profesional> listado = new List<Profesional>();
@@ -607,6 +606,30 @@ namespace Clinica
             return Resultado;
         }
 
+        public Int32 getConsulta(Int32 turno)
+        {
+            Int32 Resultado = 0;
+            using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
+            {
+                connection.Open();
+                SqlCommand command = connection.CreateCommand();
+                command.CommandText = @"select consul_id from GESTIONAR.consulta where consul_turno_id=@turno;";
+
+
+                command.Parameters.Add("@turno", SqlDbType.Int);
+
+                command.Parameters["@turno"].Value = turno;
+
+                SqlDataReader Reg = command.ExecuteReader();
+                if (Reg.HasRows)
+                {
+                    Reg.Read();
+                    Resultado = Convert.ToInt32(Reg[0].ToString());
+                }
+            }
+            return Resultado;
+        }
+
         #endregion
 
         #region ADDS
@@ -977,10 +1000,12 @@ namespace Clinica
                 command.Parameters.Add("@hora_desde", SqlDbType.Time);
                 command.Parameters.Add("@hora_hasta", SqlDbType.Time);
                 command.Parameters.Add("@profesional", SqlDbType.Int);
+                command.Parameters.Add("@modificado", SqlDbType.DateTime);
 
 
                 command.Parameters["@fecha_hasta"].Value = hasta;
                 command.Parameters["@profesional"].Value = profesional;
+                command.Parameters["@modificado"].Value = Helper.GetFechaNow();
 
 
 
@@ -1102,7 +1127,7 @@ namespace Clinica
         #endregion
         
         #region Consulta
-        public string persistir_medic(List<int> medic_list, List<int> medic_cant, int afil_id, int bono_id, int consulta)
+        public string persistir_medic(List<int> medic_list, List<int> medic_cant, int afil_id, int bono_id, int turno)
         {
             string resultado = string.Empty;
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
@@ -1117,7 +1142,7 @@ namespace Clinica
                 try
                 {
                     command.CommandText = "update GESTIONAR.bono_farmacia" +
-                                           " set bofa_bono_consulta_id=@consulta," +
+                                           " set bofa_consulta_id=@consulta," +
                                            "bofa_modificado=@modificado " +
                                            "where bofa_id=@bono";
 
@@ -1126,7 +1151,7 @@ namespace Clinica
                     command.Parameters.Add("@bono", SqlDbType.Int);
                     command.Parameters.Add("@modificado", SqlDbType.DateTime);
 
-                    command.Parameters["@consulta"].Value = consulta;
+                    command.Parameters["@consulta"].Value = getConsulta(turno);
                     command.Parameters["@bono"].Value = bono_id;
                     command.Parameters["@modificado"].Value = Helper.GetFechaNow();
                     command.ExecuteNonQuery();

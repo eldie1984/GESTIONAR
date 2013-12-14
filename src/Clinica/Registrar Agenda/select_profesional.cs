@@ -35,6 +35,7 @@ namespace Clinica.Registrar_Agenda
 
             if (salida.ID == 0)
             {
+                MessageBox.Show("Se creo la agenda correctamente", "Info");
                 this.Close();
                 padre.Close();
             }
@@ -46,22 +47,39 @@ namespace Clinica.Registrar_Agenda
             
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonBuscar_Click(object sender, EventArgs e)
         {
-            //Formularios profesional = new Formularios();
-            //DataSet profeLista = profesional.listarProfesionales(textBox1.Text);
-            //dataGridView1.DataSource = profeLista.Tables[0].DefaultView;
-            if (textBox1.Text != string.Empty)
+            this.dataAccess = new DataAccessLayer();
+            string nombre = null;
+            string apellido = null;
+            string dni = null;
+            if (textBoxNombre.Text != string.Empty)
             {
-                List<Profesional> profesionales_list = this.dataAccess.GetProfesionales(textBox1.Text, null, null);
-                profesionales_list.AddRange(this.dataAccess.GetProfesionales(null, textBox1.Text, null));
-                dataGridView1.DataSource = (from profesional in profesionales_list
-                                            select new { ID = profesional.ID, Nombre = profesional.Nombre, Apellido = profesional.Apellido }).ToList();
+                nombre = textBoxNombre.Text;
             }
-            else
+            if (textBoxNombre.Text != string.Empty)
             {
-                dataGridView1.DataSource = this.dataAccess.GetProfesionales(null, null, null);
+                apellido = textBoxApellido.Text;
             }
+
+            if (textBoxDocumento.Text != string.Empty)
+            {
+                dni = textBoxDocumento.Text;
+            }
+
+            List<Profesional> profesionales_list = this.dataAccess.GetProfesionales(nombre, apellido, dni);
+
+            dataGridView1.DataSource = (from profesional in profesionales_list
+                                        select new { ID = profesional.ID, Nombre = profesional.Nombre, Apellido = profesional.Apellido }).ToList();
+            ;
+        }
+
+        private void buttonLimpiar_Click(object sender, EventArgs e)
+        {
+            this.textBoxApellido.Text = string.Empty;
+            this.textBoxNombre.Text = string.Empty;
+            this.textBoxDocumento.Text = string.Empty;
+        
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Clinica.Generar_Receta
     public partial class medicamentos : Form
     {
         public Form parent;
-        private Int32 consulta;
+        private Int32 turno;
         private Int32 bono_id;
         private Int32 afil_id;
         public List<Int32> medic_list = new List<Int32>();
@@ -22,10 +22,10 @@ namespace Clinica.Generar_Receta
         private DataAccessLayer dataAccess;
         int[] arr = new int[5];
 
-        public medicamentos(Int32 consulta, Int32 bono, Int32 afiliado)
+        public medicamentos(Int32 turno, Int32 bono, Int32 afiliado)
         {
             InitializeComponent();
-            this.consulta = consulta;
+            this.turno = turno;
             this.bono_id = bono;
             this.afil_id=afiliado;
             this.dataAccess = new DataAccessLayer();
@@ -155,8 +155,8 @@ namespace Clinica.Generar_Receta
                 switch (result)
                 {
                     case DialogResult.Yes:
-                        this.dataAccess.persistir_medic(medic_list, medic_cant, afil_id, bono_id, consulta);
-                        Bono_farmacia farmacia = new Bono_farmacia(consulta, afil_id);
+                        this.dataAccess.persistir_medic(medic_list, medic_cant, afil_id, bono_id, turno);
+                        Bono_farmacia farmacia = new Bono_farmacia(turno, afil_id);
                         farmacia.padre = this.parent;
                         farmacia.medic_hist = this.medic_hist;
                         farmacia.Show();
@@ -165,7 +165,7 @@ namespace Clinica.Generar_Receta
                         this.Hide();
                         break;
                     case DialogResult.No:
-                        this.dataAccess.persistir_medic(medic_list, medic_cant, afil_id, bono_id, consulta);
+                        this.dataAccess.persistir_medic(medic_list, medic_cant, afil_id, bono_id, turno);
                         this.Close();
                         parent.Close();
                         break;
@@ -173,7 +173,7 @@ namespace Clinica.Generar_Receta
             }
             else
             {
-                this.dataAccess.persistir_medic(medic_list, medic_cant, afil_id, bono_id, consulta);
+                this.dataAccess.persistir_medic(medic_list, medic_cant, afil_id, bono_id, turno);
                 this.Close();
                 parent.Close();
             }

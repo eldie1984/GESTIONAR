@@ -5,9 +5,7 @@ IF  EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'[GESTIONAR]
 DROP TRIGGER [GESTIONAR].[afilado_tracker]
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[agenda]') AND type in (N'U'))
-DROP TABLE [GESTIONAR].[agenda]
-GO
+
 
 
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[profesional_especialidad]') AND type in (N'U'))
@@ -26,12 +24,8 @@ IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].
 DROP TABLE [GESTIONAR].[cancelacion]
 GO
 
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[consulta]') AND type in (N'U'))
-DROP TABLE [GESTIONAR].[consulta]
-GO
-
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[turno]') AND type in (N'U'))
-DROP TABLE [GESTIONAR].[turno]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[tipo_cancelacion]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[tipo_cancelacion]
 GO
 
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[medicamento_bono]') AND type in (N'U'))
@@ -40,6 +34,18 @@ GO
 
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[bono_farmacia]') AND type in (N'U'))
 DROP TABLE [GESTIONAR].[bono_farmacia]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[consulta]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[consulta]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[turno]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[turno]
+GO
+
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[agenda]') AND type in (N'U'))
+DROP TABLE [GESTIONAR].[agenda]
 GO
 
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[GESTIONAR].[bono_consulta]') AND type in (N'U'))

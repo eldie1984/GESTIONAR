@@ -36,7 +36,7 @@ namespace Clinica.Generar_Receta
                 {
                     case DialogResult.Yes:
                         this.dataAccess.updateConsul(this.turno, textBox1.Text, textBox2.Text);
-                        Bono_farmacia farmacia = new Bono_farmacia(bono_consulta,afil_id);
+                        Bono_farmacia farmacia = new Bono_farmacia(this.turno,afil_id);
                         farmacia.Show();
 
 

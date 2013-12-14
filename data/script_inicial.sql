@@ -583,6 +583,62 @@ Select 'Creo las relaciones entre el usuario y el rol'
   
 
 
+select 'Creo la tabla agenda'
+
+CREATE TABLE [GESTIONAR].[agenda](
+  [agen_id] [int] IDENTITY(0,1) NOT NULL ,
+  [agen_profe_id] [int] NOT NULL REFERENCES GESTIONAR.profesional (prof_id),
+  [agen_fecha] [date] null,
+  [agen_hora_inicio] [time] null,
+  [agen_hora_fin] [time] null,
+  [agen_baja] [bit] NULL,
+  [agen_creado] [datetime] NULL,
+  [agen_modificado] [datetime] NULL,
+  CONSTRAINT [PK_GESTIONAR.agenda] PRIMARY KEY CLUSTERED 
+  (
+    [agen_id] ASC
+  )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+  ) ON [PRIMARY]
+GO
+
+select 'Populo la tabla agenda'
+
+-- insert into GESTIONAR.agenda (
+-- [agen_profe_id],
+-- [agen_afil_id],
+-- [agend_afil_sub_id],
+-- [agen_hora_inicio],
+-- [agen_baja],
+-- [agen_creado],
+-- [agen_modificado])
+-- (select p.prof_id,af.afi_id,af.afi_sub_id, m.turno_fecha,0,SYSDATETIME(),SYSDATETIME()
+-- from gd_esquema.Maestra m
+-- inner join GESTIONAR.afiliado af on af.afi_nro_documento = m.Paciente_Dni
+-- inner join GESTIONAR.profesional p on p.prof_nro_documento=m.Medico_Dni
+-- )
+-- GO
+
+INSERT INTO [GD2C2013].[GESTIONAR].[agenda]
+           ([agen_profe_id]
+           ,[agen_fecha]
+           ,[agen_hora_inicio]
+           ,[agen_hora_fin]
+           ,[agen_baja]
+           ,[agen_creado]
+           ,[agen_modificado])
+     (select p.prof_id,convert( date , m.Turno_Fecha ),min(convert( time , m.Turno_Fecha )),DATEADD(minute,30,MAX(convert( time , m.Turno_Fecha ))),case DATEPART( WEEKDAY , convert( date , m.Turno_Fecha ) )
+when 7  then 1
+ELSE 0 end ,SYSDATETIME(),SYSDATETIME()
+from gd_esquema.Maestra m
+inner join GESTIONAR.profesional p on p.prof_nro_documento=m.Medico_Dni
+where DATEADD(minute,30,convert( time , m.Turno_Fecha )) < convert( time , '18:01:00')
+and DATEPART( WEEKDAY , convert( date , m.Turno_Fecha ) ) <> 6
+and convert( time , m.Turno_Fecha ) > convert( time , '07:59:00')
+group by p.prof_id,convert( date , m.Turno_Fecha )
+)
+GO
+
+
 
 
 Select 'Creo la tabla Turno '
@@ -592,6 +648,7 @@ CREATE TABLE [GESTIONAR].[turno](
   [turn_profe_id] [int] NOT NULL REFERENCES GESTIONAR.profesional (prof_id),
   [turn_afil_id] [int]  NULL ,
   [turn_afi_sub_id] [int]  NULL ,
+  [turn_agen_id] [int] NOT NULL REFERENCES GESTIONAR.agenda (agen_id),
   [turn_hora_inicio] [datetime] null,
   [turn_baja] [bit] NULL,
   [turn_creado] [datetime] NULL,
@@ -612,57 +669,44 @@ insert into GESTIONAR.turno (
 [turn_profe_id],
 [turn_afil_id],
 [turn_afi_sub_id],
+[turn_agen_id],
 [turn_hora_inicio],
 [turn_baja],
 [turn_creado],
 [turn_modificado])
-(select Turno_Numero,p.prof_id,af.afi_id,af.afi_sub_id, m.turno_fecha , case DATEPART( WEEKDAY , m.Turno_Fecha )
+(select Turno_Numero,p.prof_id,af.afi_id,af.afi_sub_id, agen_id ,m.turno_fecha , case DATEPART( WEEKDAY , m.Turno_Fecha )
 when 7  then 1
 ELSE 0 end ,SYSDATETIME(),SYSDATETIME()
 from gd_esquema.Maestra m
 inner join GESTIONAR.afiliado af on af.afi_nro_documento = m.Paciente_Dni
 inner join GESTIONAR.profesional p on p.prof_nro_documento=m.Medico_Dni
+inner join GESTIONAR.agenda on agen_profe_id = p.prof_id
 where consulta_sintomas is null
 and consulta_enfermedades is null
 and Turno_Numero is not null
+and CONVERT(time, m.turno_fecha) >= agen_hora_inicio
+and CONVERT(time, m.turno_fecha) <= agen_hora_fin
+and CONVERT(date, m.turno_fecha) = agen_fecha
 )
-SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[turno] OFF
 
---select 'Creo la tabla agenda'
 
--- CREATE TABLE [GESTIONAR].[agenda](
---   [agend_id] [int] IDENTITY(0,1) NOT NULL ,
---   [agen_profe_id] [int] NOT NULL REFERENCES GESTIONAR.profesional (prof_id),
---   [agen_afil_id] [int] NOT NULL,
---   [agend_afil_sub_id] [int] NOT NULL ,
---   [agen_hora_inicio] [datetime] null,
---   [agen_baja] [bit] NULL,
---   [agen_creado] [datetime] NULL,
---   [agen_modificado] [datetime] NULL,
---   foreign key (agen_afil_id,agend_afil_sub_id) references GESTIONAR.afiliado (afi_id,afi_sub_id),
---   CONSTRAINT [PK_GESTIONAR.agenda] PRIMARY KEY CLUSTERED 
---   (
---     [agend_id] ASC
---   )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
---   ) ON [PRIMARY]
--- GO
 
--- select 'Populo la tabla agenda'
 
--- insert into GESTIONAR.agenda (
--- [agen_profe_id],
--- [agen_afil_id],
--- [agend_afil_sub_id],
--- [agen_hora_inicio],
--- [agen_baja],
--- [agen_creado],
--- [agen_modificado])
--- (select p.prof_id,af.afi_id,af.afi_sub_id, m.turno_fecha,0,SYSDATETIME(),SYSDATETIME()
+
+
+-- (select Turno_Numero,p.prof_id,af.afi_id,af.afi_sub_id, m.turno_fecha , case DATEPART( WEEKDAY , m.Turno_Fecha )
+-- when 7  then 1
+-- ELSE 0 end ,SYSDATETIME(),SYSDATETIME()
 -- from gd_esquema.Maestra m
 -- inner join GESTIONAR.afiliado af on af.afi_nro_documento = m.Paciente_Dni
 -- inner join GESTIONAR.profesional p on p.prof_nro_documento=m.Medico_Dni
+-- where consulta_sintomas is null
+-- and consulta_enfermedades is null
+-- and Turno_Numero is not null
 -- )
--- GO
+SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[turno] OFF
+
+
 
 select 'Creo la tabla compra'
 
@@ -867,19 +911,49 @@ where boco_id=Bono_Consulta_Numero
 and Consulta_Enfermedades is not null
 and Consulta_Sintomas is not null)
 
+GO
+
+
+
+select 'Creo la tabla tipo cancelacion'
+
+CREATE TABLE [GESTIONAR].[tipo_cancelacion](
+  [tica_id] [int] IDENTITY(0,1) NOT NULL ,
+  [tica_descripcion] varchar(255) NULL,
+  [tica_creado] [datetime] NULL,
+  [tica_modificado] [datetime] NULL,
+  CONSTRAINT [PK_GESTIONAR.tipo_cancelacion] PRIMARY KEY CLUSTERED 
+  (
+    [tica_id] ASC
+  )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+  ) ON [PRIMARY]
+
+GO
+
+select 'Populo la tabla tipo_cancelacion'
+
+insert into [GD2C2013].[GESTIONAR].[tipo_cancelacion](
+    [tica_descripcion]
+    ,[tica_creado]
+    ,[tica_modificado])
+  values
+  ('Migracion',SYSDATETIME(),SYSDATETIME()),
+  ('Afiliado',SYSDATETIME(),SYSDATETIME()),
+  ('Profesional',SYSDATETIME(),SYSDATETIME())
+
 
 
 select 'Creo la tabla cancelacion'
 
 CREATE TABLE [GESTIONAR].[cancelacion](
   [cancel_id] [int] IDENTITY(0,1) NOT NULL ,
-  [cancel_tipo] varchar(255) NULL ,
+  [cancel_tipo] [int] NOT NULL REFERENCES GESTIONAR.tipo_cancelacion (tica_id),
   [cancel_descripcion] varchar(255) NULL,
   [cancel_turno_id] [int] NOT NULL REFERENCES GESTIONAR.turno (turn_id),
-  [cancel_creado] [datetime] NULL,
-  [cancel_modificado] [datetime] NULL,
   [cancel_afil_id] [int] NULL,
   [cancel_afil_sub_id] [int] NULL,
+  [cancel_creado] [datetime] NULL,
+  [cancel_modificado] [datetime] NULL,
   CONSTRAINT [PK_GESTIONAR.cancelacion] PRIMARY KEY CLUSTERED 
   (
     [cancel_id] ASC
@@ -888,6 +962,23 @@ CREATE TABLE [GESTIONAR].[cancelacion](
 
 GO
 
+
+Select 'Populo la tabla cancelacion'
+
+
+INSERT INTO [GD2C2013].[GESTIONAR].[cancelacion]
+           ([cancel_tipo]
+           ,[cancel_descripcion]
+           ,[cancel_turno_id]
+           ,[cancel_afil_id]
+           ,[cancel_afil_sub_id]
+           ,[cancel_creado]
+           ,[cancel_modificado])
+     (select 0,'Turnos borrados en la migracion',turn_id,turn_afil_id,turn_afi_sub_id,SYSDATETIME(),SYSDATETIME() from GESTIONAR.turno where turn_baja=1)
+GO
+
+
+
 select 'Creo la tabla bono_farmacia'
 
 CREATE TABLE [GESTIONAR].[bono_farmacia](
@@ -895,7 +986,7 @@ CREATE TABLE [GESTIONAR].[bono_farmacia](
   [bofa_compra_id] [int]  NULL REFERENCES GESTIONAR.compra (compra_id),
   [bofa_afi_id] [int] NOT NULL ,
   [bofa_afi_sub_id] [int] NOT NULL,
-  [bofa_bono_consulta_id] [int] NULL REFERENCES GESTIONAR.bono_consulta (boco_id),
+  [bofa_consulta_id] [int] NULL REFERENCES GESTIONAR.consulta (consul_id),
   [bofa_plan_id] [int] NOT NULL REFERENCES GESTIONAR.plan_medico (plan_id),
   [bofa_creado] [datetime] NULL,
   [bofa_modificado] [datetime] NULL,
@@ -918,15 +1009,22 @@ INSERT INTO [GD2C2013].[GESTIONAR].[bono_farmacia]
            ,[bofa_compra_id]
            ,[bofa_afi_id]
            ,[bofa_afi_sub_id]
-           ,[bofa_bono_consulta_id]
+           ,[bofa_consulta_id]
            ,[bofa_plan_id]
            ,[bofa_creado]
            ,[bofa_modificado])
-           (select Bono_Farmacia_Numero,(Bono_Farmacia_Numero+200000), afi_id,afi_sub_id,Bono_Consulta_Numero,afi_plan,Bono_Farmacia_Fecha_Impresion, SYSDATETIME()
-from gd_esquema.Maestra,GESTIONAR.afiliado
+           (select Bono_Farmacia_Numero,(Bono_Farmacia_Numero+200000), afi_id,afi_sub_id,consul_id,afi_plan,Bono_Farmacia_Fecha_Impresion, SYSDATETIME()
+from gd_esquema.Maestra,GESTIONAR.afiliado,GESTIONAR.consulta
 where Bono_Farmacia_Numero is not null
 and Bono_Consulta_Numero is not null
-and afi_nro_documento=Paciente_Dni)
+and afi_nro_documento=Paciente_Dni
+and consul_bono_id=Bono_Consulta_Numero)
+
+--           (select Bono_Farmacia_Numero,(Bono_Farmacia_Numero+200000), afi_id,afi_sub_id,Bono_Consulta_Numero,afi_plan,Bono_Farmacia_Fecha_Impresion, SYSDATETIME()
+--from gd_esquema.Maestra,GESTIONAR.afiliado
+--where Bono_Farmacia_Numero is not null
+--and Bono_Consulta_Numero is not null
+--and afi_nro_documento=Paciente_Dni)
            
 
 SET IDENTITY_INSERT  [GD2C2013].[GESTIONAR].[bono_farmacia] OFF
@@ -1133,7 +1231,7 @@ AS
 GO
 
 
-create procedure GESTIONAR.generar_agenda (@fecha_desde date ,@fecha_hasta date, @hora_desde time, @hora_hasta time ,@profesional int)
+create procedure GESTIONAR.generar_agenda (@fecha_desde date ,@fecha_hasta date, @hora_desde time, @hora_hasta time ,@profesional int,@modificado datetime)
 as
 SET NOCOUNT ON
 begin
@@ -1143,12 +1241,22 @@ declare @hora time
 set @fecha=@fecha_desde
 while DATEDIFF(day,@fecha,@fecha_hasta) > 0
   begin
+  INSERT INTO [GD2C2013].[GESTIONAR].[agenda]
+           ([agen_profe_id]
+           ,[agen_fecha]
+           ,[agen_hora_inicio]
+           ,[agen_hora_fin]
+           ,[agen_baja]
+           ,[agen_creado]
+           ,[agen_modificado])
+  values(@profesional,@fecha,@hora_desde,@hora_hasta,0,@modificado,@modificado);
+
   set @hora=@hora_desde
   while DATEDIFF(minute,@hora,@hora_hasta) > 29
     begin
     insert into GESTIONAR.turno (turn_profe_id,turn_hora_inicio,turn_baja,turn_creado,turn_modificado)
     values
-    (@profesional,@fecha+CONVERT(datetime, @hora),0,SYSDATETIME(),SYSDATETIME())
+    (@profesional,@fecha+CONVERT(datetime, @hora),0,@modificado,@modificado)
     
     set @hora = DATEADD(minute,30,@hora)
     select @hora, DATEDIFF(minute,@hora,@hora_hasta)
@@ -1235,7 +1343,7 @@ else
     where 
       a.afi_id = bf.bofa_afi_id 
       and DATEDIFF(D,bf.bofa_creado,@fecha) > 60 
-      and bf.bofa_bono_consulta_id is null
+      and bf.bofa_consulta_id is null
       and DATEPART(YEAR, DATEADD(DAY,60,bofa_creado)) = @anio 
         and ((datepart(MONTH, DATEADD(DAY,60,bofa_creado)) in (1, 2, 3, 4, 5, 6) 
           and @semestre = 0 ) 
@@ -1247,7 +1355,7 @@ else
   else
     if @informe = 3
     begin
-      select top 5 DATEPART(MONTH, consul_modificado),e.Espe_Descripcion, COUNT(bf.bofa_bono_consulta_id) 
+      select top 5 DATEPART(MONTH, consul_modificado),e.Espe_Descripcion, COUNT(*) 
       from 
         GESTIONAR.bono_farmacia bf
         , GESTIONAR.profesional_especialidad pe
@@ -1255,7 +1363,7 @@ else
         , GESTIONAR.turno t
         ,GESTIONAR.consulta
       where 
-        bofa_bono_consulta_id = consul_bono_id
+        bofa_consulta_id = consul_id
         and consul_turno_id=turn_id
         and turn_profe_id=espr_prof_id
         and espr_especialidad_id=espe_Codigo
