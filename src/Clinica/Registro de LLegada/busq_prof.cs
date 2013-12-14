@@ -49,12 +49,12 @@ namespace Clinica.Registro_de_LLegada
             {
                 nombre = textBoxNombre.Text;
             }
-             if (textBoxNombre.Text != string.Empty)
+             if (textBoxApellido.Text != string.Empty)
             {
                 apellido = textBoxApellido.Text;
             }
 
-            if ( textBoxDocumento.Text != string.Empty)
+            if (textBoxDocumento.Text != string.Empty)
             {
                 dni = textBoxDocumento.Text;
             }

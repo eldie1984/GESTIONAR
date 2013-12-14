@@ -175,7 +175,7 @@ namespace Clinica.Registrar_Agenda
                 minutosDesde = Convert.ToInt32(this.dateTimePicker12.Value.ToString("mm"));
                 horaHasta = Convert.ToInt32(this.dateTimePicker11.Value.ToString("HH"));
                 minutosHasta = Convert.ToInt32(this.dateTimePicker11.Value.ToString("mm"));
-                if (check_horario(horaDesde, minutosDesde, horaHasta, minutosHasta) || (horaHasta >= 15 && minutosHasta > 0 ))
+                if (check_horario(horaDesde, minutosDesde, horaHasta, minutosHasta) && (horaHasta < 16 || (horaHasta == 15 && minutosHasta == 0 )))
                 {
                     dias.Add(new Agenda() { dia = 6, horaInicio = horaDesde + ":" + minutosDesde, horaFin = horaHasta + ":" + minutosHasta });
                     sum_horas = sum_horas + horaHasta - horaDesde;
