@@ -37,7 +37,7 @@ namespace Clinica.Abm_de_Afiliado
             //carga opciones estado
             this.comboBoxEstado.DisplayMember = "Key";
             this.comboBoxEstado.ValueMember = "Value";
-            this.comboBoxEstado.DataSource = new[] { new KeyValuePair<string, int>("Soltero/a", 1), new KeyValuePair<string, int>("Casado/a", 2), new KeyValuePair<string, int>("Viudo/a", 3), new KeyValuePair<string, int>("Concubinato", 4), new KeyValuePair<string, int>("Divorciado/a", 5) };
+            this.comboBoxEstado.DataSource = new[] { new KeyValuePair<string, int>("Soltero/a", 0), new KeyValuePair<string, int>("Casado/a", 1), new KeyValuePair<string, int>("Viudo/a", 2), new KeyValuePair<string, int>("Concubinato", 3), new KeyValuePair<string, int>("Divorciado/a", 4) };
 
             //carga listado planes
             this.listadoPlanes = dataAccess.GetPlanes();

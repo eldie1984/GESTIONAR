@@ -57,7 +57,7 @@ namespace Clinica.Registrar_Agenda
             {
                 nombre = textBoxNombre.Text;
             }
-            if (textBoxNombre.Text != string.Empty)
+            if (textBoxApellido.Text != string.Empty)
             {
                 apellido = textBoxApellido.Text;
             }
@@ -80,6 +80,11 @@ namespace Clinica.Registrar_Agenda
             this.textBoxNombre.Text = string.Empty;
             this.textBoxDocumento.Text = string.Empty;
         
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

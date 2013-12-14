@@ -165,7 +165,19 @@ namespace Clinica.Abm_de_Profesional
                 else
                 {
                     this.dataAccess.AddProf(prof, especialidadesSelec);
-                    LimpiarCampos();
+                    DialogResult result = MessageBox.Show("Se creo correctamente el profesional, desea cargar otro?", "Profesional", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information);
+                    switch (result)
+                    {
+                        case DialogResult.Yes:
+                            LimpiarCampos();
+                            break;
+                        case DialogResult.No:
+                            this.Close();
+                            break;
+                        case DialogResult.Cancel:
+                            break;
+                    }
+                    
                 }
                 
               
