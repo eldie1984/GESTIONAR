@@ -182,7 +182,7 @@ namespace Clinica
 
                 System.Text.StringBuilder query = new System.Text.StringBuilder();
                 
-                query.Append("SELECT TOP 200 afi_id,afi_sub_id,afi_nombre, afi_apellido, afi_nro_documento,afi_direccion,afi_tipo_documento,afi_telefono,afi_mail,afi_fecha_nacimiento,afi_sexo,afi_estado_id,afi_cant_hijos,afi_plan FROM GESTIONAR.afiliado WHERE afi_baja=0");
+                query.Append("SELECT afi_id,afi_sub_id,afi_nombre, afi_apellido, afi_nro_documento,afi_direccion,afi_tipo_documento,afi_telefono,afi_mail,afi_fecha_nacimiento,afi_sexo,afi_estado_id,afi_cant_hijos,afi_plan FROM GESTIONAR.afiliado WHERE afi_baja=0");
                 if (fNombre != String.Empty && fNombre != null)
                     query.Append(" and afi_nombre LIKE '%" + fNombre + "%'");
                 if (fApellido != String.Empty && fApellido != null)
