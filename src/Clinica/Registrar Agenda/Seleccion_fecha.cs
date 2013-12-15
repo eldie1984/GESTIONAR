@@ -16,6 +16,7 @@ namespace Clinica.Registrar_Agenda
         DateTime Desde;
         DateTime Hasta;
         public Form padre;
+        public Usuario profesional;
 
         public Seleccion_fecha(List<Agenda> Dias)
         {
@@ -39,6 +40,7 @@ namespace Clinica.Registrar_Agenda
                 select_profesional profesional = new select_profesional(dias,Desde,Hasta);
                 profesional.Show();
                 profesional.padre = this.padre;
+                profesional.profesional=this.profesional;
                 this.Hide();
             }
             else

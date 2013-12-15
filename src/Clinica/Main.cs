@@ -270,7 +270,7 @@ namespace Clinica
 
         private void registrarToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Registrar_Agenda.Seleccion_dias agenda = new Clinica.Registrar_Agenda.Seleccion_dias(this.usuario.user_rel);
+            Registrar_Agenda.Seleccion_dias agenda = new Clinica.Registrar_Agenda.Seleccion_dias(this.usuario);
             agenda.Show();
             agenda.MdiParent = this;
         }

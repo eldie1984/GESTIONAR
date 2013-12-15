@@ -162,6 +162,7 @@
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.Size = new System.Drawing.Size(574, 280);
             this.dataGridView1.TabIndex = 10;
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick_1);
             // 
             // select_profesional
             // 
@@ -177,6 +178,7 @@
             this.Controls.Add(this.dataGridView1);
             this.Name = "select_profesional";
             this.Text = "Seleccion de profesional";
+            this.Load += new System.EventHandler(this.select_profesional_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
