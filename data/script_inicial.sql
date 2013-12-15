@@ -1237,6 +1237,7 @@ SET NOCOUNT ON
 begin
 declare @fecha date
 declare @hora time
+declare @agenda int
 
 set @fecha=@fecha_desde
 while DATEDIFF(day,@fecha,@fecha_hasta) > 0
@@ -1250,13 +1251,15 @@ while DATEDIFF(day,@fecha,@fecha_hasta) > 0
            ,[agen_creado]
            ,[agen_modificado])
   values(@profesional,@fecha,@hora_desde,@hora_hasta,0,@modificado,@modificado);
+  
+  set @agenda = @@IDENTITY
 
   set @hora=@hora_desde
   while DATEDIFF(minute,@hora,@hora_hasta) > 29
     begin
-    insert into GESTIONAR.turno (turn_profe_id,turn_hora_inicio,turn_baja,turn_creado,turn_modificado)
+    insert into GESTIONAR.turno (turn_profe_id,turn_hora_inicio,turn_baja,turn_creado,turn_modificado,turn_agen_id)
     values
-    (@profesional,@fecha+CONVERT(datetime, @hora),0,@modificado,@modificado)
+    (@profesional,@fecha+CONVERT(datetime, @hora),0,@modificado,@modificado,@agenda)
     
     set @hora = DATEADD(minute,30,@hora)
     select @hora, DATEDIFF(minute,@hora,@hora_hasta)

@@ -17,6 +17,7 @@ namespace Clinica.Registrar_Agenda
         private DateTime Hasta;
         private DataAccessLayer dataAccess;
         public Form padre;
+        public Usuario profesional;
 
         public select_profesional(List<Agenda> dias,DateTime desde,DateTime hasta)
         {
@@ -25,26 +26,6 @@ namespace Clinica.Registrar_Agenda
             this.Desde = desde;
             this.Hasta = hasta;
             this.dataAccess = new DataAccessLayer();
-        }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-
-            QueryResult salida = this.dataAccess.AddAgenda(Dias, Desde, Hasta, Convert.ToInt32(dataGridView1.CurrentRow.Cells["ID"].Value.ToString()));
-
-            if (salida.ID == 0)
-            {
-                MessageBox.Show("Se creo la agenda correctamente", "Info");
-                this.Close();
-                padre.Close();
-            }
-            else
-            {
-                MessageBox.Show("Ocurrio un error al generar la agenda", "Error");
-            }
-             
-            
         }
 
         private void buttonBuscar_Click(object sender, EventArgs e)
@@ -85,6 +66,41 @@ namespace Clinica.Registrar_Agenda
         private void button3_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void dataGridView1_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
+        {
+            QueryResult salida = this.dataAccess.AddAgenda(Dias, Desde, Hasta, Convert.ToInt32(dataGridView1.CurrentRow.Cells["ID"].Value.ToString()));
+
+            if (salida.ID == 0)
+            {
+                MessageBox.Show("Se creo la agenda correctamente", "Info");
+                this.Close();
+                padre.Close();
+            }
+            else
+            {
+                MessageBox.Show("Ocurrio un error al generar la agenda", "Error");
+            }
+        }
+
+        private void select_profesional_Load(object sender, EventArgs e)
+        {
+            if (profesional != null)
+            {
+                QueryResult salida = this.dataAccess.AddAgenda(Dias, Desde, Hasta, Convert.ToInt32(profesional.user_rel));
+
+                if (salida.ID == 0)
+                {
+                    MessageBox.Show("Se creo la agenda correctamente", "Info");
+                    this.Close();
+                    padre.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Ocurrio un error al generar la agenda", "Error");
+                }
+            }
         }
     }
 }

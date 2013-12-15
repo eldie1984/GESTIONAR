@@ -12,9 +12,9 @@ namespace Clinica.Registrar_Agenda
 {
     public partial class Seleccion_dias : Form
     {
-        private Int32 prof_id;
+        private Usuario prof_id;
         List<Agenda> dias;
-        public Seleccion_dias(Int32 user)
+        public Seleccion_dias(Usuario user)
         {
             InitializeComponent();
             this.prof_id = user;
