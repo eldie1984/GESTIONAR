@@ -200,6 +200,7 @@ namespace Clinica.Registrar_Agenda
                 Seleccion_fecha horario = new Seleccion_fecha(dias);
                 horario.Show();
                 horario.padre = this;
+                horario.profesional = this.prof_id;
                 this.Hide();
             }
             else

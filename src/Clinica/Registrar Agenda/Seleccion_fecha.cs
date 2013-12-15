@@ -38,9 +38,9 @@ namespace Clinica.Registrar_Agenda
                 && Hasta>Desde)
             {
                 select_profesional profesional = new select_profesional(dias,Desde,Hasta);
-                profesional.Show();
                 profesional.padre = this.padre;
                 profesional.profesional=this.profesional;
+                profesional.Show();
                 this.Hide();
             }
             else

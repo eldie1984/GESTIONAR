@@ -56,7 +56,16 @@ namespace Clinica.Registro_de_LLegada
 
             if (textBoxDocumento.Text != string.Empty)
             {
-                dni = textBoxDocumento.Text;
+                try
+                {
+                    Convert.ToInt32(this.textBoxDocumento.Text);
+                    dni = textBoxDocumento.Text;
+                }
+                catch
+                {
+                    MessageBox.Show("Documento puede ser solo numerico", "Error");
+                    return;
+                }
             }
 
             List<Profesional> profesionales_list = this.dataAccess.GetProfesionales(nombre, apellido, dni);

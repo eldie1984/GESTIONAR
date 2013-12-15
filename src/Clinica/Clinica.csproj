@@ -133,7 +133,9 @@
     <Compile Include="Compra de Bono\CompraBonos.Designer.cs">
       <DependentUpon>CompraBonos.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataAccessLayer.cs" />
+    <Compile Include="DataAccessLayer.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Listados Estadisticos\Pantalla.cs">
       <SubType>Form</SubType>
     </Compile>
