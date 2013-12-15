@@ -1459,15 +1459,16 @@ CREATE PROCEDURE GESTIONAR.CancelarTurnoProf
 	@profID int,
     @desde Date,
 	@hasta Date,
-	@motivo varchar(255)
+	@motivo varchar(255),
+	@fecha DateTime
     
 AS 
 
     SET NOCOUNT ON;
    
-   INSERT INTO [GD2C2013].[GESTIONAR].[cancelacion]
+      INSERT INTO [GD2C2013].[GESTIONAR].[cancelacion]
            (cancel_tipo,cancel_descripcion,cancel_turno_id,cancel_afil_id,cancel_afil_sub_id,cancel_creado)
-           (select 'PROFESIONAL',@motivo, turn_id,turn_afil_id,turn_afi_sub_id,GETDATE()
+           (select 2,@motivo, turn_id,turn_afil_id,turn_afi_sub_id,@fecha
 from GESTIONAR.turno 
 where turn_profe_id = @profID and CAST(turn_hora_inicio AS DATE) >= @desde and CAST(turn_hora_inicio AS DATE)  <= @hasta)
    
