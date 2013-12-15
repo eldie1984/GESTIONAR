@@ -1180,6 +1180,23 @@ AS
     afi_modificado=@modificado
     WHERE afi_id = @mainid and afi_sub_id=@subid
 		
+	INSERT INTO [GD2C2013].[GESTIONAR].[cancelacion] (cancel_tipo,cancel_descripcion,cancel_turno_id,cancel_afil_id,cancel_afil_sub_id,cancel_creado)
+	SELECT 1,'Baja Afiliado',turn_id,@mainid,@subid,@modificado
+	FROM GESTIONAR.turno tur
+	WHERE tur.turn_afil_id = @mainid and tur.turn_afi_sub_id=@subid and tur.turn_hora_inicio > @modificado and
+	NOT EXISTS
+    (SELECT * 
+     FROM GESTIONAR.consulta con
+     WHERE con.consul_turno_id = tur.turn_id)
+   
+    UPDATE GESTIONAR.turno
+    SET turn_afil_id = NULL , turn_afi_sub_id = NULL
+    WHERE turn_afil_id = @mainid and turn_afi_sub_id=@subid and turn_hora_inicio > @modificado and
+    NOT EXISTS
+    (SELECT * 
+     FROM GESTIONAR.consulta con2
+     WHERE con2.consul_turno_id = turn_id)
+		
 		
 GO
 
@@ -1191,10 +1208,28 @@ AS
 
     SET NOCOUNT ON;
    
-    UPDATE GESTIONAR.profesional
+   UPDATE GESTIONAR.profesional
     SET prof_baja = 1,
     prof_modificado=@modificado
     WHERE prof_id = @profid
+	
+	UPDATE GESTIONAR.turno 
+    SET turn_baja = 1
+    WHERE turn_profe_id = @profid and turn_hora_inicio > @modificado and
+    NOT EXISTS
+    (SELECT * 
+     FROM GESTIONAR.consulta con2
+     WHERE con2.consul_turno_id = turn_id)
+	
+		
+	INSERT INTO [GD2C2013].[GESTIONAR].[cancelacion] (cancel_tipo,cancel_descripcion,cancel_turno_id,cancel_afil_id,cancel_afil_sub_id,cancel_creado)
+	SELECT 2,'Baja Profesional',turn_id,turn_afil_id,turn_afi_sub_id,@modificado
+	FROM GESTIONAR.turno tur
+	WHERE tur.turn_profe_id = @profid and tur.turn_hora_inicio > @modificado and
+	NOT EXISTS
+    (SELECT * 
+     FROM GESTIONAR.consulta con
+     WHERE con.consul_turno_id = tur.turn_id)
 		
 		
 GO
