@@ -57,7 +57,7 @@ namespace Clinica.Cancelar_Atencion
             if(this.comboBoxTunoAfil.SelectedValue!=null)
             {
             int selTurn = (int)this.comboBoxTunoAfil.SelectedValue;
-            this.dataAccess.BajaTurnoAfil(selTurn, this.textBoxMotivoAfil.Text);
+            this.dataAccess.BajaTurnoAfil(selTurn, this.textBoxMotivoAfil.Text,Helper.GetFechaNow());
             MessageBox.Show("Turno Cancelado exitosamente");
             this.Close();
             }
@@ -75,7 +75,7 @@ namespace Clinica.Cancelar_Atencion
             DateTime hasta = this.dateTimeHasta.Value.Date;
             
             string motivo = this.textBoxMotivoProf.Text;
-            this.dataAccess.BajaTurnosProf(this.usuario.user_rel,desde,hasta,motivo);
+            this.dataAccess.BajaTurnosProf(this.usuario.user_rel,desde,hasta,motivo,Helper.GetFechaNow());
             MessageBox.Show("Periodo de turnos Cancelado exitosamente");
             this.Close();
         }

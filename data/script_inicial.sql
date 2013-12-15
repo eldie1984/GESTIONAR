@@ -1428,8 +1428,8 @@ GO
 
 CREATE PROCEDURE GESTIONAR.CancelarTurnoAfil 
     @turnoID int,
-	@motivo varchar(255)
-    
+	@motivo varchar(255),
+    @fecha DateTime
 AS 
 
     SET NOCOUNT ON;
@@ -1439,9 +1439,9 @@ AS
    
 	SET @AFIID = (select turn_afil_id from GESTIONAR.turno WHERE turn_id = @turnoID)
    	SET @SUBID = (select turn_afi_sub_id from GESTIONAR.turno WHERE turn_id = @turnoID)
-   
+   	
 	INSERT INTO [GD2C2013].[GESTIONAR].[cancelacion] (cancel_tipo,cancel_descripcion,cancel_turno_id,cancel_afil_id,cancel_afil_sub_id,cancel_creado)
-	VALUES ('AFILIADO',@motivo,@turnoID,@AFIID,@SUBID,GETDATE())
+	VALUES (1,@motivo,@turnoID,@AFIID,@SUBID,@fecha)
    
    
     UPDATE GESTIONAR.turno

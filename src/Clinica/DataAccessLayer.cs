@@ -1529,7 +1529,7 @@ namespace Clinica
             }
         }
 
-        public void BajaTurnoAfil(int turnoID,string motivo)
+        public void BajaTurnoAfil(int turnoID,string motivo,DateTime fecha)
         {
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
             {
@@ -1544,12 +1544,15 @@ namespace Clinica
                 SqlParameter motivParm = new SqlParameter("motivo", motivo);
                 command.Parameters.Add(motivParm);
 
+                SqlParameter fechaParm = new SqlParameter("fecha", fecha);
+                command.Parameters.Add(fechaParm);
+
                 int rows = command.ExecuteNonQuery();
             }
         }
 
 
-        public void BajaTurnosProf(int profID,DateTime desde, DateTime hasta, string motivo)
+        public void BajaTurnosProf(int profID,DateTime desde, DateTime hasta, string motivo,DateTime fecha)
         {
             using (SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings["GD2013"].ConnectionString))
             {
@@ -1569,6 +1572,9 @@ namespace Clinica
 
                 SqlParameter motivParm = new SqlParameter("motivo", motivo);
                 command.Parameters.Add(motivParm);
+
+                SqlParameter fecParm = new SqlParameter("fecha", fecha);
+                command.Parameters.Add(fecParm);
 
                 int rows = command.ExecuteNonQuery();
             }
